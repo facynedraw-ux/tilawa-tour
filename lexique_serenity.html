@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lexique — Tilawa Tour</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      "primary": "#00917c",
+      "primary-container": "#b2dfdb",
+      "secondary": "#735c00",
+      "secondary-container": "#fed65b",
+      "surface": "#f8faf8",
+      "surface-container-lowest": "#ffffff",
+      "surface-container": "#eceeec",
+      "on-surface": "#191c1b",
+      "on-surface-variant": "#404944",
+      "outline-variant": "#bfc9c3",
+    },
+    fontFamily: {
+      "headline": ["Noto Serif"],
+      "body": ["Manrope"],
+      "label": ["Manrope"],
+      "arabic": ["Amiri","serif"],
+    }
+  }}
+}
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  body { font-family:'Manrope',sans-serif; background:#f8faf8; }
+  /* Tajwid couleurs */
+  .tj-mad     { color:#dc2626; font-weight:600; }
+  .tj-ghunna  { color:#16a34a; font-weight:600; }
+  .tj-tafkhim { color:#1d4ed8; font-weight:600; }
+  .tj-qalqala { color:#0284c7; font-weight:600; }
+  .tj-ithar   { color:#ea580c; font-weight:600; }
+  .tj-muet    { color:#9ca3af; text-decoration:line-through; font-weight:600; }
+</style>
+</head>
+<body class="text-on-surface pb-32">
+
+<!-- Header -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant/20">
+  <div class="flex items-center gap-3 px-5 py-3.5 max-w-2xl mx-auto">
+    <a href="profil_serenity.html" class="p-2 rounded-full hover:bg-surface-container transition-colors">
+      <span class="material-symbols-outlined text-on-surface-variant">arrow_back</span>
+    </a>
+    <h1 class="font-headline text-base font-semibold text-primary">Lexique</h1>
+  </div>
+</header>
+
+<main class="pt-20 max-w-2xl mx-auto px-5">
+
+  <!-- Intro -->
+  <div class="mb-10 text-center">
+    <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+      Termes et règles de lecture du Coran utilisés dans Tilawa Tour.
+    </p>
+  </div>
+
+  <!-- ── SECTION 1 : Structure du Coran ── -->
+  <section class="mb-10">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="h-px flex-grow bg-outline-variant/30"></div>
+      <h2 class="font-headline text-sm text-primary uppercase tracking-widest whitespace-nowrap">Structure du Coran</h2>
+      <div class="h-px flex-grow bg-outline-variant/30"></div>
+    </div>
+
+    <div class="space-y-4">
+
+      <!-- Khatma -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-grow">
+            <div class="flex items-baseline gap-3 mb-1">
+              <h3 class="font-headline text-lg text-primary">Khatma</h3>
+              <span class="font-arabic text-base text-on-surface-variant" dir="rtl">خَتْمَة</span>
+            </div>
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+              Lecture complète du Coran du début (Al-Fatiha) à la fin (An-Nas). Une Khatma = 604 pages = 60 hizbs.
+            </p>
+          </div>
+          <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">604 pages</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Juz -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-grow">
+            <div class="flex items-baseline gap-3 mb-1">
+              <h3 class="font-headline text-lg text-primary">Juz</h3>
+              <span class="font-arabic text-base text-on-surface-variant" dir="rtl">جُزْء</span>
+            </div>
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+              Division du Coran en 30 parties égales. Chaque Juz contient 2 Hizbs et correspond à environ 20 pages.
+            </p>
+          </div>
+          <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">30 Juz</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hizb -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-grow">
+            <div class="flex items-baseline gap-3 mb-1">
+              <h3 class="font-headline text-lg text-primary">Hizb</h3>
+              <span class="font-arabic text-base text-on-surface-variant" dir="rtl">حِزْب</span>
+            </div>
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+              Division du Coran en 60 parties égales. Chaque Hizb = ½ Juz = 10 pages. C'est l'unité de base de Tilawa Tour.
+            </p>
+          </div>
+          <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">60 Hizbs</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nisf -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-grow">
+            <div class="flex items-baseline gap-3 mb-1">
+              <h3 class="font-headline text-lg text-primary">Nisf</h3>
+              <span class="font-arabic text-base text-on-surface-variant" dir="rtl">نِصْف</span>
+            </div>
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+              Moitié d'un Hizb = 5 pages. Marqueur officiel du mushaf, point d'arrêt valide pour la lecture.
+            </p>
+          </div>
+          <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">5 pages</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Roubou / Thoulouth -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-start gap-4">
+          <div class="flex-grow">
+            <div class="flex items-baseline gap-3 mb-1">
+              <h3 class="font-headline text-lg text-primary">Roubou' / Thoulouth</h3>
+              <span class="font-arabic text-base text-on-surface-variant" dir="rtl">رُبُع / ثُلُث</span>
+            </div>
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+              Quart (¼) et tiers (⅔) d'un Hizb. Marqueurs présents dans le mushaf mais non utilisés dans Tilawa Tour.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sourate -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-grow">
+            <div class="flex items-baseline gap-3 mb-1">
+              <h3 class="font-headline text-lg text-primary">Sourate</h3>
+              <span class="font-arabic text-base text-on-surface-variant" dir="rtl">سُورَة</span>
+            </div>
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+              Chapitre du Coran. Il y en a 114, de longueurs très variées — de 3 versets (Al-Kawthar) à 286 versets (Al-Baqarah).
+            </p>
+          </div>
+          <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">114</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ayah -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-grow">
+            <div class="flex items-baseline gap-3 mb-1">
+              <h3 class="font-headline text-lg text-primary">Verset (Ayah)</h3>
+              <span class="font-arabic text-base text-on-surface-variant" dir="rtl">آيَة</span>
+            </div>
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+              Unité de base du Coran. Le Coran contient 6236 versets au total.
+            </p>
+          </div>
+          <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">6236</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── SECTION 2 : Lecture ── -->
+  <section class="mb-10">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="h-px flex-grow bg-outline-variant/30"></div>
+      <h2 class="font-headline text-sm text-primary uppercase tracking-widest whitespace-nowrap">Lecture</h2>
+      <div class="h-px flex-grow bg-outline-variant/30"></div>
+    </div>
+
+    <div class="space-y-4">
+
+      <!-- Basmala -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-baseline gap-3 mb-1">
+          <h3 class="font-headline text-lg text-primary">Basmala</h3>
+          <span class="font-arabic text-base text-on-surface-variant" dir="rtl">بَسْمَلَة</span>
+        </div>
+        <p class="font-arabic text-xl text-primary my-2" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+          « Au nom d'Allah, le Tout Miséricordieux, le Très Miséricordieux. » Précède chaque sourate sauf At-Tawba (sourate 9).
+        </p>
+      </div>
+
+      <!-- Tajwid -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-baseline gap-3 mb-2">
+          <h3 class="font-headline text-lg text-primary">Tajwid</h3>
+          <span class="font-arabic text-base text-on-surface-variant" dir="rtl">تَجْوِيد</span>
+        </div>
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+          Ensemble des règles de prononciation correcte du Coran. Le mot signifie littéralement "embellissement" ou "amélioration".
+        </p>
+      </div>
+
+      <!-- Riwaya -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-baseline gap-3 mb-2">
+          <h3 class="font-headline text-lg text-primary">Riwaya</h3>
+          <span class="font-arabic text-base text-on-surface-variant" dir="rtl">رِوَايَة</span>
+        </div>
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+          Tradition de récitation du Coran. Les deux principales sont <strong>Hafs</strong> (la plus répandue dans le monde) et <strong>Warsh</strong> (répandue en Afrique du Nord et de l'Ouest).
+        </p>
+      </div>
+
+      <!-- Mushaf -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-baseline gap-3 mb-2">
+          <h3 class="font-headline text-lg text-primary">Mushaf</h3>
+          <span class="font-arabic text-base text-on-surface-variant" dir="rtl">مُصْحَف</span>
+        </div>
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+          L'exemplaire physique (livre) du Coran. Le mushaf de Médine d'Osman Taha est la référence utilisée dans Tilawa Tour (604 pages).
+        </p>
+      </div>
+
+      <!-- Tadabbur -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10">
+        <div class="flex items-baseline gap-3 mb-2">
+          <h3 class="font-headline text-lg text-primary">Tadabbur</h3>
+          <span class="font-arabic text-base text-on-surface-variant" dir="rtl">تَدَبُّر</span>
+        </div>
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+          Méditation et réflexion profonde sur le sens des versets du Coran. Aller au-delà de la simple lecture pour comprendre et intérioriser le message.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── SECTION 3 : Règles de Tajwid ── -->
+  <section class="mb-10">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="h-px flex-grow bg-outline-variant/30"></div>
+      <h2 class="font-headline text-sm text-primary uppercase tracking-widest whitespace-nowrap">Règles de Tajwid</h2>
+      <div class="h-px flex-grow bg-outline-variant/30"></div>
+    </div>
+
+    <p class="font-label text-xs text-on-surface-variant mb-5 leading-relaxed">
+      Dans le lecteur, les lettres concernées par une règle sont colorées. Voici le détail de chaque règle.
+    </p>
+
+    <div class="space-y-4">
+
+      <!-- Mad -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10 border-l-4" style="border-left-color:#dc2626">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-grow">
+            <div class="flex items-center gap-3 mb-1">
+              <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:#dc2626"></span>
+              <h3 class="font-headline text-lg text-primary">Mad — Prolongation</h3>
+              <span class="font-arabic text-base text-on-surface-variant" dir="rtl">مَدّ</span>
+            </div>
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed mb-3">
+              Étirement obligatoire d'une voyelle longue. La durée varie selon le contexte :
+            </p>
+            <div class="space-y-1.5">
+              <div class="flex items-center gap-2">
+                <span class="font-arabic tj-mad text-lg" dir="rtl">ا</span>
+                <p class="font-label text-xs text-on-surface-variant"><strong>Mad Tabi'i</strong> — prolongation naturelle de 2 temps</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="font-arabic tj-mad text-lg" dir="rtl">ا</span>
+                <p class="font-label text-xs text-on-surface-variant"><strong>Mad Wajib / Ja'iz</strong> — prolongation de 4 à 5 temps (devant un Hamza)</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="font-arabic tj-mad text-lg" dir="rtl">ا</span>
+                <p class="font-label text-xs text-on-surface-variant"><strong>Mad Lazim</strong> — prolongation obligatoire de 6 temps</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ghounnah -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10 border-l-4" style="border-left-color:#16a34a">
+        <div class="flex items-center gap-3 mb-1">
+          <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:#16a34a"></span>
+          <h3 class="font-headline text-lg text-primary">Ghounnah — Nasalisation</h3>
+          <span class="font-arabic text-base text-on-surface-variant" dir="rtl">غُنَّة</span>
+        </div>
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed mb-3">
+          Son nasal produit dans le nez pendant 2 temps. S'applique au <strong>Noun (نّ)</strong> et au <strong>Mim (مّ)</strong> avec chadda, ainsi que lors des règles d'Ikhfa et d'Idgham.
+        </p>
+        <div class="flex gap-3 items-center">
+          <span class="font-arabic tj-ghunna text-2xl" dir="rtl">نّ</span>
+          <span class="font-arabic tj-ghunna text-2xl" dir="rtl">مّ</span>
+          <p class="font-label text-xs text-on-surface-variant">Le son vibre dans le nez, bouche fermée</p>
+        </div>
+      </div>
+
+      <!-- Tafkhim -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10 border-l-4" style="border-left-color:#1d4ed8">
+        <div class="flex items-center gap-3 mb-1">
+          <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:#1d4ed8"></span>
+          <h3 class="font-headline text-lg text-primary">Tafkhim — Emphase</h3>
+          <span class="font-arabic text-base text-on-surface-variant" dir="rtl">تَفْخِيم</span>
+        </div>
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed mb-3">
+          Prononciation "épaisse" ou "grasse" de certaines lettres. La langue remonte vers le palais, donnant un son grave et lourd.
+        </p>
+        <div class="flex gap-3 items-center">
+          <span class="font-arabic tj-tafkhim text-2xl" dir="rtl">خ ص ض غ ط ق ظ</span>
+          <p class="font-label text-xs text-on-surface-variant">Lettres toujours emphatiques</p>
+        </div>
+      </div>
+
+      <!-- Qalqalah -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10 border-l-4" style="border-left-color:#0284c7">
+        <div class="flex items-center gap-3 mb-1">
+          <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:#0284c7"></span>
+          <h3 class="font-headline text-lg text-primary">Qalqalah — Rebond</h3>
+          <span class="font-arabic text-base text-on-surface-variant" dir="rtl">قَلْقَلَة</span>
+        </div>
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed mb-3">
+          Effet d'écho ou de rebond sec sur certaines lettres lorsqu'elles sont à l'arrêt (sukun). Le son "rebondit" légèrement après la lettre.
+        </p>
+        <div class="flex gap-3 items-center">
+          <span class="font-arabic tj-qalqala text-2xl" dir="rtl">قْ طْ بْ جْ دْ</span>
+          <p class="font-label text-xs text-on-surface-variant">Les 5 lettres Qalqalah en sukun</p>
+        </div>
+      </div>
+
+      <!-- Ithar -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10 border-l-4" style="border-left-color:#ea580c">
+        <div class="flex items-center gap-3 mb-1">
+          <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:#ea580c"></span>
+          <h3 class="font-headline text-lg text-primary">Ithar — Clarification</h3>
+          <span class="font-arabic text-base text-on-surface-variant" dir="rtl">إِظْهَار</span>
+        </div>
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed mb-3">
+          Prononciation claire et distincte du Noun sakin (نْ) ou du Tanwin devant certaines lettres. Aucune nasalisation, chaque lettre est prononcée nettement.
+        </p>
+        <div class="flex gap-3 items-center flex-wrap">
+          <span class="font-arabic tj-ithar text-xl" dir="rtl">ء ه ع ح غ خ</span>
+          <p class="font-label text-xs text-on-surface-variant">Les 6 lettres gutturales d'Ithar</p>
+        </div>
+      </div>
+
+      <!-- Lettre muette -->
+      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10 border-l-4" style="border-left-color:#9ca3af">
+        <div class="flex items-center gap-3 mb-1">
+          <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:#9ca3af"></span>
+          <h3 class="font-headline text-lg text-primary">Lettre muette</h3>
+          <span class="font-arabic text-base text-on-surface-variant" dir="rtl">حَرْف مُهْمَل</span>
+        </div>
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
+          Lettre écrite dans le mushaf mais qui ne se prononce pas. On passe directement à la lettre suivante sans émettre aucun son.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center pt-8 border-t border-outline-variant/10 mb-8">
+    <p class="font-headline text-sm text-on-surface-variant mb-3">Proposé par JUMUA &amp; Me</p>
+    <a class="flex items-center justify-center gap-2 text-primary hover:opacity-70 mb-4" href="https://www.instagram.com/jumua_and_me">
+      <span class="material-symbols-outlined text-lg">photo_camera</span>
+      <span class="font-label text-xs uppercase tracking-widest">@jumua_and_me</span>
+    </a>
+    <p class="font-label text-[10px] text-on-surface-variant/60 uppercase tracking-[0.2em]">© 2026 Tilawa Tour • Cheminer avec le Coran, mois après mois.</p>
+  </footer>
+
+</main>
+
+<!-- Nav -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pt-2 pb-5 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-4px_24px_rgba(0,145,124,0.06)]">
+  <a href="dashboard_serenity_v4.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+    <span class="material-symbols-outlined text-xl">dashboard</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Accueil</span>
+  </a>
+  <a href="lecteur_serenity.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+    <span class="material-symbols-outlined text-xl">menu_book</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Coran</span>
+  </a>
+  <a href="calendrier_serenity.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+    <span class="material-symbols-outlined text-xl">calendar_month</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Calendrier</span>
+  </a>
+  <a href="plan_serenity.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+    <span class="material-symbols-outlined text-xl">edit_calendar</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Programme</span>
+  </a>
+  <a href="profil_serenity.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl bg-primary/10 text-primary active:scale-90 transition-all">
+    <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1;">person</span>
+    <span class="font-label text-[10px] font-bold uppercase tracking-widest">Profil</span>
+  </a>
+</nav>
+
+</body>
+</html>
