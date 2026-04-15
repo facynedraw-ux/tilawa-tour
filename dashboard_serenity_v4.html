@@ -134,22 +134,20 @@
   </section>
 
   <!-- Bento Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-
-    <!-- Hizb du jour -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:2rem;">
     <div class="bg-surface-container-low rounded-3xl p-8 flex flex-col justify-between">
       <div>
         <span class="material-symbols-outlined text-secondary mb-4" style="font-variation-settings:'FILL' 1;">menu_book</span>
-        <h3 class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-2">Hizb du jour</h3>
-        <p class="font-headline text-3xl text-primary font-semibold mb-6">Hizb 3 &amp; 4</p>
+        <h3 class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-2">Lecture du jour</h3>
+        <p class="font-headline text-3xl text-primary font-semibold mb-6" id="hizb-label-jour">—</p>
         <div class="space-y-4">
           <div class="flex flex-col gap-1">
             <span class="text-[10px] uppercase tracking-widest font-bold text-secondary">Début</span>
-            <p class="text-sm text-primary font-medium">Sourate Al-Baqarah, Verset 253, Page 42</p>
+            <p class="text-sm text-primary font-medium" id="hizb-debut">—</p>
           </div>
           <div class="flex flex-col gap-1">
             <span class="text-[10px] uppercase tracking-widest font-bold text-secondary">Fin</span>
-            <p class="text-sm text-primary font-medium">Sourate Al-Imran, Verset 91, Page 61</p>
+            <p class="text-sm text-primary font-medium" id="hizb-fin">—</p>
           </div>
         </div>
       </div>
@@ -158,26 +156,38 @@
         <p class="text-[9px] text-on-surface-variant mt-1 uppercase tracking-widest">Al-Baqarah • 255</p>
       </div>
     </div>
-
-    <!-- Reste à lire -->
-    <div class="bg-primary rounded-3xl p-8 flex flex-col justify-between text-on-primary">
+    <div class="bg-primary rounded-3xl p-8 flex flex-col justify-between text-on-primary" id="btn-programme-container">
       <div>
-        <span class="material-symbols-outlined text-secondary-fixed mb-4">schedule</span>
-        <h3 class="font-label text-xs uppercase tracking-widest text-primary-fixed-dim font-bold mb-2">Reste à lire</h3>
-        <p class="font-headline text-5xl font-bold italic">15 <span class="text-xl not-italic font-normal opacity-70">Hizbs</span></p>
+        <span class="material-symbols-outlined text-secondary-fixed mb-4" style="font-variation-settings:'FILL' 1;">task_alt</span>
+        <h3 class="font-label text-xs uppercase tracking-widest text-primary-fixed-dim font-bold mb-2">Programme du jour</h3>
+        <p class="font-headline text-xl text-on-primary font-semibold mb-6" id="programme-label">Chargement...</p>
       </div>
-      <div class="mt-8 space-y-3">
-        <div class="flex items-center gap-2">
-          <div class="h-1 flex-grow bg-white/10 rounded-full overflow-hidden">
-            <div class="h-full bg-secondary-container rounded-full" style="width:75%"></div>
+      <div class="flex flex-col gap-3">
+        <button onclick="marquerFaitDashboard()"
+          class="w-full py-3 bg-secondary-container text-on-secondary-container rounded-2xl font-label text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-all hover:opacity-90">
+          ✓ J'ai fait mon programme
+        </button>
+        <button onclick="arreterIciDashboard()"
+          class="w-full py-2 border border-on-primary/30 text-on-primary/70 hover:text-on-primary rounded-2xl font-label text-[10px] uppercase tracking-widest active:scale-95 transition-all">
+          ◎ Je me suis arrêté avant
+        </button>
+        <div class="mt-3 pt-3 border-t border-on-primary/20 flex items-center justify-between">
+          <div>
+            <p class="font-label text-[9px] uppercase tracking-widest text-on-primary/60">Reste à lire</p>
+            <p class="font-headline text-xl text-on-primary font-bold mt-0.5">
+              <span id="hizbs-restants">—</span>
+              <span class="font-label text-xs font-normal text-on-primary/70"> Hizbs • <span id="jours-restants">—</span></span>
+            </p>
           </div>
-          <span class="text-xs text-primary-fixed-dim">75%</span>
+          <div class="w-20">
+            <div class="h-1.5 bg-on-primary/20 rounded-full overflow-hidden">
+              <div class="h-full bg-secondary-container rounded-full transition-all" id="progress-bar-hizb" style="width:0%"></div>
+            </div>
+            <p class="font-label text-[9px] text-right text-on-primary/60 mt-1" id="pct-hizb">0%</p>
+          </div>
         </div>
-        <p class="text-xs text-primary-fixed-dim opacity-70">18 jours restants ce mois</p>
       </div>
     </div>
-
-    <!-- Citation -->
     <div class="relative rounded-3xl overflow-hidden bg-primary-dark min-h-[200px] flex flex-col justify-end p-8">
       <div class="absolute inset-0 opacity-10 flex items-center justify-center">
         <span class="material-symbols-outlined text-white" style="font-size:120px;">auto_stories</span>
@@ -307,6 +317,25 @@
 </nav>
 
 <script>
+
+const HIZB_TABLE = {"1":{"hizb":1,"s":1,"v":1,"p":1},"2":{"hizb":2,"s":2,"v":75,"p":11},"3":{"hizb":3,"s":2,"v":142,"p":22},"4":{"hizb":4,"s":2,"v":203,"p":32},"5":{"hizb":5,"s":2,"v":253,"p":42},"6":{"hizb":6,"s":3,"v":15,"p":51},"7":{"hizb":7,"s":3,"v":93,"p":62},"8":{"hizb":8,"s":3,"v":171,"p":72},"9":{"hizb":9,"s":4,"v":24,"p":82},"10":{"hizb":10,"s":4,"v":88,"p":92},"11":{"hizb":11,"s":4,"v":148,"p":102},"12":{"hizb":12,"s":5,"v":27,"p":112},"13":{"hizb":13,"s":5,"v":82,"p":121},"14":{"hizb":14,"s":6,"v":36,"p":132},"15":{"hizb":15,"s":6,"v":111,"p":142},"16":{"hizb":16,"s":7,"v":1,"p":151},"17":{"hizb":17,"s":7,"v":88,"p":162},"18":{"hizb":18,"s":7,"v":171,"p":173},"19":{"hizb":19,"s":8,"v":41,"p":182},"20":{"hizb":20,"s":9,"v":34,"p":192},"21":{"hizb":21,"s":9,"v":93,"p":201},"22":{"hizb":22,"s":10,"v":26,"p":212},"23":{"hizb":23,"s":11,"v":6,"p":222},"24":{"hizb":24,"s":11,"v":84,"p":231},"25":{"hizb":25,"s":12,"v":53,"p":242},"26":{"hizb":26,"s":13,"v":19,"p":252},"27":{"hizb":27,"s":15,"v":1,"p":262},"28":{"hizb":28,"s":16,"v":51,"p":272},"29":{"hizb":29,"s":17,"v":1,"p":282},"30":{"hizb":30,"s":17,"v":99,"p":292},"31":{"hizb":31,"s":18,"v":75,"p":302},"32":{"hizb":32,"s":20,"v":1,"p":312},"33":{"hizb":33,"s":21,"v":1,"p":322},"34":{"hizb":34,"s":22,"v":1,"p":332},"35":{"hizb":35,"s":23,"v":1,"p":342},"36":{"hizb":36,"s":24,"v":21,"p":352},"37":{"hizb":37,"s":25,"v":21,"p":362},"38":{"hizb":38,"s":26,"v":111,"p":371},"39":{"hizb":39,"s":27,"v":56,"p":382},"40":{"hizb":40,"s":28,"v":51,"p":392},"41":{"hizb":41,"s":29,"v":46,"p":402},"42":{"hizb":42,"s":31,"v":22,"p":413},"43":{"hizb":43,"s":33,"v":31,"p":422},"44":{"hizb":44,"s":34,"v":24,"p":431},"45":{"hizb":45,"s":36,"v":28,"p":442},"46":{"hizb":46,"s":37,"v":145,"p":451},"47":{"hizb":47,"s":39,"v":32,"p":462},"48":{"hizb":48,"s":40,"v":41,"p":472},"49":{"hizb":49,"s":41,"v":47,"p":482},"50":{"hizb":50,"s":43,"v":24,"p":491},"51":{"hizb":51,"s":46,"v":1,"p":502},"52":{"hizb":52,"s":48,"v":18,"p":513},"53":{"hizb":53,"s":51,"v":31,"p":522},"54":{"hizb":54,"s":55,"v":1,"p":531},"55":{"hizb":55,"s":58,"v":1,"p":542},"56":{"hizb":56,"s":62,"v":1,"p":553},"57":{"hizb":57,"s":67,"v":1,"p":562},"58":{"hizb":58,"s":72,"v":1,"p":572},"59":{"hizb":59,"s":78,"v":1,"p":582},"60":{"hizb":60,"s":87,"v":1,"p":591}};
+const PAGE_TO_HIZB = {"1":1,"2":1,"3":1,"4":1,"5":1,"6":1,"7":1,"8":1,"9":1,"10":1,"11":2,"12":2,"13":2,"14":2,"15":2,"16":2,"17":2,"18":2,"19":2,"20":2,"21":2,"22":3,"23":3,"24":3,"25":3,"26":3,"27":3,"28":3,"29":3,"30":3,"31":3,"32":4,"33":4,"34":4,"35":4,"36":4,"37":4,"38":4,"39":4,"40":4,"41":4,"42":5,"43":5,"44":5,"45":5,"46":5,"47":5,"48":5,"49":5,"50":5,"51":6,"52":6,"53":6,"54":6,"55":6,"56":6,"57":6,"58":6,"59":6,"60":6,"61":6,"62":7,"63":7,"64":7,"65":7,"66":7,"67":7,"68":7,"69":7,"70":7,"71":7,"72":8,"73":8,"74":8,"75":8,"76":8,"77":8,"78":8,"79":8,"80":8,"81":8,"82":9,"83":9,"84":9,"85":9,"86":9,"87":9,"88":9,"89":9,"90":9,"91":9,"92":10,"93":10,"94":10,"95":10,"96":10,"97":10,"98":10,"99":10,"100":10,"101":10,"102":11,"103":11,"104":11,"105":11,"106":11,"107":11,"108":11,"109":11,"110":11,"111":11,"112":12,"113":12,"114":12,"115":12,"116":12,"117":12,"118":12,"119":12,"120":12,"121":13,"122":13,"123":13,"124":13,"125":13,"126":13,"127":13,"128":13,"129":13,"130":13,"131":13,"132":14,"133":14,"134":14,"135":14,"136":14,"137":14,"138":14,"139":14,"140":14,"141":14,"142":15,"143":15,"144":15,"145":15,"146":15,"147":15,"148":15,"149":15,"150":15,"151":16,"152":16,"153":16,"154":16,"155":16,"156":16,"157":16,"158":16,"159":16,"160":16,"161":16,"162":17,"163":17,"164":17,"165":17,"166":17,"167":17,"168":17,"169":17,"170":17,"171":17,"172":17,"173":18,"174":18,"175":18,"176":18,"177":18,"178":18,"179":18,"180":18,"181":18,"182":19,"183":19,"184":19,"185":19,"186":19,"187":19,"188":19,"189":19,"190":19,"191":19,"192":20,"193":20,"194":20,"195":20,"196":20,"197":20,"198":20,"199":20,"200":20,"201":21,"202":21,"203":21,"204":21,"205":21,"206":21,"207":21,"208":21,"209":21,"210":21,"211":21,"212":22,"213":22,"214":22,"215":22,"216":22,"217":22,"218":22,"219":22,"220":22,"221":22,"222":23,"223":23,"224":23,"225":23,"226":23,"227":23,"228":23,"229":23,"230":23,"231":24,"232":24,"233":24,"234":24,"235":24,"236":24,"237":24,"238":24,"239":24,"240":24,"241":24,"242":25,"243":25,"244":25,"245":25,"246":25,"247":25,"248":25,"249":25,"250":25,"251":25,"252":26,"253":26,"254":26,"255":26,"256":26,"257":26,"258":26,"259":26,"260":26,"261":26,"262":27,"263":27,"264":27,"265":27,"266":27,"267":27,"268":27,"269":27,"270":27,"271":27,"272":28,"273":28,"274":28,"275":28,"276":28,"277":28,"278":28,"279":28,"280":28,"281":28,"282":29,"283":29,"284":29,"285":29,"286":29,"287":29,"288":29,"289":29,"290":29,"291":29,"292":30,"293":30,"294":30,"295":30,"296":30,"297":30,"298":30,"299":30,"300":30,"301":30,"302":31,"303":31,"304":31,"305":31,"306":31,"307":31,"308":31,"309":31,"310":31,"311":31,"312":32,"313":32,"314":32,"315":32,"316":32,"317":32,"318":32,"319":32,"320":32,"321":32,"322":33,"323":33,"324":33,"325":33,"326":33,"327":33,"328":33,"329":33,"330":33,"331":33,"332":34,"333":34,"334":34,"335":34,"336":34,"337":34,"338":34,"339":34,"340":34,"341":34,"342":35,"343":35,"344":35,"345":35,"346":35,"347":35,"348":35,"349":35,"350":35,"351":35,"352":36,"353":36,"354":36,"355":36,"356":36,"357":36,"358":36,"359":36,"360":36,"361":36,"362":37,"363":37,"364":37,"365":37,"366":37,"367":37,"368":37,"369":37,"370":37,"371":38,"372":38,"373":38,"374":38,"375":38,"376":38,"377":38,"378":38,"379":38,"380":38,"381":38,"382":39,"383":39,"384":39,"385":39,"386":39,"387":39,"388":39,"389":39,"390":39,"391":39,"392":40,"393":40,"394":40,"395":40,"396":40,"397":40,"398":40,"399":40,"400":40,"401":40,"402":41,"403":41,"404":41,"405":41,"406":41,"407":41,"408":41,"409":41,"410":41,"411":41,"412":41,"413":42,"414":42,"415":42,"416":42,"417":42,"418":42,"419":42,"420":42,"421":42,"422":43,"423":43,"424":43,"425":43,"426":43,"427":43,"428":43,"429":43,"430":43,"431":44,"432":44,"433":44,"434":44,"435":44,"436":44,"437":44,"438":44,"439":44,"440":44,"441":44,"442":45,"443":45,"444":45,"445":45,"446":45,"447":45,"448":45,"449":45,"450":45,"451":46,"452":46,"453":46,"454":46,"455":46,"456":46,"457":46,"458":46,"459":46,"460":46,"461":46,"462":47,"463":47,"464":47,"465":47,"466":47,"467":47,"468":47,"469":47,"470":47,"471":47,"472":48,"473":48,"474":48,"475":48,"476":48,"477":48,"478":48,"479":48,"480":48,"481":48,"482":49,"483":49,"484":49,"485":49,"486":49,"487":49,"488":49,"489":49,"490":49,"491":50,"492":50,"493":50,"494":50,"495":50,"496":50,"497":50,"498":50,"499":50,"500":50,"501":50,"502":51,"503":51,"504":51,"505":51,"506":51,"507":51,"508":51,"509":51,"510":51,"511":51,"512":51,"513":52,"514":52,"515":52,"516":52,"517":52,"518":52,"519":52,"520":52,"521":52,"522":53,"523":53,"524":53,"525":53,"526":53,"527":53,"528":53,"529":53,"530":53,"531":54,"532":54,"533":54,"534":54,"535":54,"536":54,"537":54,"538":54,"539":54,"540":54,"541":54,"542":55,"543":55,"544":55,"545":55,"546":55,"547":55,"548":55,"549":55,"550":55,"551":55,"552":55,"553":56,"554":56,"555":56,"556":56,"557":56,"558":56,"559":56,"560":56,"561":56,"562":57,"563":57,"564":57,"565":57,"566":57,"567":57,"568":57,"569":57,"570":57,"571":57,"572":58,"573":58,"574":58,"575":58,"576":58,"577":58,"578":58,"579":58,"580":58,"581":58,"582":59,"583":59,"584":59,"585":59,"586":59,"587":59,"588":59,"589":59,"590":59,"591":60,"592":60,"593":60,"594":60,"595":60,"596":60,"597":60,"598":60,"599":60,"600":60,"601":60,"602":60,"603":60,"604":60};
+const SURAH_NAMES = {"1":"Al-Fatiha","2":"Al-Baqarah","3":"Al-Imran","4":"An-Nisa","5":"Al-Ma'idah","6":"Al-An'am","7":"Al-A'raf","8":"Al-Anfal","9":"At-Tawbah","10":"Yunus","11":"Hud","12":"Yusuf","13":"Ar-Ra'd","14":"Ibrahim","15":"Al-Hijr","16":"An-Nahl","17":"Al-Isra","18":"Al-Kahf","19":"Maryam","20":"Ta-Ha","21":"Al-Anbiya","22":"Al-Hajj","23":"Al-Mu'minun","24":"An-Nur","25":"Al-Furqan","26":"Ash-Shu'ara","27":"An-Naml","28":"Al-Qasas","29":"Al-Ankabut","30":"Ar-Rum","31":"Luqman","32":"As-Sajdah","33":"Al-Ahzab","34":"Saba","35":"Fatir","36":"Ya-Sin","37":"As-Saffat","38":"Sad","39":"Az-Zumar","40":"Ghafir","41":"Fussilat","42":"Ash-Shura","43":"Az-Zukhruf","44":"Ad-Dukhan","45":"Al-Jathiyah","46":"Al-Ahqaf","47":"Muhammad","48":"Al-Fath","49":"Al-Hujurat","50":"Qaf","51":"Adh-Dhariyat","52":"At-Tur","53":"An-Najm","54":"Al-Qamar","55":"Ar-Rahman","56":"Al-Waqi'ah","57":"Al-Hadid","58":"Al-Mujadila","59":"Al-Hashr","60":"Al-Mumtahanah","61":"As-Saf","62":"Al-Jumu'ah","63":"Al-Munafiqun","64":"At-Taghabun","65":"At-Talaq","66":"At-Tahrim","67":"Al-Mulk","68":"Al-Qalam","69":"Al-Haqqah","70":"Al-Ma'arij","71":"Nuh","72":"Al-Jinn","73":"Al-Muzzammil","74":"Al-Muddathir","75":"Al-Qiyamah","76":"Al-Insan","77":"Al-Mursalat","78":"An-Naba","79":"An-Nazi'at","80":"Abasa","81":"At-Takwir","82":"Al-Infitar","83":"Al-Mutaffifin","84":"Al-Inshiqaq","85":"Al-Buruj","86":"At-Tariq","87":"Al-A'la","88":"Al-Ghashiyah","89":"Al-Fajr","90":"Al-Balad","91":"Ash-Shams","92":"Al-Layl","93":"Ad-Duha","94":"Ash-Sharh","95":"At-Tin","96":"Al-Alaq","97":"Al-Qadr","98":"Al-Bayyinah","99":"Az-Zalzalah","100":"Al-Adiyat","101":"Al-Qari'ah","102":"At-Takathur","103":"Al-Asr","104":"Al-Humazah","105":"Al-Fil","106":"Quraysh","107":"Al-Ma'un","108":"Al-Kawthar","109":"Al-Kafirun","110":"An-Nasr","111":"Al-Masad","112":"Al-Ikhlas","113":"Al-Falaq","114":"An-Nas"};
+
+// ── Utilitaires Hizb officiels ────────────────────────────────────────────
+function getHizbForPage(page) {
+  return PAGE_TO_HIZB[Math.min(Math.max(page,1),604)] || 1;
+}
+function getHizbLabel(hizb) {
+  return 'Hizb ' + hizb;
+}
+function getSouratePourPage(page) {
+  var h = getHizbForPage(page);
+  var info = HIZB_TABLE[String(h)];
+  return info ? (SURAH_NAMES[String(info.s)] || '') : '';
+}
+
+
 const now = new Date();
 
 // Date grégorienne en français
@@ -322,7 +351,7 @@ const moisHijFr = [
 ];
 try {
   // On utilise la locale arabe pour extraire les composantes, puis on traduit
-  const fmtDay  = new Intl.DateTimeFormat('ar-SA-u-ca-islamic', { day: 'numeric' }).format(now);
+  const fmtDay  = new Intl.DateTimeFormat('en-u-ca-islamic', { day: 'numeric' }).format(now);
   const fmtMon  = new Intl.DateTimeFormat('en-u-ca-islamic',    { month: 'numeric' }).format(now);
   const fmtYear = new Intl.DateTimeFormat('en-u-ca-islamic',    { year: 'numeric' }).format(now);
   const day  = parseInt(fmtDay.replace(/[^0-9]/g,''));
@@ -349,24 +378,21 @@ try {
     }
   } catch(e) {}
   function hizbLbl(i) {
-    if (hizbsJour === 0.5) return "Nisf " + (i+1);
-    if (hizbsJour === 1)   return "Hizb " + (i+1);
-    if (hizbsJour === 2)   return "Hizb " + (i*2+1) + "-" + (i*2+2);
-    if (hizbsJour === 3)   return "Hizb " + (i*3+1) + "-" + (i*3+3);
-    return "Hizb " + (i*4+1) + "-" + (i*4+4);
+    // Utiliser les vrais numéros de hizb depuis la page de début
+    var lastP = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+    var hizbDebut = typeof PAGE_TO_HIZB !== 'undefined' ? (PAGE_TO_HIZB[lastP] || 1) : 1;
+    var h1 = hizbDebut + Math.floor(i * hizbsJour * 2);
+    var h2 = h1 + Math.ceil(hizbsJour * 2) - 1;
+    h1 = Math.min(h1, 60); h2 = Math.min(h2, 60);
+    return h1 === h2 ? 'Hizb ' + h1 : 'Hizb ' + h1 + '-' + h2;
   }
-  var SMAP = {1:"Al-Fatiha",2:"Al-Baqarah",50:"Al-Imran",77:"An-Nisa",106:"Al-Maida",
-    128:"Al-Anam",151:"Al-Araf",177:"Al-Anfal",187:"At-Tawba",208:"Yunus",221:"Hud",
-    235:"Yusuf",267:"An-Nahl",282:"Al-Isra",293:"Al-Kahf",305:"Maryam",312:"Ta-Ha",
-    322:"Al-Anbiya",332:"Al-Hajj",342:"Al-Muminun",350:"An-Nur",440:"Ya-Sin",
-    458:"Az-Zumar",502:"Muhammad",525:"Ar-Rahman",528:"Al-Waqia",
-    560:"Al-Mulk",582:"An-Naba",604:"An-Nas"};
   function sdp(p) {
-    p = Math.min(Math.max(p,1),604);
-    var keys = Object.keys(SMAP).map(Number).sort(function(a,b){return a-b;});
-    var nom = "Al-Fatiha";
-    for (var k=0;k<keys.length;k++){if(keys[k]<=p)nom=SMAP[keys[k]];else break;}
-    return nom;
+    if (typeof HIZB_TABLE !== 'undefined' && typeof PAGE_TO_HIZB !== 'undefined') {
+      var h = PAGE_TO_HIZB[Math.min(Math.max(p,1),604)];
+      var info = HIZB_TABLE[String(h)];
+      return info ? (SURAH_NAMES[String(info.s)] || 'Page ' + p) : 'Page ' + p;
+    }
+    return 'Page ' + p;
   }
   var today = new Date(); today.setHours(0,0,0,0);
   for (var i = 0; i < 7; i++) {
@@ -385,6 +411,26 @@ try {
       ? "<span class='material-symbols-outlined text-secondary'>radio_button_checked</span>"
       : "<span class='material-symbols-outlined text-on-surface-variant/30'>radio_button_unchecked</span>";
     var todayTxt = isToday ? " - Aujourd'hui" : "";
+    // Vérifier si ce jour est marqué comme fait
+    var dayKey = dd.toISOString().split('T')[0];
+    var doneDays = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+    var isDone = !!doneDays[dayKey];
+
+    var btnsFait = '';
+    if (isToday && !isDone) {
+      btnsFait =
+        "<div class='flex gap-2 mt-2'>" +
+          "<button onclick='marquerFait(\"" + dayKey + "\")' class='font-label text-[9px] font-bold uppercase tracking-wide bg-primary text-on-primary px-3 py-1.5 rounded-full flex items-center gap-1 hover:opacity-90 active:scale-95 transition-all'>" +
+            "<span class='material-symbols-outlined text-sm' style=\"font-variation-settings:'FILL' 1;\">check_circle</span> Programme fait" +
+          "</button>" +
+          "<button onclick='arreterIci()' class='font-label text-[9px] font-bold uppercase tracking-wide border border-outline-variant text-on-surface-variant px-3 py-1.5 rounded-full hover:border-primary/40 active:scale-95 transition-all'>" +
+            "Je me suis arrêté à cette page" +
+          "</button>" +
+        "</div>";
+    } else if (isDone) {
+      btnsFait = "<p class='font-label text-[9px] text-primary/60 mt-1.5 flex items-center gap-1'><span class='material-symbols-outlined text-sm' style=\"font-variation-settings:'FILL' 1;\">check_circle</span> Fait !</p>";
+    }
+
     div.innerHTML =
       "<div class='w-12 h-12 flex-shrink-0 " + badge + " rounded-xl flex flex-col items-center justify-center font-bold text-sm'>" +
         "<span>" + dd.getDate() + "</span>" +
@@ -394,15 +440,16 @@ try {
         "<p class='font-bold text-primary'>" + jours[dd.getDay()] + todayTxt + "</p>" +
         "<p class='font-label text-xs text-on-surface-variant uppercase tracking-widest'>" + hizbLbl(i) + "</p>" +
         "<p class='font-label text-[10px] text-on-surface-variant/60 mt-0.5 truncate'>" + sourStr + " p." + pd + "-" + pf + "</p>" +
+        btnsFait +
       "</div>" + icon;
     container.appendChild(div);
   }
 })();
 
 
-</script>
 
-<script>
+
+
 (function() {
   var p2 = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
   var lp = parseInt(localStorage.getItem('tilawa_last_page') || '1');
@@ -439,7 +486,120 @@ try {
   if(el('stat-pct'))          el('stat-pct').textContent          = pct;
   if(el('stat-khatmates'))    el('stat-khatmates').textContent    = km;
 })();
+
+// ── Fonctions programme du jour ───────────────────────────────────────────
+function marquerFait(dayKey) {
+  var doneDays = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+  doneDays[dayKey] = true;
+  localStorage.setItem('tilawa_done_days', JSON.stringify(doneDays));
+  // Avancer la page automatiquement
+  var prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+  var lastPage = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  var pagesJour = prog.pages_jour || 20;
+  var newPage = Math.min(lastPage + pagesJour, 604);
+  localStorage.setItem('tilawa_last_page', String(newPage));
+  // Recharger pour mettre à jour l'affichage
+  window.location.reload();
+}
+
+function arreterIci() {
+  var page = prompt('À quelle page vous êtes-vous arrêté ?');
+  if (page && !isNaN(page)) {
+    page = Math.min(Math.max(parseInt(page), 1), 604);
+    localStorage.setItem('tilawa_last_page', String(page));
+    window.location.reload();
+  }
+}
+
+
+// ── Lecture + Programme + Reste à lire dynamiques ────────────────────────
+(function updateDashboard() {
+  var prog      = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+  var lastPage  = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  var hizbsJour = prog.hizbs_jour || 2;
+
+  // Hizb actuel
+  var hizbActuel = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(lastPage,604)] || 1) : Math.ceil(lastPage / 10);
+  var hizbFin    = Math.min(hizbActuel + Math.ceil(hizbsJour) - 1, 60);
+  var hizbsRestants = 60 - hizbActuel + 1;
+  var pct = Math.round((hizbActuel / 60) * 100);
+  var joursRest = Math.ceil(hizbsRestants / hizbsJour);
+
+  // Bloc Lecture du jour
+  var labelH = hizbActuel === hizbFin ? 'Hizb ' + hizbActuel : 'Hizb ' + hizbActuel + ' & ' + hizbFin;
+  var elLabel = document.getElementById('hizb-label-jour');
+  if (elLabel) elLabel.textContent = labelH;
+
+  if (typeof HIZB_TABLE !== 'undefined' && SURAH_NAMES) {
+    var infoD     = HIZB_TABLE[String(hizbActuel)];
+    var infoFNext = HIZB_TABLE[String(hizbFin + 1)];
+    var debutEl = document.getElementById('hizb-debut');
+    var finEl   = document.getElementById('hizb-fin');
+    if (debutEl && infoD) {
+      debutEl.textContent = 'Sourate ' + (SURAH_NAMES[String(infoD.s)] || '') + ', v.' + infoD.v + ' — p.' + infoD.p;
+    }
+    if (finEl) {
+      if (infoFNext) {
+        finEl.textContent = 'Sourate ' + (SURAH_NAMES[String(infoFNext.s)] || '') + ', v.' + (infoFNext.v > 1 ? infoFNext.v - 1 : 1) + ' — p.' + (infoFNext.p - 1);
+      } else {
+        finEl.textContent = 'An-Nas — p.604';
+      }
+    }
+  }
+
+  // Bloc Programme du jour
+  var progLabel = document.getElementById('programme-label');
+  if (progLabel) progLabel.textContent = labelH;
+
+  // Bloc Reste à lire
+  var hrEl  = document.getElementById('hizbs-restants');
+  var barEl = document.getElementById('progress-bar-hizb');
+  var pctEl = document.getElementById('pct-hizb');
+  var jrEl  = document.getElementById('jours-restants');
+  if (hrEl)  hrEl.textContent  = hizbsRestants;
+  if (barEl) barEl.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+  if (jrEl)  jrEl.textContent  = joursRest + ' jour' + (joursRest > 1 ? 's' : '') + ' restants';
+
+  // Programme déjà fait aujourd'hui ?
+  var today = new Date().toISOString().split('T')[0];
+  var doneDays = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+  var btnContainer = document.getElementById('btn-programme-container');
+  if (doneDays[today] && btnContainer) {
+    btnContainer.innerHTML =
+      '<div class="flex flex-col items-center justify-center h-full gap-3 text-center">' +
+        '<span class="material-symbols-outlined text-4xl text-secondary">task_alt</span>' +
+        '<p class="font-headline text-lg text-primary">Programme accompli !</p>' +
+        '<p class="font-label text-xs text-on-surface-variant">Barak Allahou fikoum</p>' +
+      '</div>';
+  }
+})();
+
+function marquerFaitDashboard() {
+  var today = new Date().toISOString().split('T')[0];
+  var doneDays = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+  doneDays[today] = true;
+  localStorage.setItem('tilawa_done_days', JSON.stringify(doneDays));
+  var prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+  var lastPage = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  var pagesJour = prog.pages_jour || 20;
+  localStorage.setItem('tilawa_last_page', String(Math.min(lastPage + pagesJour, 604)));
+  window.location.reload();
+}
+
+function arreterIciDashboard() {
+  var page = prompt('À quelle page vous êtes-vous arrêté ? (1-604)');
+  if (page && !isNaN(page)) {
+    page = Math.min(Math.max(parseInt(page), 1), 604);
+    localStorage.setItem('tilawa_last_page', String(page));
+    window.location.reload();
+  }
+}
+
+
 </script>
+
+
 
 </body>
 </html>
