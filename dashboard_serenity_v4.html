@@ -167,13 +167,18 @@
           class="w-full py-3 bg-secondary-container text-on-secondary-container rounded-2xl font-label text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-all hover:opacity-90">
           ✓ J'ai fait mon programme
         </button>
-        <button onclick="arreterIciDashboard()"
-          class="w-full py-2 border border-on-primary/30 text-on-primary/70 hover:text-on-primary rounded-2xl font-label text-[10px] uppercase tracking-widest active:scale-95 transition-all">
-          ◎ Je me suis arrêté avant
-        </button>
+        <p class="font-label text-xs text-on-primary/70 mb-1.5">Non, je me suis arrêté à la page :</p>
+        <div class="flex gap-2 items-center">
+          <input type="number" id="input-page-arret" min="1" max="604" placeholder="Page..."
+            class="flex-1 py-2 px-3 rounded-xl border border-on-primary/30 bg-on-primary/10 text-on-primary placeholder-on-primary/40 font-label text-xs focus:outline-none focus:border-on-primary/60 text-center"/>
+          <button onclick="arreterIciDashboard()"
+            class="py-2 px-3 border border-on-primary/30 text-on-primary/70 hover:text-on-primary rounded-xl font-label text-[10px] uppercase tracking-widest active:scale-95 transition-all whitespace-nowrap">
+            ◎ Valider
+          </button>
+        </div>
         <div class="mt-3 pt-3 border-t border-on-primary/20 flex items-center justify-between">
           <div>
-            <p class="font-label text-[9px] uppercase tracking-widest text-on-primary/60">Reste à lire</p>
+            <p class="font-label text-sm font-medium text-on-primary/80">Reste à lire</p>
             <p class="font-headline text-xl text-on-primary font-bold mt-0.5">
               <span id="hizbs-restants">—</span>
               <span class="font-label text-xs font-normal text-on-primary/70"> Hizbs • <span id="jours-restants">—</span></span>
@@ -395,11 +400,12 @@ try {
     return 'Page ' + p;
   }
   var today = new Date(); today.setHours(0,0,0,0);
+  var nextPageToday = parseInt(localStorage.getItem('tilawa_last_page') || '1');
   for (var i = 0; i < 7; i++) {
     var dd = new Date(today); dd.setDate(today.getDate() + i);
     var isToday = (i === 0);
-    var jourProg = Math.floor((dd - dateDebut) / 86400000);
-    var pd = Math.max(1, jourProg * pagesJour + 1);
+    // Aujourd'hui : de nextPage à nextPage+pagesJour-1
+    var pd = Math.min(nextPageToday + i * pagesJour, 604);
     var pf = Math.min(pd + pagesJour - 1, 604);
     var sourStr = sdp(pd); var sf = sdp(pf);
     if (sourStr !== sf) sourStr = sourStr + " - " + sf;
@@ -417,19 +423,7 @@ try {
     var isDone = !!doneDays[dayKey];
 
     var btnsFait = '';
-    if (isToday && !isDone) {
-      btnsFait =
-        "<div class='flex gap-2 mt-2'>" +
-          "<button onclick='marquerFait(\"" + dayKey + "\")' class='font-label text-[9px] font-bold uppercase tracking-wide bg-primary text-on-primary px-3 py-1.5 rounded-full flex items-center gap-1 hover:opacity-90 active:scale-95 transition-all'>" +
-            "<span class='material-symbols-outlined text-sm' style=\"font-variation-settings:'FILL' 1;\">check_circle</span> Programme fait" +
-          "</button>" +
-          "<button onclick='arreterIci()' class='font-label text-[9px] font-bold uppercase tracking-wide border border-outline-variant text-on-surface-variant px-3 py-1.5 rounded-full hover:border-primary/40 active:scale-95 transition-all'>" +
-            "Je me suis arrêté à cette page" +
-          "</button>" +
-        "</div>";
-    } else if (isDone) {
-      btnsFait = "<p class='font-label text-[9px] text-primary/60 mt-1.5 flex items-center gap-1'><span class='material-symbols-outlined text-sm' style=\"font-variation-settings:'FILL' 1;\">check_circle</span> Fait !</p>";
-    }
+    // Pas d'indicateur Fait dans le programme
 
     div.innerHTML =
       "<div class='w-12 h-12 flex-shrink-0 " + badge + " rounded-xl flex flex-col items-center justify-center font-bold text-sm'>" +
@@ -478,10 +472,10 @@ try {
     return n;
   }
 
-  if(el('last-page-sourate')) el('last-page-sourate').textContent = 'Sourate ' + sdp(lp);
-  if(el('last-page-info'))    el('last-page-info').textContent    = 'Page ' + lp;
-  if(el('last-page-arabic'))  el('last-page-arabic').textContent  = adp(lp);
-  if(el('stat-total'))        el('stat-total').textContent        = lp;
+  if(el('last-page-sourate')) el('last-page-sourate').textContent = 'Sourate ' + sdp(Math.max(1, lp - 1));
+  if(el('last-page-info'))    el('last-page-info').textContent    = 'Page ' + Math.max(1, lp - 1);
+  if(el('last-page-arabic'))  el('last-page-arabic').textContent  = adp(Math.max(1, lp - 1));
+  if(el('stat-total'))        el('stat-total').textContent        = Math.max(0, lp - 1);
   if(el('stat-pages-jour'))   el('stat-pages-jour').textContent   = pj;
   if(el('stat-pct'))          el('stat-pct').textContent          = pct;
   if(el('stat-khatmates'))    el('stat-khatmates').textContent    = km;
@@ -514,15 +508,22 @@ function arreterIci() {
 
 // ── Lecture + Programme + Reste à lire dynamiques ────────────────────────
 (function updateDashboard() {
-  var prog      = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
-  var lastPage  = parseInt(localStorage.getItem('tilawa_last_page') || '1');
-  var hizbsJour = prog.hizbs_jour || 2;
+  var prog       = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+  var nextPage   = parseInt(localStorage.getItem('tilawa_last_page') || '1'); // prochaine page à lire
+  var lastPageLue = Math.max(1, nextPage - 1); // dernière page effectivement lue
+  var pagesJour  = prog.pages_jour || 20;
+  var hizbsJour  = prog.hizbs_jour || 2;
 
-  // Hizb actuel
-  var hizbActuel = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(lastPage,604)] || 1) : Math.ceil(lastPage / 10);
+  // Hizb du jour = hizb de la prochaine page à lire
+  // nextPage = première page à lire aujourd'hui
+  // Si cette page est la DERNIÈRE d'un hizb, on est au début du hizb suivant
+  var _h = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(nextPage,604)] || 1) : Math.ceil(nextPage / 10);
+  var _hNext = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(nextPage+1,604)] || 1) : _h;
+  // Si la page suivante est dans un hizb différent, on commence le hizb suivant
+  var hizbActuel = (_hNext > _h) ? _hNext : _h;
   var hizbFin    = Math.min(hizbActuel + Math.ceil(hizbsJour) - 1, 60);
   var hizbsRestants = 60 - hizbActuel + 1;
-  var pct = Math.round((hizbActuel / 60) * 100);
+  var pct = Math.round((lastPageLue / 604) * 100);
   var joursRest = Math.ceil(hizbsRestants / hizbsJour);
 
   // Bloc Lecture du jour
@@ -567,10 +568,10 @@ function arreterIci() {
   var btnContainer = document.getElementById('btn-programme-container');
   if (doneDays[today] && btnContainer) {
     btnContainer.innerHTML =
-      '<div class="flex flex-col items-center justify-center h-full gap-3 text-center">' +
-        '<span class="material-symbols-outlined text-4xl text-secondary">task_alt</span>' +
-        '<p class="font-headline text-lg text-primary">Programme accompli !</p>' +
-        '<p class="font-label text-xs text-on-surface-variant">Barak Allahou fikoum</p>' +
+      '<div class="flex flex-col items-center justify-center h-full gap-4 text-center">' +
+        '<span class="material-symbols-outlined text-5xl text-on-primary" style="font-variation-settings:' + "'" + 'FILL' + "'" + ' 1;">task_alt</span>' +
+        '<p class="font-headline text-2xl text-on-primary font-bold">Programme accompli !</p>' +
+        '<p class="font-label text-base text-on-primary/80">Barak Allahou fikoum</p>' +
       '</div>';
   }
 })();
@@ -582,17 +583,27 @@ function marquerFaitDashboard() {
   localStorage.setItem('tilawa_done_days', JSON.stringify(doneDays));
   var prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
   var lastPage = parseInt(localStorage.getItem('tilawa_last_page') || '1');
-  var pagesJour = prog.pages_jour || 20;
-  localStorage.setItem('tilawa_last_page', String(Math.min(lastPage + pagesJour, 604)));
+  var hizbsJour = prog.hizbs_jour || 2;
+  // Avancer au début du prochain hizb officiel
+  var hizbActuel = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(lastPage,604)] || 1) : 1;
+  var hizbSuivant = Math.min(hizbActuel + Math.round(hizbsJour), 60);
+  var nextPage = (typeof HIZB_TABLE !== 'undefined' && HIZB_TABLE[String(hizbSuivant)])
+    ? HIZB_TABLE[String(hizbSuivant)].p
+    : Math.min(lastPage + (prog.pages_jour || 20), 604);
+  localStorage.setItem('tilawa_last_page', String(nextPage));
   window.location.reload();
 }
 
 function arreterIciDashboard() {
-  var page = prompt('À quelle page vous êtes-vous arrêté ? (1-604)');
-  if (page && !isNaN(page)) {
-    page = Math.min(Math.max(parseInt(page), 1), 604);
+  var input = document.getElementById('input-page-arret');
+  if (!input) return;
+  var page = parseInt(input.value);
+  if (!isNaN(page) && page >= 1 && page <= 604) {
     localStorage.setItem('tilawa_last_page', String(page));
     window.location.reload();
+  } else {
+    input.style.borderColor = 'rgba(255,100,100,0.6)';
+    input.placeholder = '1 à 604';
   }
 }
 
