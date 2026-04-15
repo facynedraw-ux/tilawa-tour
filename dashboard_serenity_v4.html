@@ -204,6 +204,63 @@
   </div>
 
   
+
+  <!-- Régularité + Dernière page -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-5 mb-6">
+    <div class="md:col-span-6 bg-secondary-container/20 rounded-[2rem] p-8 border border-secondary-container/40">
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-secondary">calendar_today</span>
+          <p class="font-headline text-xl">Régularité</p>
+        </div>
+        <span class="font-label text-xs font-bold tracking-widest uppercase text-secondary bg-secondary-container/50 px-3 py-1 rounded-full" id="streak-badge">—</span>
+      </div>
+      <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-3">
+        <div class="bg-secondary h-full rounded-full" id="objectif-bar" style="width:0%"></div>
+      </div>
+      <p class="font-label text-sm text-on-surface-variant" id="objectif-txt">Chargement...</p>
+    </div>
+    <div class="md:col-span-6 bg-surface-container rounded-[2rem] p-8 flex flex-col justify-between border border-outline-variant/20">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="material-symbols-outlined text-primary">bookmark_heart</span>
+        <p class="font-headline text-xl">Dernière page lue</p>
+      </div>
+      <div class="flex justify-between items-end">
+        <div>
+          <p class="font-label text-lg text-on-surface font-medium" id="last-page-sourate">—</p>
+          <p class="font-label text-xs text-on-surface-variant mt-1 uppercase tracking-widest" id="last-page-info">Page —</p>
+        </div>
+        <span class="font-arabic text-primary/30 text-3xl" dir="rtl" id="last-page-arabic"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistiques -->
+  <section class="bg-surface-container rounded-[2rem] p-7 mb-6">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="material-symbols-outlined text-primary">bar_chart</span>
+      <h3 class="font-headline text-lg">Statistiques de lecture</h3>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="p-5 bg-surface-container-lowest rounded-2xl text-center">
+        <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mb-2">Total Lu</p>
+        <p class="font-headline text-2xl"><span id="stat-total">—</span> <span class="font-label text-xs text-on-surface-variant">pages</span></p>
+      </div>
+      <div class="p-5 bg-surface-container-lowest rounded-2xl text-center">
+        <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mb-2">Pages/jour</p>
+        <p class="font-headline text-2xl"><span id="stat-pages-jour">—</span> <span class="font-label text-xs text-on-surface-variant">p/j</span></p>
+      </div>
+      <div class="p-5 bg-surface-container-lowest rounded-2xl text-center">
+        <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mb-2">Avancement</p>
+        <p class="font-headline text-2xl"><span id="stat-pct">—</span> <span class="font-label text-xs text-on-surface-variant">%</span></p>
+      </div>
+      <div class="p-5 bg-surface-container-lowest rounded-2xl text-center">
+        <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mb-2">Khatmates</p>
+        <p class="font-headline text-2xl"><span id="stat-khatmates">—</span> <span class="font-label text-xs text-on-surface-variant">/ an</span></p>
+      </div>
+    </div>
+  </section>
+
   <!-- Programme de la semaine -->
   <section class="mb-8">
     <div class="flex justify-between items-end mb-6">
@@ -344,5 +401,45 @@ try {
 
 
 </script>
+
+<script>
+(function() {
+  var p2 = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+  var lp = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  var km = parseInt(localStorage.getItem('tilawa_khatmates_annee') || '0');
+  var pj = p2.pages_jour || 20;
+  var pct = Math.round((lp / 604) * 100);
+
+  var el = function(id) { return document.getElementById(id); };
+  if(el('streak-badge')) el('streak-badge').textContent = 'Page ' + lp + ' / 604';
+  if(el('objectif-bar')) el('objectif-bar').style.width = pct + '%';
+  if(el('objectif-txt')) el('objectif-txt').textContent = pct + '% accompli — ' + pj + ' pages/jour';
+
+  var SMAP = {1:'Al-Fatiha',2:'Al-Baqarah',50:"Al-'Imran",77:'An-Nisa',128:"Al-An'am",
+    208:'Yunus',267:'An-Nahl',293:'Al-Kahf',440:'Ya-Sin',528:"Al-Waqi'ah",560:'Al-Mulk',604:'An-Nas'};
+  var ARABIC = {1:'الفَاتِحَة',2:'البَقَرَة',50:'آل عِمْرَان',77:'النِّسَاء',293:'الكَهْف',440:'يس'};
+  function sdp(p) {
+    var keys = Object.keys(SMAP).map(Number).sort(function(a,b){return a-b;});
+    var n = 'Al-Fatiha';
+    for(var i=0;i<keys.length;i++){if(keys[i]<=p)n=SMAP[keys[i]];else break;}
+    return n;
+  }
+  function adp(p) {
+    var keys = Object.keys(ARABIC).map(Number).sort(function(a,b){return a-b;});
+    var n = 'الفَاتِحَة';
+    for(var i=0;i<keys.length;i++){if(keys[i]<=p)n=ARABIC[keys[i]];else break;}
+    return n;
+  }
+
+  if(el('last-page-sourate')) el('last-page-sourate').textContent = 'Sourate ' + sdp(lp);
+  if(el('last-page-info'))    el('last-page-info').textContent    = 'Page ' + lp;
+  if(el('last-page-arabic'))  el('last-page-arabic').textContent  = adp(lp);
+  if(el('stat-total'))        el('stat-total').textContent        = lp;
+  if(el('stat-pages-jour'))   el('stat-pages-jour').textContent   = pj;
+  if(el('stat-pct'))          el('stat-pct').textContent          = pct;
+  if(el('stat-khatmates'))    el('stat-khatmates').textContent    = km;
+})();
+</script>
+
 </body>
 </html>
