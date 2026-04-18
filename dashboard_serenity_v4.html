@@ -2,8 +2,12 @@
 <html class="light" lang="fr">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <title>Tilawa Tour - Dashboard Serenity</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="theme-color" content="#6a5b53"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -51,6 +55,7 @@
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
   body { font-family: 'Noto Serif', serif; min-height: max(884px, 100dvh); }
+  nav.fixed.bottom-0 { padding-bottom: max(1.25rem, env(safe-area-inset-bottom)); }
 </style>
 </head>
 <body class="bg-surface text-on-surface min-h-screen pb-32">
@@ -490,7 +495,15 @@ function marquerFait(dayKey) {
   var prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
   var lastPage = parseInt(localStorage.getItem('tilawa_last_page') || '1');
   var pagesJour = prog.pages_jour || 20;
-  var newPage = Math.min(lastPage + pagesJour, 604);
+  var newPage = lastPage + pagesJour;
+  // Détection de Khatma complète
+  if (newPage > 604) {
+    var khatmates = parseInt(localStorage.getItem('tilawa_khatmates_annee') || '0') + 1;
+    localStorage.setItem('tilawa_khatmates_annee', String(khatmates));
+    localStorage.setItem('tilawa_last_page', '1');
+    window.location.href = 'celebration_serenity.html';
+    return;
+  }
   localStorage.setItem('tilawa_last_page', String(newPage));
   // Recharger pour mettre à jour l'affichage
   window.location.reload();
@@ -586,7 +599,15 @@ function marquerFaitDashboard() {
   var hizbsJour = prog.hizbs_jour || 2;
   // Avancer au début du prochain hizb officiel
   var hizbActuel = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(lastPage,604)] || 1) : 1;
-  var hizbSuivant = Math.min(hizbActuel + Math.round(hizbsJour), 60);
+  var hizbSuivant = hizbActuel + Math.round(hizbsJour);
+  // Détection de Khatma complète
+  if (hizbSuivant > 60) {
+    var khatmates = parseInt(localStorage.getItem('tilawa_khatmates_annee') || '0') + 1;
+    localStorage.setItem('tilawa_khatmates_annee', String(khatmates));
+    localStorage.setItem('tilawa_last_page', '1');
+    window.location.href = 'celebration_serenity.html';
+    return;
+  }
   var nextPage = (typeof HIZB_TABLE !== 'undefined' && HIZB_TABLE[String(hizbSuivant)])
     ? HIZB_TABLE[String(hizbSuivant)].p
     : Math.min(lastPage + (prog.pages_jour || 20), 604);

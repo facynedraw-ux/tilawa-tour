@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <title>Lexique — Tilawa Tour</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Manrope:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
@@ -41,6 +41,7 @@ tailwind.config = {
   .tj-qalqala { color:#0284c7; font-weight:600; }
   .tj-ithar   { color:#ea580c; font-weight:600; }
   .tj-muet    { color:#9ca3af; text-decoration:line-through; font-weight:600; }
+  nav.fixed.bottom-0 { padding-bottom: max(1.25rem, env(safe-area-inset-bottom)); }
 </style>
 </head>
 <body class="text-on-surface pb-32">
