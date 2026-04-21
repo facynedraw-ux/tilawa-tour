@@ -1,6 +1,6 @@
 // ── Configuration Supabase ────────────────────────────────────────────────
 // Remplace ces deux valeurs après avoir créé ton projet Supabase
-const SUPABASE_URL      = 'https://lekirecmfhewsnozgusm.supabase.co/rest/v1/';
+const SUPABASE_URL      = 'https://lekirecmfhewsnozgusm.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_9O8kw2OwMKT5Kw4PBlHnew_l44qd46X';
 
 // ── Clés localStorage synchronisées avec le cloud ─────────────────────────
