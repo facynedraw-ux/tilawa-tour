@@ -13,6 +13,7 @@ const SYNC_KEYS = [
   'tilawa_bookmark',
   'tilawa_objectif_ramadan',
   'tilawa_langue',
+  'tilawa_prenom',
 ];
 
 // ── Client Supabase (chargé via <script> dans les pages) ──────────────────
