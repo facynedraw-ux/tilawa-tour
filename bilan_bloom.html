@@ -1,33 +1,22 @@
 <!DOCTYPE html>
 <html class="light" lang="fr"><head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Bilan Annuel — Tilawa Tour Bloom</title>
-<link rel="manifest" href="manifest.json"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
-<meta name="theme-color" content="#6a5b53"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script>
 tailwind.config = {
   theme: { extend: {
-    colors: {
-      "primary":"#6a5b53","primary-container":"#e9d5ca","on-primary":"#ffffff",
-      "secondary":"#6a5d43","secondary-container":"#f0debc","on-secondary-container":"#1a120c",
-      "surface":"#fcf9f5","surface-container-lowest":"#ffffff","surface-container":"#eceeec",
-      "surface-container-high":"#e6e9e7","on-surface":"#1c1c1a","on-surface-variant":"#4e4540",
-      "outline-variant":"#d1c4bd",
-    },
-    fontFamily: { "headline":["Noto Serif"],"body":["Manrope"],"label":["Manrope"] }
+    colors: {"primary":"#5c5b9e","primary-dark":"#3f3e7a","primary-container":"#e6e5ff","on-primary":"#ffffff","on-primary-container":"#1a1860","secondary":"#b8920a","secondary-container":"#fef4c0","secondary-fixed":"#fef8d8","on-secondary-container":"#4a3800","tertiary":"#d4a820","tertiary-container":"#fff3c0","on-tertiary-container":"#3a2c00","surface":"#f7f7fd","surface-bright":"#f7f7fd","surface-container-lowest":"#ffffff","surface-container-low":"#f0f0fa","surface-container":"#e9e8f5","surface-container-high":"#e2e1ef","on-surface":"#1a1a2e","on-surface-variant":"#46455a","outline":"#787490","outline-variant":"#c8c5dc","primary-fixed-dim":"#b0aee8"},
+    fontFamily: { "headline":["Noto Serif"],"body": ["Plus Jakarta Sans"],"label": ["Plus Jakarta Sans"] }
   }}
 }
 </script>
 <style>
-  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}
-  body{font-family:'Plus Jakarta Sans',sans-serif;background:#fcf9f5;}
-  nav.fixed.bottom-0 { padding-bottom: max(1.25rem, env(safe-area-inset-bottom)); }
+  .material-symbols-outlined{font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;}
+  body{font-family:'Plus Jakarta Sans', sans-serif;background:#f7f7fd;}
 </style>
 </head>
 <body class="bg-surface text-on-surface min-h-screen pb-32">
@@ -35,10 +24,11 @@ tailwind.config = {
 <!-- Header -->
 <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant/20">
   <div class="flex items-center justify-between px-6 py-4 max-w-2xl mx-auto">
-    <div class="flex items-center gap-3">
+    <a href="dashboard_bloom_v4.html" class="flex items-center gap-2.5 hover:opacity-70 transition-opacity">
+      <img src="Images/logo_ok.svg" alt="Tilawa Tour" class="h-7 w-7"/>
       <span class="font-headline text-secondary tracking-widest font-bold text-lg">Tilawa Tour</span>
-    </div>
-    <div class="font-jakarta text-xs text-on-surface-variant uppercase tracking-widest" id="annee-hij"></div>
+    </a>
+    <div class="font-label text-xs text-on-surface-variant uppercase tracking-widest" id="annee-hij"></div>
   </div>
 </header>
 
@@ -47,77 +37,71 @@ tailwind.config = {
   <!-- Hero -->
   <section class="text-center space-y-4 pt-4">
     <h1 class="font-headline text-4xl font-bold text-primary tracking-tight leading-tight">Votre Bilan Annuel</h1>
-    <p class="text-base text-on-surface-variant leading-relaxed max-w-md mx-auto font-jakarta" id="salutation">
+    <p class="text-base text-on-surface-variant leading-relaxed max-w-md mx-auto font-label" id="salutation">
       Assalamou alaykoum. À l'approche du mois béni de Ramadan, voici le récapitulatif de votre année de lecture.
     </p>
   </section>
 
   <!-- Carte Khatmates -->
   <div class="bg-surface-container-lowest p-8 rounded-[2rem] border border-outline-variant/15 flex flex-col items-center justify-center text-center space-y-4 relative overflow-hidden">
-    <div class="absolute top-0 right-0 p-8 opacity-5">
-      <span class="material-symbols-outlined text-9xl text-primary">menu_book</span>
-    </div>
-    <span class="font-jakarta text-xs uppercase tracking-[0.15em] text-secondary font-extrabold">Cette année hégirienne</span>
+    <span class="font-label text-xs uppercase tracking-[0.15em] text-secondary font-extrabold">Cette année hégirienne</span>
     <div class="flex flex-col items-center">
       <span class="text-7xl font-headline font-bold text-primary" id="nb-khatmates">—</span>
       <p class="font-headline text-xl text-on-surface-variant mt-1" id="label-khatmates">Khatmates</p>
-      <p class="font-jakarta text-xs text-on-surface-variant mt-1" id="pages-lues"></p>
+      <p class="font-label text-xs text-on-surface-variant mt-1" id="pages-lues"></p>
     </div>
     <div class="w-full max-w-xs">
       <div class="flex justify-between mb-1">
-        <span class="font-jakarta text-[9px] uppercase tracking-widest text-on-surface-variant">Objectif annuel</span>
-        <span class="font-jakarta text-[9px] font-bold text-secondary" id="pct-objectif">—</span>
+        <span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant">Objectif annuel</span>
+        <span class="font-label text-[9px] font-bold text-secondary" id="pct-objectif">—</span>
       </div>
       <div class="bg-surface-container-high h-2 rounded-full overflow-hidden">
         <div class="bg-secondary h-full rounded-full transition-all duration-700" id="barre-progression" style="width:0%"></div>
       </div>
-      <p class="font-jakarta text-[9px] text-on-surface-variant mt-1" id="objectif-label"></p>
+      <p class="font-label text-[9px] text-on-surface-variant mt-1" id="objectif-label"></p>
     </div>
   </div>
 
   <!-- Dates année -->
   <div class="grid grid-cols-2 gap-4">
     <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10 text-center">
-      <p class="font-jakarta text-[9px] uppercase tracking-widest text-on-surface-variant mb-1">Début d'année</p>
+      <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mb-1">Début d'année</p>
       <p class="font-headline text-sm font-bold text-primary" id="debut-annee">—</p>
-      <p class="font-jakarta text-[9px] text-on-surface-variant mt-0.5" id="debut-annee-gr">—</p>
+      <p class="font-label text-[9px] text-on-surface-variant mt-0.5" id="debut-annee-gr">—</p>
     </div>
     <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/10 text-center">
-      <p class="font-jakarta text-[9px] uppercase tracking-widest text-on-surface-variant mb-1">Fin d'année</p>
+      <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mb-1">Fin d'année</p>
       <p class="font-headline text-sm font-bold text-primary" id="fin-annee">—</p>
-      <p class="font-jakarta text-[9px] text-on-surface-variant mt-0.5" id="fin-annee-gr">—</p>
+      <p class="font-label text-[9px] text-on-surface-variant mt-0.5" id="fin-annee-gr">—</p>
     </div>
   </div>
 
   <!-- Carte Ramadan (style Stitch) -->
   <div class="bg-primary text-on-primary p-8 rounded-[2rem] relative overflow-hidden">
-    <div class="absolute -bottom-10 -right-10 opacity-10">
-      <span class="material-symbols-outlined text-[10rem]" style="font-variation-settings:'FILL' 1;">crescent_moon</span>
-    </div>
     <div class="relative z-10 space-y-5">
       <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-secondary-container text-2xl" style="font-variation-settings:'FILL' 1;">crescent_moon</span>
-        <p class="font-jakarta text-xs uppercase tracking-widest font-bold text-secondary-container">Ramadan</p>
+        <span class="material-symbols-outlined text-secondary-container text-2xl" style="font-variation-settings:'FILL' 1;">star</span>
+        <p class="font-label text-xs uppercase tracking-widest font-bold text-secondary-container">Ramadan</p>
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <p class="font-jakarta text-[9px] uppercase tracking-widest text-on-primary/60 mb-1">Début estimé</p>
+          <p class="font-label text-[9px] uppercase tracking-widest text-on-primary/60 mb-1">Début estimé</p>
           <p class="font-headline text-base font-bold" id="ramadan-debut">—</p>
         </div>
         <div>
-          <p class="font-jakarta text-[9px] uppercase tracking-widest text-on-primary/60 mb-1">Fin estimée</p>
+          <p class="font-label text-[9px] uppercase tracking-widest text-on-primary/60 mb-1">Fin estimée</p>
           <p class="font-headline text-base font-bold" id="ramadan-fin">—</p>
         </div>
       </div>
       <div class="bg-on-primary/10 rounded-xl p-3">
         <div class="flex items-start gap-2">
           <span class="material-symbols-outlined text-secondary-container text-sm mt-0.5 flex-shrink-0">info</span>
-          <p class="font-jakarta text-xs text-on-primary/80 leading-relaxed">Dates indicatives. Le début officiel dépend de l'observation de la lune. Ajustez selon votre pays ou autorité religieuse.</p>
+          <p class="font-label text-xs text-on-primary/80 leading-relaxed">Dates indicatives. Le début officiel dépend de l'observation de la lune. Ajustez selon votre pays ou autorité religieuse.</p>
         </div>
       </div>
       <!-- Objectif Ramadan -->
       <div>
-        <p class="font-jakarta text-[9px] uppercase tracking-widest text-on-primary/60 mb-3">Mon objectif pour le Ramadan</p>
+        <p class="font-label text-[9px] uppercase tracking-widest text-on-primary/60 mb-3" id="ramadan-objectif-title">Mon objectif pour le Ramadan</p>
         <div class="grid grid-cols-2 gap-3" id="ramadan-objectifs"></div>
       </div>
     </div>
@@ -130,28 +114,21 @@ tailwind.config = {
     </div>
     <div class="relative z-10">
       <span class="material-symbols-outlined text-secondary text-4xl mb-3 block" style="font-variation-settings:'FILL' 1;">format_quote</span>
-      <p class="font-headline text-lg leading-relaxed italic text-on-surface" id="citation-encouragement"></p>
+      <p class="font-headline text-lg leading-relaxed italic text-primary" id="citation-encouragement"></p>
     </div>
   </div>
 
-  <!-- CTA -->
-  <section class="flex justify-center">
-    <a href="plan_bloom.html"
-      class="group bg-secondary-container text-on-secondary-container px-8 py-5 rounded-xl font-bold text-base flex items-center gap-3 hover:shadow-xl hover:shadow-secondary/10 active:scale-95 transition-all duration-200">
-      <span>Définir mon intention pour le Ramadan</span>
-      <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-    </a>
-  </section>
+
 
   <!-- Footer -->
   <footer class="text-center pt-8 border-t border-outline-variant/10 mb-8">
     <div class="flex flex-col items-center gap-4">
-      <p class="font-headline text-sm text-on-surface-variant">Proposé par JUMUA &amp; Me</p>
+      <a class="font-headline text-sm text-on-surface-variant hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">Proposé par JUMUA &amp; Me</a>
       <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me">
         <span class="material-symbols-outlined text-lg">photo_camera</span>
-        <span class="font-jakarta text-xs uppercase tracking-widest">@jumua_and_me</span>
+        <span class="font-label text-xs uppercase tracking-widest">@jumua_and_me</span>
       </a>
-      <p class="font-jakarta text-[10px] text-on-surface-variant/60 uppercase tracking-[0.2em]">© 2026 Tilawa Tour • Cheminer avec le Coran, mois après mois.</p>
+      <p class="font-label text-[10px] text-on-surface-variant/60 uppercase tracking-[0.2em]">© 2026 JUMUA &amp; Me · Tous droits réservés · Tilawa Tour</p>
     </div>
   </footer>
 
@@ -161,23 +138,23 @@ tailwind.config = {
 <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pt-2 pb-5 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/20">
   <a href="dashboard_bloom_v4.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary transition-all">
     <span class="material-symbols-outlined text-xl">dashboard</span>
-    <span class="font-jakarta text-[10px] uppercase tracking-widest">Accueil</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Accueil</span>
   </a>
   <a href="lecteur_bloom.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary transition-all">
     <span class="material-symbols-outlined text-xl">menu_book</span>
-    <span class="font-jakarta text-[10px] uppercase tracking-widest">Coran</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Coran</span>
   </a>
   <a href="calendrier_bloom.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary transition-all">
     <span class="material-symbols-outlined text-xl">calendar_month</span>
-    <span class="font-jakarta text-[10px] uppercase tracking-widest">Calendrier</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Calendrier</span>
   </a>
   <a href="plan_bloom.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary transition-all">
     <span class="material-symbols-outlined text-xl">edit_calendar</span>
-    <span class="font-jakarta text-[10px] uppercase tracking-widest">Programme</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Programme</span>
   </a>
   <a href="profil_bloom.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl text-on-surface-variant hover:text-primary transition-all">
     <span class="material-symbols-outlined text-xl">person</span>
-    <span class="font-jakarta text-[10px] uppercase tracking-widest">Profil</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Profil</span>
   </a>
 </nav>
 
@@ -205,7 +182,17 @@ function debutAnneeHij(annee) {
   return new Date((jd - 2440587.5) * 86400000);
 }
 
+const RAMADAN_DATES = {
+  1446: { debut: new Date(2025, 2, 1),  fin: new Date(2025, 2, 30) },
+  1447: { debut: new Date(2026, 1, 18), fin: new Date(2026, 2, 18) },
+  1448: { debut: new Date(2027, 1, 8),  fin: new Date(2027, 2, 10) },
+  1449: { debut: new Date(2028, 0, 28), fin: new Date(2028, 1, 25) },
+  1450: { debut: new Date(2029, 0, 17), fin: new Date(2029, 1, 14) },
+  1451: { debut: new Date(2030, 0, 6),  fin: new Date(2030, 1, 4)  },
+};
+
 function getRamadanEstime(anneeHij) {
+  if (RAMADAN_DATES[anneeHij]) return RAMADAN_DATES[anneeHij];
   const debut1Mouharram = debutAnneeHij(anneeHij);
   const debutRamadan = new Date(debut1Mouharram.getTime() + 236 * 86400000);
   const finRamadan   = new Date(debutRamadan.getTime() + 29 * 86400000);
@@ -216,8 +203,9 @@ function getRamadanEstime(anneeHij) {
 const prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
 const khatmatesAnnee = parseInt(localStorage.getItem('tilawa_khatmates_annee') || '0');
 const rythmeIdx = prog.rythme_idx !== undefined ? prog.rythme_idx : 3;
-const objectifMensuel = [0.5, 1, 1.5, 2, 3, 4][rythmeIdx] || 2;
-const objectifAnnuel  = Math.round(objectifMensuel * 12 * 10) / 10;
+const hizbsJour = prog.hizbs_jour || 2;
+const joursParKhatma = Math.ceil(60 / hizbsJour);
+const objectifAnnuel = Math.round(365 / joursParKhatma);
 
 // ── Calculs hégiriens ─────────────────────────────────────────────────────
 const now = new Date();
@@ -225,7 +213,8 @@ const hij = hijriFromDate(now);
 const anneeHij = hij ? hij.y : 1446;
 const debutAnnee = debutAnneeHij(anneeHij);
 const finAnnee   = new Date(debutAnneeHij(anneeHij + 1).getTime() - 86400000);
-const ramadan    = getRamadanEstime(anneeHij);
+let ramadan = getRamadanEstime(anneeHij);
+if (ramadan.fin < now) ramadan = getRamadanEstime(anneeHij + 1);
 const joursAvantRamadan = Math.ceil((ramadan.debut - now) / 86400000);
 const pctObjectif = objectifAnnuel > 0
   ? Math.min(100, Math.round(khatmatesAnnee / objectifAnnuel * 100)) : 0;
@@ -233,14 +222,7 @@ const pctObjectif = objectifAnnuel > 0
 // ── Remplir le DOM ────────────────────────────────────────────────────────
 document.getElementById('annee-hij').textContent = 'An ' + anneeHij + ' H';
 
-// Salutation
-let salutation = "Assalamou alaykoum. À l'approche du Ramadan, voici votre bilan de l'année.";
-if (joursAvantRamadan <= 0 && joursAvantRamadan > -30) {
-  salutation = "Ramadan Moubarak ! Que ce mois béni renforce votre lien avec le Livre d'Allah.";
-} else if (joursAvantRamadan > 0 && joursAvantRamadan <= 30) {
-  salutation = "Dans " + joursAvantRamadan + " jour(s), le Ramadan commence. Voici votre bilan annuel.";
-}
-document.getElementById('salutation').textContent = salutation;
+document.getElementById('salutation').textContent = "Assalamou alaykoum. Voici le récapitulatif de votre année de lecture.";
 
 // Khatmates
 document.getElementById('nb-khatmates').textContent = khatmatesAnnee;
@@ -257,36 +239,45 @@ document.getElementById('fin-annee').textContent = '29 Dhou al-Hijja ' + anneeHi
 document.getElementById('fin-annee-gr').textContent = formatGr(finAnnee);
 
 // Ramadan
+const anneeRamadan = ramadan.debut.getFullYear();
 document.getElementById('ramadan-debut').textContent = formatGr(ramadan.debut);
 document.getElementById('ramadan-fin').textContent = formatGr(ramadan.fin);
+document.getElementById('ramadan-objectif-title').textContent = 'Mon objectif pour le Ramadan ' + anneeRamadan;
 
-// Objectifs Ramadan
-const savedObj = JSON.parse(localStorage.getItem('tilawa_objectif_ramadan') || 'null');
-const OBJECTIFS = [
-  { label: '1 Khatma', desc: '20 pages/jour', rythme: 3 },
-  { label: '2 Khatmates', desc: '40 pages/jour', rythme: 5 },
-  { label: '½ Khatma', desc: '10 pages/jour', rythme: 1 },
-  { label: 'Mon rythme', desc: prog.pages_jour ? prog.pages_jour + ' pages/jour' : 'Mon rythme actuel', rythme: rythmeIdx },
-];
+// Objectifs Ramadan — actifs seulement dans les 30 jours avant le Ramadan
 const grid = document.getElementById('ramadan-objectifs');
-OBJECTIFS.forEach(function(obj, i) {
-  const active = savedObj ? savedObj.label === obj.label : i === 0;
-  const btn = document.createElement('button');
-  btn.className = 'p-3 rounded-xl text-left transition-all ' +
-    (active ? 'bg-on-primary/25 ring-2 ring-secondary-container' : 'bg-on-primary/10 hover:bg-on-primary/20');
-  btn.innerHTML = '<p class="font-jakarta text-xs font-bold">' + obj.label + '</p>' +
-    '<p class="font-jakarta text-[9px] text-on-primary/70">' + obj.desc + '</p>';
-  btn.onclick = function() {
-    grid.querySelectorAll('button').forEach(function(b) {
-      b.classList.remove('bg-on-primary/25','ring-2','ring-secondary-container');
-      b.classList.add('bg-on-primary/10');
-    });
-    btn.classList.add('bg-on-primary/25','ring-2','ring-secondary-container');
-    btn.classList.remove('bg-on-primary/10');
-    localStorage.setItem('tilawa_objectif_ramadan', JSON.stringify(obj));
-  };
-  grid.appendChild(btn);
-});
+if (joursAvantRamadan > 30) {
+  const msg = document.createElement('p');
+  msg.className = 'font-label text-xs text-on-primary/50 col-span-2 text-center py-1';
+  msg.textContent = 'Disponible 30 jours avant le Ramadan ' + anneeRamadan;
+  grid.appendChild(msg);
+} else {
+  const savedObj = JSON.parse(localStorage.getItem('tilawa_objectif_ramadan') || 'null');
+  const OBJECTIFS = [
+    { label: '1 Khatma',    desc: '20 pages/jour',  rythme: 3 },
+    { label: '2 Khatmates', desc: '40 pages/jour',  rythme: 5 },
+    { label: '½ Khatma',   desc: '10 pages/jour',  rythme: 1 },
+    { label: 'Mon rythme',  desc: prog.pages_jour ? prog.pages_jour + ' pages/jour' : 'Mon rythme actuel', rythme: rythmeIdx },
+  ];
+  OBJECTIFS.forEach(function(obj, i) {
+    const active = savedObj ? savedObj.label === obj.label : i === 0;
+    const btn = document.createElement('button');
+    btn.className = 'p-3 rounded-xl text-left transition-all ' +
+      (active ? 'bg-on-primary/25 ring-2 ring-secondary-container' : 'bg-on-primary/10 hover:bg-on-primary/20');
+    btn.innerHTML = '<p class="font-label text-xs font-bold">' + obj.label + '</p>' +
+      '<p class="font-label text-[9px] text-on-primary/70">' + obj.desc + '</p>';
+    btn.onclick = function() {
+      grid.querySelectorAll('button').forEach(function(b) {
+        b.classList.remove('bg-on-primary/25','ring-2','ring-secondary-container');
+        b.classList.add('bg-on-primary/10');
+      });
+      btn.classList.add('bg-on-primary/25','ring-2','ring-secondary-container');
+      btn.classList.remove('bg-on-primary/10');
+      localStorage.setItem('tilawa_objectif_ramadan', JSON.stringify(obj));
+    };
+    grid.appendChild(btn);
+  });
+}
 
 // Citation selon khatmates
 const citations = [

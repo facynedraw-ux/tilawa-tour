@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="Tilawa Tour"/>
-<meta name="theme-color" content="#6a5b53"/>
+<meta name="theme-color" content="#00917c"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script>
 tailwind.config = {
@@ -25,66 +25,144 @@ tailwind.config = {
 <style>
   .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
   body { font-family:'Plus Jakarta Sans',sans-serif; }
-  @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
-  .fade-in { animation: fadeIn 0.6s ease-out forwards; }
-  .theme-card { transition: all 0.2s ease; cursor: pointer; }
+
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(24px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeInDown {
+    from { opacity:0; transform:translateY(-16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity:0; transform:scale(0.85); }
+    to   { opacity:1; transform:scale(1); }
+  }
+
+  .anim-logo  { animation: scaleIn  0.5s cubic-bezier(.34,1.56,.64,1) forwards; }
+  .anim-title { animation: fadeInDown 0.5s ease-out 0.15s both; }
+  .anim-sub   { animation: fadeInUp  0.5s ease-out 0.25s both; }
+  .anim-cards { animation: fadeInUp  0.5s ease-out 0.35s both; }
+  .anim-foot  { animation: fadeInUp  0.4s ease-out 0.5s  both; }
+
+  .theme-card {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    cursor: pointer;
+  }
+  .theme-card:hover  { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.10); }
   .theme-card:active { transform: scale(0.97); }
+
+  .card-femme:hover  { border-color: #d4a5a0; }
+  .card-homme:hover  { border-color: #00917c; }
+
+  /* Ornemental arabic pattern top-right */
+  .deco-circle {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
 </style>
 </head>
-<body class="min-h-dvh bg-gradient-to-b from-amber-50 to-stone-100 flex flex-col items-center justify-center px-6 py-12">
+<body class="min-h-dvh flex flex-col items-center justify-center px-5 py-10 relative overflow-hidden"
+      style="background: linear-gradient(160deg, #f0f7f5 0%, #e8f4f0 40%, #fdf6ee 100%);">
 
-<div class="w-full max-w-sm space-y-8 fade-in">
+<!-- Decorative blobs -->
+<div class="deco-circle" style="width:320px;height:320px;top:-80px;right:-80px;background:radial-gradient(circle,rgba(0,145,124,0.12) 0%,transparent 70%);"></div>
+<div class="deco-circle" style="width:260px;height:260px;bottom:-60px;left:-60px;background:radial-gradient(circle,rgba(212,165,160,0.15) 0%,transparent 70%);"></div>
+<div class="deco-circle" style="width:160px;height:160px;top:30%;left:-40px;background:radial-gradient(circle,rgba(254,214,91,0.12) 0%,transparent 70%);"></div>
 
-  <!-- Logo -->
-  <div class="text-center space-y-2">
-    <div class="w-16 h-16 mx-auto bg-stone-700 rounded-2xl flex items-center justify-center shadow-lg mb-4">
-      <span class="material-symbols-outlined text-amber-100 text-3xl" style="font-variation-settings:'FILL' 1;">menu_book</span>
+<div class="w-full max-w-xs relative z-10 flex flex-col items-center gap-8">
+
+  <!-- Hero -->
+  <div class="text-center flex flex-col items-center gap-3">
+    <div class="anim-logo w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl"
+         style="background: linear-gradient(145deg, #00a98f, #00917c); box-shadow: 0 8px 32px rgba(0,145,124,0.35);">
+      <span class="material-symbols-outlined text-4xl text-white"
+            style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 48;">menu_book</span>
     </div>
-    <h1 class="font-headline text-3xl font-bold text-stone-800 tracking-tight">Tilawa Tour</h1>
-    <p class="text-sm text-stone-500 leading-relaxed">Cheminer avec le Coran, mois après mois.</p>
+
+    <div class="anim-title">
+      <h1 class="font-headline text-4xl font-bold tracking-tight" style="color:#1a2e28;">Tilawa Tour</h1>
+    </div>
+
+    <p class="anim-sub font-headline text-sm italic leading-relaxed" style="color:#4a6b62;">
+      Cheminer avec le Coran, mois après mois.
+    </p>
+
+    <p class="anim-sub text-xs leading-relaxed text-center px-4" style="color:#6b9088; animation-delay:0.32s;">
+      Votre programme de lecture personnalisé — suivez votre avancement, jour après jour, jusqu'au khatm.
+    </p>
   </div>
 
-  <!-- Sélection thème -->
-  <div class="space-y-3">
-    <p class="text-xs text-stone-400 uppercase tracking-widest text-center font-semibold">Choisissez votre thème</p>
+  <!-- Séparateur ornemental -->
+  <div class="anim-sub flex items-center gap-3 w-full px-2">
+    <div class="flex-1 h-px" style="background:linear-gradient(to right, transparent, #b2d8d0);"></div>
+    <span class="text-xs font-semibold uppercase tracking-[0.2em]" style="color:#7aada4;">Qui êtes-vous ?</span>
+    <div class="flex-1 h-px" style="background:linear-gradient(to left, transparent, #b2d8d0);"></div>
+  </div>
 
-    <!-- Bloom -->
-    <div class="theme-card bg-white border-2 border-transparent rounded-2xl p-5 shadow-sm hover:border-stone-400 hover:shadow-md"
-         onclick="choisirTheme('bloom')">
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl flex-shrink-0" style="background:linear-gradient(135deg,#e9d5ca,#f0debc)"></div>
-        <div>
-          <p class="font-headline text-base font-bold text-stone-800">Bloom</p>
-          <p class="text-xs text-stone-500 mt-0.5">Chaleureux · Tons terracotta et dorés</p>
+  <!-- Cartes choix -->
+  <div class="anim-cards w-full flex flex-col gap-3">
+
+    <!-- Femme -->
+    <div class="theme-card card-femme bg-white border-2 border-transparent rounded-2xl overflow-hidden shadow-sm"
+         onclick="choisirTheme('bloom')" style="border-color:#f0ebe9;">
+      <div class="flex items-center gap-0">
+        <!-- Avatar zone -->
+        <div class="w-24 h-24 flex-shrink-0 overflow-hidden relative" style="background:linear-gradient(135deg,#f7e8e4,#f9edd7);">
+          <img src="Images/avatar_feminin.png" alt="Femme"
+               class="absolute inset-0 w-full h-full object-cover object-top"/>
         </div>
-        <span class="material-symbols-outlined text-stone-300 ml-auto">chevron_right</span>
+        <!-- Text -->
+        <div class="flex-1 px-5">
+          <p class="font-headline text-base font-bold" style="color:#3d2b27;">Je suis une femme</p>
+        </div>
+        <span class="material-symbols-outlined mr-4 text-xl" style="color:#d4a5a0;">chevron_right</span>
       </div>
     </div>
 
-    <!-- Serenity -->
-    <div class="theme-card bg-white border-2 border-transparent rounded-2xl p-5 shadow-sm hover:border-teal-400 hover:shadow-md"
-         onclick="choisirTheme('serenity')">
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl flex-shrink-0" style="background:linear-gradient(135deg,#b2dfdb,#fed65b)"></div>
-        <div>
-          <p class="font-headline text-base font-bold text-stone-800">Serenity</p>
-          <p class="text-xs text-stone-500 mt-0.5">Apaisant · Tons émeraude et crème</p>
+    <!-- Homme -->
+    <div class="theme-card card-homme bg-white border-2 border-transparent rounded-2xl overflow-hidden shadow-sm"
+         onclick="choisirTheme('serenity')" style="border-color:#e4f0ee;">
+      <div class="flex items-center gap-0">
+        <!-- Avatar zone -->
+        <div class="w-24 h-24 flex-shrink-0 overflow-hidden relative" style="background:linear-gradient(135deg,#d4eeea,#e8f7f4);">
+          <img src="Images/avatar_homme.png" alt="Homme"
+               class="absolute inset-0 w-full h-full object-cover object-top"/>
         </div>
-        <span class="material-symbols-outlined text-stone-300 ml-auto">chevron_right</span>
+        <!-- Text -->
+        <div class="flex-1 px-5">
+          <p class="font-headline text-base font-bold" style="color:#0d2e28;">Je suis un homme</p>
+        </div>
+        <span class="material-symbols-outlined mr-4 text-xl" style="color:#7ac8bc;">chevron_right</span>
       </div>
     </div>
+
   </div>
 
   <!-- Footer -->
-  <p class="text-center text-[10px] text-stone-400 uppercase tracking-widest">
-    Proposé par JUMUA &amp; Me
-  </p>
+  <div class="anim-foot flex flex-col items-center gap-1">
+    <a href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener"
+       class="text-[11px] font-semibold uppercase tracking-widest transition-opacity hover:opacity-70"
+       style="color:#7aada4;">Proposé par JUMUA &amp; Me</a>
+    <p class="text-[9px] uppercase tracking-widest" style="color:#aeccc7;">© 2026 · Tous droits réservés</p>
+  </div>
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
 <script>
-// Redirection automatique si thème déjà choisi
-(function() {
+(async function() {
+  // Vérification de session
+  const session = await getSession();
+  if (!session) {
+    window.location.replace('login.html');
+    return;
+  }
+  // Sync depuis le cloud puis redirection si programme déjà choisi
+  await syncFromCloud();
   try {
     var prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
     if (prog.theme === 'serenity') {

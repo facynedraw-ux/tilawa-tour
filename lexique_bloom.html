@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Lexique — Tilawa Tour</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
@@ -10,30 +10,19 @@
 <script>
 tailwind.config = {
   theme: { extend: {
-    colors: {
-      "primary": "#6a5b53",
-      "primary-container": "#e9d5ca",
-      "secondary": "#6a5d43",
-      "secondary-container": "#f0debc",
-      "surface": "#fcf9f5",
-      "surface-container-lowest": "#ffffff",
-      "surface-container": "#eceeec",
-      "on-surface": "#1c1c1a",
-      "on-surface-variant": "#4e4540",
-      "outline-variant": "#d1c4bd",
-    },
+    colors: {"primary":"#5c5b9e","primary-dark":"#3f3e7a","primary-container":"#e6e5ff","on-primary":"#ffffff","on-primary-container":"#1a1860","secondary":"#b8920a","secondary-container":"#fef4c0","secondary-fixed":"#fef8d8","on-secondary-container":"#4a3800","tertiary":"#d4a820","tertiary-container":"#fff3c0","on-tertiary-container":"#3a2c00","surface":"#f7f7fd","surface-bright":"#f7f7fd","surface-container-lowest":"#ffffff","surface-container-low":"#f0f0fa","surface-container":"#e9e8f5","surface-container-high":"#e2e1ef","on-surface":"#1a1a2e","on-surface-variant":"#46455a","outline":"#787490","outline-variant":"#c8c5dc","primary-fixed-dim":"#b0aee8"},
     fontFamily: {
       "headline": ["Noto Serif"],
-      "body": ["Manrope"],
-      "label": ["Manrope"],
+      "body": ["Plus Jakarta Sans"],
+      "label": ["Plus Jakarta Sans"],
       "arabic": ["Amiri","serif"],
     }
   }}
 }
 </script>
 <style>
-  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
-  body { font-family:'Plus Jakarta Sans',sans-serif; background:#fcf9f5; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+  body { font-family:'Plus Jakarta Sans', sans-serif; background:#f7f7fd; }
   /* Tajwid couleurs */
   .tj-mad     { color:#dc2626; font-weight:600; }
   .tj-ghunna  { color:#16a34a; font-weight:600; }
@@ -41,7 +30,6 @@ tailwind.config = {
   .tj-qalqala { color:#0284c7; font-weight:600; }
   .tj-ithar   { color:#ea580c; font-weight:600; }
   .tj-muet    { color:#9ca3af; text-decoration:line-through; font-weight:600; }
-  nav.fixed.bottom-0 { padding-bottom: max(1.25rem, env(safe-area-inset-bottom)); }
 </style>
 </head>
 <body class="text-on-surface pb-32">
@@ -49,8 +37,8 @@ tailwind.config = {
 <!-- Header -->
 <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant/20">
   <div class="flex items-center gap-3 px-5 py-3.5 max-w-2xl mx-auto">
-    <a href="profil_bloom.html" class="p-2 rounded-full hover:bg-surface-container transition-colors">
-      <span class="material-symbols-outlined text-on-surface-variant">arrow_back</span>
+    <a href="dashboard_bloom_v4.html" class="hover:opacity-80 transition-opacity">
+      <img src="Images/logo_ok.svg" class="w-7 h-7" alt="Tilawa Tour"/>
     </a>
     <h1 class="font-headline text-base font-semibold text-primary">Lexique</h1>
   </div>
@@ -60,7 +48,7 @@ tailwind.config = {
 
   <!-- Intro -->
   <div class="mb-10 text-center">
-    <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+    <p class="font-label text-sm text-on-surface-variant leading-relaxed">
       Termes et règles de lecture du Coran utilisés dans Tilawa Tour.
     </p>
   </div>
@@ -83,12 +71,12 @@ tailwind.config = {
               <h3 class="font-headline text-lg text-primary">Khatma</h3>
               <span class="font-arabic text-base text-on-surface-variant" dir="rtl">خَتْمَة</span>
             </div>
-            <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
               Lecture complète du Coran du début (Al-Fatiha) à la fin (An-Nas). Une Khatma = 604 pages = 60 hizbs.
             </p>
           </div>
           <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
-            <p class="font-jakarta text-[10px] text-primary font-bold uppercase tracking-widest">604 pages</p>
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">604 pages</p>
           </div>
         </div>
       </div>
@@ -101,12 +89,12 @@ tailwind.config = {
               <h3 class="font-headline text-lg text-primary">Juz</h3>
               <span class="font-arabic text-base text-on-surface-variant" dir="rtl">جُزْء</span>
             </div>
-            <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
               Division du Coran en 30 parties égales. Chaque Juz contient 2 Hizbs et correspond à environ 20 pages.
             </p>
           </div>
           <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
-            <p class="font-jakarta text-[10px] text-primary font-bold uppercase tracking-widest">30 Juz</p>
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">30 Juz</p>
           </div>
         </div>
       </div>
@@ -119,12 +107,12 @@ tailwind.config = {
               <h3 class="font-headline text-lg text-primary">Hizb</h3>
               <span class="font-arabic text-base text-on-surface-variant" dir="rtl">حِزْب</span>
             </div>
-            <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
               Division du Coran en 60 parties égales. Chaque Hizb = ½ Juz = 10 pages. C'est l'unité de base de Tilawa Tour.
             </p>
           </div>
           <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
-            <p class="font-jakarta text-[10px] text-primary font-bold uppercase tracking-widest">60 Hizbs</p>
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">60 Hizbs</p>
           </div>
         </div>
       </div>
@@ -137,12 +125,12 @@ tailwind.config = {
               <h3 class="font-headline text-lg text-primary">Nisf</h3>
               <span class="font-arabic text-base text-on-surface-variant" dir="rtl">نِصْف</span>
             </div>
-            <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
               Moitié d'un Hizb = 5 pages. Marqueur officiel du mushaf, point d'arrêt valide pour la lecture.
             </p>
           </div>
           <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
-            <p class="font-jakarta text-[10px] text-primary font-bold uppercase tracking-widest">5 pages</p>
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">5 pages</p>
           </div>
         </div>
       </div>
@@ -155,7 +143,7 @@ tailwind.config = {
               <h3 class="font-headline text-lg text-primary">Roubou' / Thoulouth</h3>
               <span class="font-arabic text-base text-on-surface-variant" dir="rtl">رُبُع / ثُلُث</span>
             </div>
-            <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
               Quart (¼) et tiers (⅔) d'un Hizb. Marqueurs présents dans le mushaf mais non utilisés dans Tilawa Tour.
             </p>
           </div>
@@ -170,12 +158,12 @@ tailwind.config = {
               <h3 class="font-headline text-lg text-primary">Sourate</h3>
               <span class="font-arabic text-base text-on-surface-variant" dir="rtl">سُورَة</span>
             </div>
-            <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
               Chapitre du Coran. Il y en a 114, de longueurs très variées — de 3 versets (Al-Kawthar) à 286 versets (Al-Baqarah).
             </p>
           </div>
           <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
-            <p class="font-jakarta text-[10px] text-primary font-bold uppercase tracking-widest">114</p>
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">114</p>
           </div>
         </div>
       </div>
@@ -188,12 +176,12 @@ tailwind.config = {
               <h3 class="font-headline text-lg text-primary">Verset (Ayah)</h3>
               <span class="font-arabic text-base text-on-surface-variant" dir="rtl">آيَة</span>
             </div>
-            <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed">
               Unité de base du Coran. Le Coran contient 6236 versets au total.
             </p>
           </div>
           <div class="bg-primary/10 rounded-xl px-3 py-1.5 flex-shrink-0">
-            <p class="font-jakarta text-[10px] text-primary font-bold uppercase tracking-widest">6236</p>
+            <p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest">6236</p>
           </div>
         </div>
       </div>
@@ -218,7 +206,7 @@ tailwind.config = {
           <span class="font-arabic text-base text-on-surface-variant" dir="rtl">بَسْمَلَة</span>
         </div>
         <p class="font-arabic text-xl text-primary my-2" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-        <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
           « Au nom d'Allah, le Tout Miséricordieux, le Très Miséricordieux. » Précède chaque sourate sauf At-Tawba (sourate 9).
         </p>
       </div>
@@ -229,7 +217,7 @@ tailwind.config = {
           <h3 class="font-headline text-lg text-primary">Tajwid</h3>
           <span class="font-arabic text-base text-on-surface-variant" dir="rtl">تَجْوِيد</span>
         </div>
-        <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
           Ensemble des règles de prononciation correcte du Coran. Le mot signifie littéralement "embellissement" ou "amélioration".
         </p>
       </div>
@@ -240,7 +228,7 @@ tailwind.config = {
           <h3 class="font-headline text-lg text-primary">Riwaya</h3>
           <span class="font-arabic text-base text-on-surface-variant" dir="rtl">رِوَايَة</span>
         </div>
-        <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
           Tradition de récitation du Coran. Les deux principales sont <strong>Hafs</strong> (la plus répandue dans le monde) et <strong>Warsh</strong> (répandue en Afrique du Nord et de l'Ouest).
         </p>
       </div>
@@ -251,7 +239,7 @@ tailwind.config = {
           <h3 class="font-headline text-lg text-primary">Mushaf</h3>
           <span class="font-arabic text-base text-on-surface-variant" dir="rtl">مُصْحَف</span>
         </div>
-        <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
           L'exemplaire physique (livre) du Coran. Le mushaf de Médine d'Osman Taha est la référence utilisée dans Tilawa Tour (604 pages).
         </p>
       </div>
@@ -262,7 +250,7 @@ tailwind.config = {
           <h3 class="font-headline text-lg text-primary">Tadabbur</h3>
           <span class="font-arabic text-base text-on-surface-variant" dir="rtl">تَدَبُّر</span>
         </div>
-        <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
           Méditation et réflexion profonde sur le sens des versets du Coran. Aller au-delà de la simple lecture pour comprendre et intérioriser le message.
         </p>
       </div>
@@ -278,7 +266,7 @@ tailwind.config = {
       <div class="h-px flex-grow bg-outline-variant/30"></div>
     </div>
 
-    <p class="font-jakarta text-xs text-on-surface-variant mb-5 leading-relaxed">
+    <p class="font-label text-xs text-on-surface-variant mb-5 leading-relaxed">
       Dans le lecteur, les lettres concernées par une règle sont colorées. Voici le détail de chaque règle.
     </p>
 
@@ -293,21 +281,21 @@ tailwind.config = {
               <h3 class="font-headline text-lg text-primary">Mad — Prolongation</h3>
               <span class="font-arabic text-base text-on-surface-variant" dir="rtl">مَدّ</span>
             </div>
-            <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed mb-3">
+            <p class="font-label text-sm text-on-surface-variant leading-relaxed mb-3">
               Étirement obligatoire d'une voyelle longue. La durée varie selon le contexte :
             </p>
             <div class="space-y-1.5">
               <div class="flex items-center gap-2">
                 <span class="font-arabic tj-mad text-lg" dir="rtl">ا</span>
-                <p class="font-jakarta text-xs text-on-surface-variant"><strong>Mad Tabi'i</strong> — prolongation naturelle de 2 temps</p>
+                <p class="font-label text-xs text-on-surface-variant"><strong>Mad Tabi'i</strong> — prolongation naturelle de 2 temps</p>
               </div>
               <div class="flex items-center gap-2">
                 <span class="font-arabic tj-mad text-lg" dir="rtl">ا</span>
-                <p class="font-jakarta text-xs text-on-surface-variant"><strong>Mad Wajib / Ja'iz</strong> — prolongation de 4 à 5 temps (devant un Hamza)</p>
+                <p class="font-label text-xs text-on-surface-variant"><strong>Mad Wajib / Ja'iz</strong> — prolongation de 4 à 5 temps (devant un Hamza)</p>
               </div>
               <div class="flex items-center gap-2">
                 <span class="font-arabic tj-mad text-lg" dir="rtl">ا</span>
-                <p class="font-jakarta text-xs text-on-surface-variant"><strong>Mad Lazim</strong> — prolongation obligatoire de 6 temps</p>
+                <p class="font-label text-xs text-on-surface-variant"><strong>Mad Lazim</strong> — prolongation obligatoire de 6 temps</p>
               </div>
             </div>
           </div>
@@ -321,13 +309,13 @@ tailwind.config = {
           <h3 class="font-headline text-lg text-primary">Ghounnah — Nasalisation</h3>
           <span class="font-arabic text-base text-on-surface-variant" dir="rtl">غُنَّة</span>
         </div>
-        <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed mb-3">
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed mb-3">
           Son nasal produit dans le nez pendant 2 temps. S'applique au <strong>Noun (نّ)</strong> et au <strong>Mim (مّ)</strong> avec chadda, ainsi que lors des règles d'Ikhfa et d'Idgham.
         </p>
         <div class="flex gap-3 items-center">
           <span class="font-arabic tj-ghunna text-2xl" dir="rtl">نّ</span>
           <span class="font-arabic tj-ghunna text-2xl" dir="rtl">مّ</span>
-          <p class="font-jakarta text-xs text-on-surface-variant">Le son vibre dans le nez, bouche fermée</p>
+          <p class="font-label text-xs text-on-surface-variant">Le son vibre dans le nez, bouche fermée</p>
         </div>
       </div>
 
@@ -338,12 +326,12 @@ tailwind.config = {
           <h3 class="font-headline text-lg text-primary">Tafkhim — Emphase</h3>
           <span class="font-arabic text-base text-on-surface-variant" dir="rtl">تَفْخِيم</span>
         </div>
-        <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed mb-3">
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed mb-3">
           Prononciation "épaisse" ou "grasse" de certaines lettres. La langue remonte vers le palais, donnant un son grave et lourd.
         </p>
         <div class="flex gap-3 items-center">
           <span class="font-arabic tj-tafkhim text-2xl" dir="rtl">خ ص ض غ ط ق ظ</span>
-          <p class="font-jakarta text-xs text-on-surface-variant">Lettres toujours emphatiques</p>
+          <p class="font-label text-xs text-on-surface-variant">Lettres toujours emphatiques</p>
         </div>
       </div>
 
@@ -354,12 +342,12 @@ tailwind.config = {
           <h3 class="font-headline text-lg text-primary">Qalqalah — Rebond</h3>
           <span class="font-arabic text-base text-on-surface-variant" dir="rtl">قَلْقَلَة</span>
         </div>
-        <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed mb-3">
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed mb-3">
           Effet d'écho ou de rebond sec sur certaines lettres lorsqu'elles sont à l'arrêt (sukun). Le son "rebondit" légèrement après la lettre.
         </p>
         <div class="flex gap-3 items-center">
           <span class="font-arabic tj-qalqala text-2xl" dir="rtl">قْ طْ بْ جْ دْ</span>
-          <p class="font-jakarta text-xs text-on-surface-variant">Les 5 lettres Qalqalah en sukun</p>
+          <p class="font-label text-xs text-on-surface-variant">Les 5 lettres Qalqalah en sukun</p>
         </div>
       </div>
 
@@ -370,12 +358,12 @@ tailwind.config = {
           <h3 class="font-headline text-lg text-primary">Ithar — Clarification</h3>
           <span class="font-arabic text-base text-on-surface-variant" dir="rtl">إِظْهَار</span>
         </div>
-        <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed mb-3">
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed mb-3">
           Prononciation claire et distincte du Noun sakin (نْ) ou du Tanwin devant certaines lettres. Aucune nasalisation, chaque lettre est prononcée nettement.
         </p>
         <div class="flex gap-3 items-center flex-wrap">
           <span class="font-arabic tj-ithar text-xl" dir="rtl">ء ه ع ح غ خ</span>
-          <p class="font-jakarta text-xs text-on-surface-variant">Les 6 lettres gutturales d'Ithar</p>
+          <p class="font-label text-xs text-on-surface-variant">Les 6 lettres gutturales d'Ithar</p>
         </div>
       </div>
 
@@ -386,7 +374,7 @@ tailwind.config = {
           <h3 class="font-headline text-lg text-primary">Lettre muette</h3>
           <span class="font-arabic text-base text-on-surface-variant" dir="rtl">حَرْف مُهْمَل</span>
         </div>
-        <p class="font-jakarta text-sm text-on-surface-variant leading-relaxed">
+        <p class="font-label text-sm text-on-surface-variant leading-relaxed">
           Lettre écrite dans le mushaf mais qui ne se prononce pas. On passe directement à la lettre suivante sans émettre aucun son.
         </p>
       </div>
@@ -397,12 +385,12 @@ tailwind.config = {
   <!-- Footer -->
   <footer class="text-center pt-8 border-t border-outline-variant/10 mb-8">
     <div class="flex flex-col items-center gap-4">
-      <p class="font-headline text-sm text-on-surface-variant">Proposé par JUMUA &amp; Me</p>
+      <a class="font-headline text-sm text-on-surface-variant hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">Proposé par JUMUA &amp; Me</a>
       <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me">
         <span class="material-symbols-outlined text-lg">photo_camera</span>
-        <span class="font-jakarta text-xs uppercase tracking-widest">@jumua_and_me</span>
+        <span class="font-label text-xs uppercase tracking-widest">@jumua_and_me</span>
       </a>
-      <p class="font-jakarta text-[10px] text-on-surface-variant/60 uppercase tracking-[0.2em]">© 2026 Tilawa Tour • Cheminer avec le Coran, mois après mois.</p>
+      <p class="font-label text-[10px] text-on-surface-variant/60 uppercase tracking-[0.2em]">© 2026 JUMUA &amp; Me · Tous droits réservés · Tilawa Tour</p>
     </div>
   </footer>
 
@@ -412,23 +400,23 @@ tailwind.config = {
 <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pt-2 pb-5 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-4px_24px_rgba(106,91,83,0.06)]">
   <a href="dashboard_bloom_v4.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary active:scale-90 transition-all">
     <span class="material-symbols-outlined text-xl">dashboard</span>
-    <span class="font-jakarta text-[10px] uppercase tracking-widest">Accueil</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Accueil</span>
   </a>
   <a href="lecteur_bloom.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary active:scale-90 transition-all">
     <span class="material-symbols-outlined text-xl">menu_book</span>
-    <span class="font-jakarta text-[10px] uppercase tracking-widest">Coran</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Coran</span>
   </a>
   <a href="calendrier_bloom.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary active:scale-90 transition-all">
     <span class="material-symbols-outlined text-xl">calendar_month</span>
-    <span class="font-jakarta text-[10px] uppercase tracking-widest">Calendrier</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Calendrier</span>
   </a>
   <a href="plan_bloom.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary active:scale-90 transition-all">
     <span class="material-symbols-outlined text-xl">edit_calendar</span>
-    <span class="font-jakarta text-[10px] uppercase tracking-widest">Programme</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Programme</span>
   </a>
   <a href="profil_bloom.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl bg-primary/10 text-primary active:scale-90 transition-all">
     <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1;">person</span>
-    <span class="font-jakarta text-[10px] font-bold uppercase tracking-widest">Profil</span>
+    <span class="font-label text-[10px] font-bold uppercase tracking-widest">Profil</span>
   </a>
 </nav>
 

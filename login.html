@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Connexion — Tilawa Tour</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Tilawa Tour"/>
+<meta name="theme-color" content="#00917c"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  body { font-family:'Plus Jakarta Sans',sans-serif; }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.5s ease both; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.35s; }
+</style>
+</head>
+<body class="min-h-dvh flex flex-col items-center justify-center px-5 py-10 relative overflow-hidden"
+      style="background: linear-gradient(160deg, #f0f7f5 0%, #e8f4f0 40%, #fdf6ee 100%);">
+
+<!-- Blobs décoratifs -->
+<div style="position:fixed;width:300px;height:300px;top:-80px;right:-80px;border-radius:50%;background:radial-gradient(circle,rgba(0,145,124,0.12) 0%,transparent 70%);pointer-events:none;"></div>
+<div style="position:fixed;width:240px;height:240px;bottom:-60px;left:-60px;border-radius:50%;background:radial-gradient(circle,rgba(212,165,160,0.13) 0%,transparent 70%);pointer-events:none;"></div>
+
+<div class="w-full max-w-xs relative z-10 flex flex-col items-center gap-8">
+
+  <!-- Logo -->
+  <div class="fade-up flex flex-col items-center gap-3 text-center">
+    <div class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
+         style="background:linear-gradient(145deg,#00a98f,#00917c);box-shadow:0 8px 24px rgba(0,145,124,0.3);">
+      <span class="material-symbols-outlined text-3xl text-white"
+            style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 48;">menu_book</span>
+    </div>
+    <h1 class="font-serif text-2xl font-bold tracking-tight" style="color:#1a2e28; font-family:'Noto Serif',serif;">Tilawa Tour</h1>
+    <p class="text-xs leading-relaxed text-center" style="color:#6b9088;">
+      Connecte-toi pour retrouver ton programme sur tous tes appareils.
+    </p>
+  </div>
+
+  <!-- Formulaire connexion -->
+  <div class="fade-up delay-1 w-full bg-white rounded-3xl shadow-sm border p-6 space-y-4"
+       style="border-color:#e0efec;" id="form-login">
+
+    <div>
+      <label class="block text-xs font-semibold uppercase tracking-widest mb-2" style="color:#4a6b62;">
+        Adresse email
+      </label>
+      <input type="email" id="email-input" placeholder="ton@email.com"
+             autocomplete="email" inputmode="email"
+             class="w-full px-4 py-3.5 rounded-2xl border text-sm outline-none transition-all"
+             style="border-color:#c5ddd9; background:#f7faf9; color:#1a2e28;"
+             onfocus="this.style.borderColor='#00917c'"
+             onblur="this.style.borderColor='#c5ddd9'"/>
+    </div>
+
+    <button id="btn-login" onclick="sendMagicLink()"
+            class="w-full py-4 rounded-2xl text-white font-bold text-sm uppercase tracking-widest transition-all active:scale-95"
+            style="background:linear-gradient(135deg,#00a98f,#00917c);box-shadow:0 4px 16px rgba(0,145,124,0.3);">
+      Recevoir mon lien de connexion
+    </button>
+
+    <p class="text-[10px] text-center leading-relaxed" style="color:#8ab5af;">
+      Tu recevras un email avec un lien magique — aucun mot de passe nécessaire.
+    </p>
+  </div>
+
+  <!-- État : email envoyé -->
+  <div class="fade-up delay-2 w-full bg-white rounded-3xl shadow-sm border p-6 text-center space-y-3 hidden"
+       style="border-color:#e0efec;" id="form-sent">
+    <span class="material-symbols-outlined text-4xl" style="color:#00917c;font-variation-settings:'FILL' 1;">mark_email_read</span>
+    <p class="font-semibold text-sm" style="color:#1a2e28;">Email envoyé !</p>
+    <p class="text-xs leading-relaxed" style="color:#6b9088;">
+      Vérifie ta boîte mail et clique sur le lien pour te connecter.<br/>
+      <span style="color:#8ab5af;">Pense à regarder les spams.</span>
+    </p>
+    <button onclick="resetForm()"
+            class="text-xs font-semibold uppercase tracking-widest underline-offset-2 hover:underline"
+            style="color:#00917c;">
+      Utiliser une autre adresse
+    </button>
+  </div>
+
+  <!-- Erreur -->
+  <div id="error-msg" class="hidden text-xs text-center font-medium px-4 py-3 rounded-2xl w-full"
+       style="background:#fff0ef;color:#c0392b;"></div>
+
+  <p class="fade-up delay-3 text-[10px] uppercase tracking-widest" style="color:#aeccc7;">
+    © 2026 JUMUA &amp; Me
+  </p>
+
+</div>
+
+<script src="supabase-client.js"></script>
+<script>
+// Si déjà connecté → aller à l'accueil
+(async function() {
+  const session = await getSession();
+  if (session) window.location.replace('index.html');
+})();
+
+async function sendMagicLink() {
+  const email = document.getElementById('email-input').value.trim();
+  if (!email || !email.includes('@')) {
+    showError('Merci de saisir une adresse email valide.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-login');
+  btn.textContent = 'Envoi en cours…';
+  btn.disabled = true;
+
+  try {
+    const { error } = await _sb.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.origin + '/index.html' }
+    });
+
+    if (error) throw error;
+
+    document.getElementById('form-login').classList.add('hidden');
+    document.getElementById('form-sent').classList.remove('hidden');
+    document.getElementById('error-msg').classList.add('hidden');
+
+  } catch (e) {
+    btn.textContent = 'Recevoir mon lien de connexion';
+    btn.disabled = false;
+    showError('Une erreur est survenue. Vérifie ton email et réessaie.');
+    console.error(e);
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+
+function resetForm() {
+  document.getElementById('form-login').classList.remove('hidden');
+  document.getElementById('form-sent').classList.add('hidden');
+  document.getElementById('email-input').value = '';
+  document.getElementById('btn-login').textContent = 'Recevoir mon lien de connexion';
+  document.getElementById('btn-login').disabled = false;
+}
+</script>
+</body>
+</html>

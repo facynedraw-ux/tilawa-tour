@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html class="light" lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Tilawa Tour - Dashboard {{THEME_TITLE}}</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="theme-color" content="#6a5b53"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {{TAILWIND_COLORS}},
+        borderRadius: {
+          "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"
+        },
+        fontFamily: {
+          "headline": ["Noto Serif"],
+          "body": ["{{BODY_FONT_NAME}}"],
+          "label": ["{{BODY_FONT_NAME}}"],
+          "arabic":   ["Amiri", "serif"]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' {{ICON_WEIGHT}}, 'GRAD' 0, 'opsz' 24;
+  }
+  body { font-family: 'Noto Serif', serif; min-height: max(884px, 100dvh); }
+  nav.fixed.bottom-0 { padding-bottom: max(1.25rem, env(safe-area-inset-bottom)); }
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20">
+  <div class="flex justify-between items-center w-full px-6 py-3.5">
+    <button class="text-on-surface hover:opacity-70 transition-opacity active:scale-95 duration-200">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+
+    <!-- Logo inline SVG + nom -->
+    <div class="flex items-center gap-2.5">
+      <!-- Icône logo SVG miniaturisée (juste le chemin + livre) -->
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+           viewBox="150 270 280 230" width="32" height="26">
+        <defs>
+          <linearGradient id="gL" x1="184.03" y1="374.96" x2="261.79" y2="374.96" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#f7d36c"/><stop offset="1" stop-color="#cc9432"/>
+          </linearGradient>
+          <linearGradient id="gL2" x1="208.83" y1="348.26" x2="285.11" y2="348.26" xlink:href="#gL"/>
+          <linearGradient id="gR" x1="58.12" y1="376.62" x2="143.66" y2="376.62"
+            gradientTransform="translate(469.13) rotate(-180) scale(1 -1)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#f7d36c"/><stop offset="1" stop-color="#cc9432"/>
+          </linearGradient>
+          <linearGradient id="gR2" x1="82.92" y1="363.27" x2="159.2" y2="363.27" xlink:href="#gR"/>
+        </defs>
+        <!-- Chemin sinueux (couleur logo jade) -->
+        <path fill="#00917c" d="M302.35,304.33c-.49-.09-7.37,4.07-9.01,6.69-5.5,7.11.09,11.67,6.66,14.41,7.63,3.37,14.33,4.98,20.9,6.36,10.62,2.34,26.89,7.03,31.8,17.94,4.47,14.15-13.72,32.28-26.45,46.57-5.85,6.25-11.42,11.3-14.51,19.34-9.7,25.08,7.17,42.79,28.49,52.98,2.3,1.32,13.02,4.38,7.93,4.77-20.33.91-46.13-3.05-64.86-9.16-3.97-1.14-7.75-3.12-9.59-6.97-2.03-3.78-4.2-9.37-4.67-15.85-.84-8.85,2.23-17.59,6.81-24.65,6.11-9.68,15.54-17.78,24.63-24.84,9.65-7.61,21.23-13.69,28.38-23.15,5.8-7.08,8.38-16.26,1.2-23.44-3.28-3.4-7.9-5.06-12.95-6.45-5.79-1.58-11.66-3.01-17.04-5.08-7.38-2.8-17.5-7.22-14.6-16.63,1.63-6.48,12.2-10.89,16.87-12.85h-.01Z"/>
+        <path fill="#00917c" d="M262.22,455.18c.21-1.03-.89-2.56-1.28-3.87-1.5-3.68-2.37-7.89-2.4-11.93.02-11.73,6.32-21.9,13.92-29.33,15.75-14.91,30.55-22.82,47.64-38.47,4.71-4.65,11.46-9.6,10.78-16.76-1.87-10.27-11.93-14.27-21.16-16.81-11.4-3.91-29.28-7.11-25.92-22.66.21-1.13.53-2.68-.44-.58-6.33,13.96,7.17,20.52,19.1,23.49,6.8,1.94,13.95,2.92,19.65,7.41,3.4,2.67,6.38,7.44,5.43,11.82-.96,4.88-11.71,13.48-21.56,20.04-15.24,10.86-31.97,18.27-43.94,32.61-8.71,9.69-15.17,24.39-8.29,36.8,1.45,2.61,3.4,4.82,5.18,6.35,1.71,1.48,3.02,2.27,3.27,1.91l.02-.03Z"/>
+        <path fill="#00917c" d="M319.55,347.03c.86,1.06,2.28,3.15,2.18,5.74-.15,3.6-3.22,6.18-4.95,7.52-9.76,7.56-39.81,24.2-52.22,31.85,0,0-16.48,10.15-21.36,22.35-1.9,4.74-1.19,8.9-1.19,8.9.48,2.81,1.71,4.91,2.57,6.13.02-2.4.31-5.91,1.68-9.85,2.78-7.98,8.3-12.75,12.37-16.06,12.3-10.01,23.61-16.66,25.91-18,0,0,35.93-20.95,38.81-30.46.79-2.61,0-4.55,0-4.55-.85-2.09-2.84-3.14-3.8-3.56Z"/>
+        <!-- Livre gauche -->
+        <path fill="url(#gL)" d="M184.03,296c.54,44.64,1.07,89.27,1.61,133.91,8.16,1.8,16.79,4.07,25.8,6.91,19.46,6.15,36.28,13.65,50.35,21.11-2.05-.96-6.69-3.49-10.09-8.85-2.49-3.93-3.24-7.71-3.5-9.88-7.85-3.95-16.17-7.89-24.98-11.75-8.11-3.55-15.99-6.76-23.6-9.66-.19-41.93-.39-83.86-.58-125.79-5,1.33-10,2.67-15,4Z"/>
+        <path fill="url(#gL2)" d="M208.83,411.42c9.51,4.09,19.01,8.17,28.52,12.26-.05-1.33-.03-2.8.12-4.4.23-2.56.71-4.79,1.23-6.63-2.12-.8-4.38-1.77-6.74-2.95-4.1-2.05-7.57-4.28-10.44-6.39.16-38.44.32-76.89.48-115.33,4,.41,8.18,1.02,12.5,1.87,21.2,4.19,38.17,12.81,50.61,21.02-5.62-7.57-19.36-23.84-43.07-32.5-13.15-4.8-24.95-5.65-33.03-5.52-.06,46.19-.12,92.38-.18,138.57Z"/>
+        <!-- Livre droite -->
+        <path fill="url(#gR)" d="M411.02,296.83c-.15,44.01-.3,88.02-.46,132.03-8.63,2.47-17.64,5.38-26.95,8.79-20.46,7.5-38.48,16.04-54.05,24.58-.66-.37-1.67-1.05-2.6-2.18-.79-.97-1.24-1.92-1.49-2.58,8.32-7.88,15.99-13.24,21.55-16.72,7.86-4.91,14.32-7.73,24.8-12.48,8.23-3.73,16.13-6.92,23.6-9.66l.68-127.6c1.81.19,4.02.59,6.45,1.4,3.72,1.24,6.54,3,8.46,4.41Z"/>
+        <path fill="url(#gR2)" d="M386.21,412.24c-11.22,3.98-25.12,10.1-39.78,19.69-10.74,7.02-19.49,14.34-26.44,20.95-.77-.43-1.81-1.12-2.82-2.22-.75-.82-1.26-1.62-1.61-2.27,1.23-1.21,3.25-3.17,5.76-5.56,28.03-26.73,39.74-33.04,45.88-35.95,2.81-1.33,5.11-2.26,6.32-2.74-.16-38.44-.32-76.89-.48-115.33-4,.41-8.18,1.02-12.5,1.87-21.2,4.19-38.17,12.81-50.61,21.02,5.62-7.57,19.36-23.84,43.07-32.5,13.15-4.8,24.95-5.65,33.03-5.52.06,46.19.12,92.38.18,138.57Z"/>
+      </svg>
+      <h1 class="font-headline italic text-lg tracking-tight font-bold text-primary">Tilawa <span class="text-secondary font-normal">Tour</span></h1>
+    </div>
+
+    <a href="profil_{{THEME}}.html">
+      <img src="Images/{{AVATAR_FILE}}" class="w-10 h-10 rounded-full object-cover ring-2 ring-primary/20" alt="Profil"/>
+    </a>
+  </div>
+</header>
+
+<main class="pt-24 px-6 max-w-5xl mx-auto">
+
+  <!-- Hero : Salutation + date -->
+  <section class="mb-10 grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+    <div class="md:col-span-7">
+      <span class="font-label text-[11px] uppercase tracking-[0.15em] text-secondary font-bold mb-3 block">Tableau de Bord</span>
+      <h2 class="font-headline text-4xl md:text-5xl text-primary leading-tight font-bold mb-4">
+        As-salāmu ʿalaykum,<br/>
+        <span class="italic font-normal">{{GENRE_SALUTATION}}.</span>
+      </h2>
+      <!-- Double date -->
+      <div class="inline-flex items-center gap-3 bg-white rounded-full px-5 py-2.5 shadow-sm border border-outline-variant/30">
+        <span class="material-symbols-outlined text-secondary text-base">calendar_today</span>
+        <span class="text-sm font-medium text-on-surface" id="date-gr"></span>
+        <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+        <span class="text-sm text-primary font-medium" id="date-hij"></span>
+      </div>
+    </div>
+    <!-- Jauge circulaire -->
+    <div class="md:col-span-5 flex justify-end">
+      <div class="relative w-48 h-48 flex items-center justify-center">
+        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 192 192">
+          <circle class="text-surface-container-high" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-width="6"/>
+          <circle id="gauge-circle" class="text-secondary" cx="96" cy="96" fill="transparent" r="88"
+            stroke="currentColor" stroke-dasharray="552.92" stroke-dashoffset="552.92"
+            stroke-linecap="round" stroke-width="10"/>
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <span class="font-headline text-4xl font-bold text-primary" id="gauge-pct">0%</span>
+          <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold" style="text-align:center;max-width:80px;line-height:1.3;display:block;">Objectif<br/>mensuel</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bento Grid -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:2rem;">
+    <div class="bg-surface-container-low rounded-3xl p-8 flex flex-col justify-between">
+      <div>
+        <span class="material-symbols-outlined text-secondary mb-4" style="font-variation-settings:'FILL' 1;">menu_book</span>
+        <h3 class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-2">Lecture du jour</h3>
+        <p class="font-headline text-3xl text-primary font-semibold mb-6" id="hizb-label-jour">—</p>
+        <div class="space-y-4">
+          <div class="flex flex-col gap-1">
+            <span class="text-[10px] uppercase tracking-widest font-bold text-secondary">Début</span>
+            <p class="text-sm text-primary font-medium" id="hizb-debut">—</p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <span class="text-[10px] uppercase tracking-widest font-bold text-secondary">Fin</span>
+            <p class="text-sm text-primary font-medium" id="hizb-fin">—</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 border-t border-outline-variant pt-4 text-right">
+        <p class="font-arabic text-primary text-lg leading-relaxed" dir="rtl">اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ</p>
+        <p class="text-[9px] text-on-surface-variant mt-1 uppercase tracking-widest">Al-Baqarah • 255</p>
+      </div>
+    </div>
+    <div class="bg-primary rounded-3xl p-8 flex flex-col justify-between text-on-primary" id="btn-programme-container">
+      <div>
+        <span class="material-symbols-outlined text-secondary-fixed mb-4" style="font-variation-settings:'FILL' 1;">task_alt</span>
+        <h3 class="font-label text-xs uppercase tracking-widest text-primary-fixed-dim font-bold mb-2">Programme du jour</h3>
+        <p class="font-headline text-xl text-on-primary font-semibold mb-6" id="programme-label">Chargement...</p>
+      </div>
+      <div class="flex flex-col gap-3">
+        <!-- Bouton pleine largeur : J'ai fait -->
+        <button onclick="marquerFaitDashboard()"
+          class="w-full py-4 bg-secondary-container text-on-secondary-container rounded-2xl font-label text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 active:scale-95 transition-all hover:opacity-90 shadow-md">
+          <span class="material-symbols-outlined text-2xl leading-none ml-1" style="font-variation-settings:'FILL' 1,'wght' 600;">check_circle</span>
+          J'ai fait mon programme
+        </button>
+        <!-- Arrêt à la page — rangée horizontale compacte -->
+        <div class="flex items-center gap-2 px-1">
+          <p class="font-label text-[10px] uppercase tracking-widest text-on-primary/60 flex-shrink-0">Arrêté à</p>
+          <input type="number" id="input-page-arret" min="1" max="604" placeholder="page"
+            class="flex-1 py-2 px-3 rounded-xl border border-on-primary/30 bg-on-primary/10 text-on-primary placeholder-on-primary/40 font-label text-xs focus:outline-none focus:border-on-primary/60 text-center min-w-0"/>
+          <button onclick="arreterIciDashboard()"
+            class="py-2 px-4 bg-secondary-container text-on-secondary-container rounded-xl font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all flex-shrink-0">
+            OK
+          </button>
+        </div>
+        <div class="pt-2 border-t border-on-primary/20 flex items-center justify-between">
+          <div>
+            <p class="font-label text-sm font-medium text-on-primary/80">Reste à lire</p>
+            <p class="font-headline text-xl text-on-primary font-bold mt-0.5">
+              <span id="hizbs-restants">—</span>
+              <span class="font-label text-xs font-normal text-on-primary/70"> Hizbs • <span id="jours-restants">—</span></span>
+            </p>
+          </div>
+          <div class="w-20">
+            <div class="h-1.5 bg-on-primary/20 rounded-full overflow-hidden">
+              <div class="h-full bg-secondary-container rounded-full transition-all" id="progress-bar-hizb" style="width:0%"></div>
+            </div>
+            <p class="font-label text-[9px] text-right text-on-primary/60 mt-1" id="pct-hizb">0%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="relative rounded-3xl overflow-hidden bg-primary-dark min-h-[200px] flex flex-col justify-end p-8">
+      <div class="absolute inset-0 opacity-10 flex items-center justify-center">
+        <span class="material-symbols-outlined text-white" style="font-size:120px;">auto_stories</span>
+      </div>
+      <p class="text-white/90 font-headline italic text-lg leading-snug relative z-10">"Le Coran est une guérison et une miséricorde pour les croyants."</p>
+      <p class="text-white/50 text-xs mt-2 uppercase tracking-widest relative z-10">Sourate Al-Isra • 17:82</p>
+    </div>
+  </div>
+
+
+  
+
+  <!-- Régularité + Dernière page -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-5 mb-6">
+    <div class="md:col-span-6 bg-secondary-container/20 rounded-[2rem] p-8 border border-secondary-container/40">
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-secondary">calendar_today</span>
+          <p class="font-headline text-xl">Régularité</p>
+        </div>
+        <span class="font-label text-xs font-bold tracking-widest uppercase text-secondary bg-secondary-container/50 px-3 py-1 rounded-full" id="streak-badge">—</span>
+      </div>
+      <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-3">
+        <div class="bg-secondary h-full rounded-full" id="objectif-bar" style="width:0%"></div>
+      </div>
+      <p class="font-label text-sm text-on-surface-variant" id="objectif-txt">Chargement...</p>
+    </div>
+    <div class="md:col-span-6 bg-surface-container rounded-[2rem] p-8 flex flex-col gap-6 border border-outline-variant/20">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary">bookmark_heart</span>
+        <p class="font-headline text-xl">Dernière page lue</p>
+      </div>
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <p class="font-label text-lg text-on-surface font-medium" id="last-page-sourate">—</p>
+          <p class="font-label text-xs text-on-surface-variant mt-1 uppercase tracking-widest" id="last-page-info">Page —</p>
+        </div>
+        <a href="lecteur_{{THEME}}.html" class="bg-primary text-on-primary px-5 py-3 rounded-2xl font-label text-sm font-semibold hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 flex-shrink-0">
+          Reprendre
+          <span class="material-symbols-outlined text-base">arrow_forward</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistiques -->
+  <section class="bg-surface-container rounded-[2rem] p-7 mb-6">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary">bar_chart</span>
+        <h3 class="font-headline text-lg">Statistiques de lecture</h3>
+      </div>
+      <a href="bilan_{{THEME}}.html" class="flex items-center gap-1.5 font-label text-xs font-bold text-on-primary uppercase tracking-widest bg-primary px-3 py-1.5 rounded-full hover:opacity-90 active:scale-95 transition-all">
+        <span class="material-symbols-outlined text-sm leading-none" style="font-variation-settings:'FILL' 1;">insights</span>
+        Bilan annuel
+      </a>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="p-5 bg-surface-container-lowest rounded-2xl text-center">
+        <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mb-2">Total Lu</p>
+        <p class="font-headline text-2xl"><span id="stat-total">—</span> <span class="font-label text-xs text-on-surface-variant">pages</span></p>
+      </div>
+      <div class="p-5 bg-surface-container-lowest rounded-2xl text-center">
+        <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mb-2">Pages/jour</p>
+        <p class="font-headline text-2xl"><span id="stat-pages-jour">—</span> <span class="font-label text-xs text-on-surface-variant">p/j</span></p>
+      </div>
+      <div class="p-5 bg-surface-container-lowest rounded-2xl text-center">
+        <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mb-2">Avancement</p>
+        <p class="font-headline text-2xl"><span id="stat-pct">—</span> <span class="font-label text-xs text-on-surface-variant">%</span></p>
+      </div>
+      <div class="p-5 bg-surface-container-lowest rounded-2xl text-center">
+        <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mb-2">Khatmates</p>
+        <p class="font-headline text-2xl"><span id="stat-khatmates">—</span> <span class="font-label text-xs text-on-surface-variant">/ an</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Programme de la semaine -->
+  <section class="mb-8">
+    <div class="flex justify-between items-end mb-6">
+      <h3 class="font-headline text-2xl text-primary font-bold">Programme de la semaine</h3>
+      <a class="text-secondary font-label text-xs uppercase tracking-widest font-bold hover:underline" href="#">Voir tout</a>
+    </div>
+    <div class="space-y-3" id="week-plan-s"></div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="text-center pt-8 border-t border-outline-variant/10 mb-8">
+    <div class="flex flex-col items-center gap-4">
+      <a class="font-headline text-sm text-on-surface-variant hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">Proposé par JUMUA &amp; Me</a>
+      <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me">
+        <span class="material-symbols-outlined text-lg">photo_camera</span>
+        <span class="font-label text-xs uppercase tracking-widest">@jumua_and_me</span>
+      </a>
+      <p class="font-label text-[10px] text-on-surface-variant/60 uppercase tracking-[0.2em]">© 2026 JUMUA &amp; Me · Tous droits réservés · Tilawa Tour</p>
+    </div>
+  </footer>
+<!-- Bottom Nav -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pt-2 pb-5 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-4px_24px_rgba(0,145,124,0.06)]">
+  <a href="dashboard_{{THEME}}_v4.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl bg-primary/10 text-primary">
+    <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1;">dashboard</span>
+    <span class="font-label text-[10px] font-bold uppercase tracking-widest">Accueil</span>
+  </a>
+  <a href="lecteur_{{THEME}}.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary transition-all">
+    <span class="material-symbols-outlined text-xl">menu_book</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Coran</span>
+  </a>
+  <a href="calendrier_{{THEME}}.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary transition-all">
+    <span class="material-symbols-outlined text-xl">calendar_month</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Calendrier</span>
+  </a>
+  <a href="plan_{{THEME}}.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary transition-all">
+    <span class="material-symbols-outlined text-xl">edit_calendar</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Programme</span>
+  </a>
+  <a href="profil_{{THEME}}.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary transition-all">
+    <span class="material-symbols-outlined text-xl">person</span>
+    <span class="font-label text-[10px] uppercase tracking-widest">Profil</span>
+  </a>
+</nav>
+
+<script>
+
+const HIZB_TABLE = {"1":{"hizb":1,"s":1,"v":1,"p":1},"2":{"hizb":2,"s":2,"v":75,"p":11},"3":{"hizb":3,"s":2,"v":142,"p":22},"4":{"hizb":4,"s":2,"v":203,"p":32},"5":{"hizb":5,"s":2,"v":253,"p":42},"6":{"hizb":6,"s":3,"v":15,"p":51},"7":{"hizb":7,"s":3,"v":93,"p":62},"8":{"hizb":8,"s":3,"v":171,"p":72},"9":{"hizb":9,"s":4,"v":24,"p":82},"10":{"hizb":10,"s":4,"v":88,"p":92},"11":{"hizb":11,"s":4,"v":148,"p":102},"12":{"hizb":12,"s":5,"v":27,"p":112},"13":{"hizb":13,"s":5,"v":82,"p":121},"14":{"hizb":14,"s":6,"v":36,"p":132},"15":{"hizb":15,"s":6,"v":111,"p":142},"16":{"hizb":16,"s":7,"v":1,"p":151},"17":{"hizb":17,"s":7,"v":88,"p":162},"18":{"hizb":18,"s":7,"v":171,"p":173},"19":{"hizb":19,"s":8,"v":41,"p":182},"20":{"hizb":20,"s":9,"v":34,"p":192},"21":{"hizb":21,"s":9,"v":93,"p":201},"22":{"hizb":22,"s":10,"v":26,"p":212},"23":{"hizb":23,"s":11,"v":6,"p":222},"24":{"hizb":24,"s":11,"v":84,"p":231},"25":{"hizb":25,"s":12,"v":53,"p":242},"26":{"hizb":26,"s":13,"v":19,"p":252},"27":{"hizb":27,"s":15,"v":1,"p":262},"28":{"hizb":28,"s":16,"v":51,"p":272},"29":{"hizb":29,"s":17,"v":1,"p":282},"30":{"hizb":30,"s":17,"v":99,"p":292},"31":{"hizb":31,"s":18,"v":75,"p":302},"32":{"hizb":32,"s":20,"v":1,"p":312},"33":{"hizb":33,"s":21,"v":1,"p":322},"34":{"hizb":34,"s":22,"v":1,"p":332},"35":{"hizb":35,"s":23,"v":1,"p":342},"36":{"hizb":36,"s":24,"v":21,"p":352},"37":{"hizb":37,"s":25,"v":21,"p":362},"38":{"hizb":38,"s":26,"v":111,"p":371},"39":{"hizb":39,"s":27,"v":56,"p":382},"40":{"hizb":40,"s":28,"v":51,"p":392},"41":{"hizb":41,"s":29,"v":46,"p":402},"42":{"hizb":42,"s":31,"v":22,"p":413},"43":{"hizb":43,"s":33,"v":31,"p":422},"44":{"hizb":44,"s":34,"v":24,"p":431},"45":{"hizb":45,"s":36,"v":28,"p":442},"46":{"hizb":46,"s":37,"v":145,"p":451},"47":{"hizb":47,"s":39,"v":32,"p":462},"48":{"hizb":48,"s":40,"v":41,"p":472},"49":{"hizb":49,"s":41,"v":47,"p":482},"50":{"hizb":50,"s":43,"v":24,"p":491},"51":{"hizb":51,"s":46,"v":1,"p":502},"52":{"hizb":52,"s":48,"v":18,"p":513},"53":{"hizb":53,"s":51,"v":31,"p":522},"54":{"hizb":54,"s":55,"v":1,"p":531},"55":{"hizb":55,"s":58,"v":1,"p":542},"56":{"hizb":56,"s":62,"v":1,"p":553},"57":{"hizb":57,"s":67,"v":1,"p":562},"58":{"hizb":58,"s":72,"v":1,"p":572},"59":{"hizb":59,"s":78,"v":1,"p":582},"60":{"hizb":60,"s":87,"v":1,"p":591}};
+const PAGE_TO_HIZB = {"1":1,"2":1,"3":1,"4":1,"5":1,"6":1,"7":1,"8":1,"9":1,"10":1,"11":2,"12":2,"13":2,"14":2,"15":2,"16":2,"17":2,"18":2,"19":2,"20":2,"21":2,"22":3,"23":3,"24":3,"25":3,"26":3,"27":3,"28":3,"29":3,"30":3,"31":3,"32":4,"33":4,"34":4,"35":4,"36":4,"37":4,"38":4,"39":4,"40":4,"41":4,"42":5,"43":5,"44":5,"45":5,"46":5,"47":5,"48":5,"49":5,"50":5,"51":6,"52":6,"53":6,"54":6,"55":6,"56":6,"57":6,"58":6,"59":6,"60":6,"61":6,"62":7,"63":7,"64":7,"65":7,"66":7,"67":7,"68":7,"69":7,"70":7,"71":7,"72":8,"73":8,"74":8,"75":8,"76":8,"77":8,"78":8,"79":8,"80":8,"81":8,"82":9,"83":9,"84":9,"85":9,"86":9,"87":9,"88":9,"89":9,"90":9,"91":9,"92":10,"93":10,"94":10,"95":10,"96":10,"97":10,"98":10,"99":10,"100":10,"101":10,"102":11,"103":11,"104":11,"105":11,"106":11,"107":11,"108":11,"109":11,"110":11,"111":11,"112":12,"113":12,"114":12,"115":12,"116":12,"117":12,"118":12,"119":12,"120":12,"121":13,"122":13,"123":13,"124":13,"125":13,"126":13,"127":13,"128":13,"129":13,"130":13,"131":13,"132":14,"133":14,"134":14,"135":14,"136":14,"137":14,"138":14,"139":14,"140":14,"141":14,"142":15,"143":15,"144":15,"145":15,"146":15,"147":15,"148":15,"149":15,"150":15,"151":16,"152":16,"153":16,"154":16,"155":16,"156":16,"157":16,"158":16,"159":16,"160":16,"161":16,"162":17,"163":17,"164":17,"165":17,"166":17,"167":17,"168":17,"169":17,"170":17,"171":17,"172":17,"173":18,"174":18,"175":18,"176":18,"177":18,"178":18,"179":18,"180":18,"181":18,"182":19,"183":19,"184":19,"185":19,"186":19,"187":19,"188":19,"189":19,"190":19,"191":19,"192":20,"193":20,"194":20,"195":20,"196":20,"197":20,"198":20,"199":20,"200":20,"201":21,"202":21,"203":21,"204":21,"205":21,"206":21,"207":21,"208":21,"209":21,"210":21,"211":21,"212":22,"213":22,"214":22,"215":22,"216":22,"217":22,"218":22,"219":22,"220":22,"221":22,"222":23,"223":23,"224":23,"225":23,"226":23,"227":23,"228":23,"229":23,"230":23,"231":24,"232":24,"233":24,"234":24,"235":24,"236":24,"237":24,"238":24,"239":24,"240":24,"241":24,"242":25,"243":25,"244":25,"245":25,"246":25,"247":25,"248":25,"249":25,"250":25,"251":25,"252":26,"253":26,"254":26,"255":26,"256":26,"257":26,"258":26,"259":26,"260":26,"261":26,"262":27,"263":27,"264":27,"265":27,"266":27,"267":27,"268":27,"269":27,"270":27,"271":27,"272":28,"273":28,"274":28,"275":28,"276":28,"277":28,"278":28,"279":28,"280":28,"281":28,"282":29,"283":29,"284":29,"285":29,"286":29,"287":29,"288":29,"289":29,"290":29,"291":29,"292":30,"293":30,"294":30,"295":30,"296":30,"297":30,"298":30,"299":30,"300":30,"301":30,"302":31,"303":31,"304":31,"305":31,"306":31,"307":31,"308":31,"309":31,"310":31,"311":31,"312":32,"313":32,"314":32,"315":32,"316":32,"317":32,"318":32,"319":32,"320":32,"321":32,"322":33,"323":33,"324":33,"325":33,"326":33,"327":33,"328":33,"329":33,"330":33,"331":33,"332":34,"333":34,"334":34,"335":34,"336":34,"337":34,"338":34,"339":34,"340":34,"341":34,"342":35,"343":35,"344":35,"345":35,"346":35,"347":35,"348":35,"349":35,"350":35,"351":35,"352":36,"353":36,"354":36,"355":36,"356":36,"357":36,"358":36,"359":36,"360":36,"361":36,"362":37,"363":37,"364":37,"365":37,"366":37,"367":37,"368":37,"369":37,"370":37,"371":38,"372":38,"373":38,"374":38,"375":38,"376":38,"377":38,"378":38,"379":38,"380":38,"381":38,"382":39,"383":39,"384":39,"385":39,"386":39,"387":39,"388":39,"389":39,"390":39,"391":39,"392":40,"393":40,"394":40,"395":40,"396":40,"397":40,"398":40,"399":40,"400":40,"401":40,"402":41,"403":41,"404":41,"405":41,"406":41,"407":41,"408":41,"409":41,"410":41,"411":41,"412":41,"413":42,"414":42,"415":42,"416":42,"417":42,"418":42,"419":42,"420":42,"421":42,"422":43,"423":43,"424":43,"425":43,"426":43,"427":43,"428":43,"429":43,"430":43,"431":44,"432":44,"433":44,"434":44,"435":44,"436":44,"437":44,"438":44,"439":44,"440":44,"441":44,"442":45,"443":45,"444":45,"445":45,"446":45,"447":45,"448":45,"449":45,"450":45,"451":46,"452":46,"453":46,"454":46,"455":46,"456":46,"457":46,"458":46,"459":46,"460":46,"461":46,"462":47,"463":47,"464":47,"465":47,"466":47,"467":47,"468":47,"469":47,"470":47,"471":47,"472":48,"473":48,"474":48,"475":48,"476":48,"477":48,"478":48,"479":48,"480":48,"481":48,"482":49,"483":49,"484":49,"485":49,"486":49,"487":49,"488":49,"489":49,"490":49,"491":50,"492":50,"493":50,"494":50,"495":50,"496":50,"497":50,"498":50,"499":50,"500":50,"501":50,"502":51,"503":51,"504":51,"505":51,"506":51,"507":51,"508":51,"509":51,"510":51,"511":51,"512":51,"513":52,"514":52,"515":52,"516":52,"517":52,"518":52,"519":52,"520":52,"521":52,"522":53,"523":53,"524":53,"525":53,"526":53,"527":53,"528":53,"529":53,"530":53,"531":54,"532":54,"533":54,"534":54,"535":54,"536":54,"537":54,"538":54,"539":54,"540":54,"541":54,"542":55,"543":55,"544":55,"545":55,"546":55,"547":55,"548":55,"549":55,"550":55,"551":55,"552":55,"553":56,"554":56,"555":56,"556":56,"557":56,"558":56,"559":56,"560":56,"561":56,"562":57,"563":57,"564":57,"565":57,"566":57,"567":57,"568":57,"569":57,"570":57,"571":57,"572":58,"573":58,"574":58,"575":58,"576":58,"577":58,"578":58,"579":58,"580":58,"581":58,"582":59,"583":59,"584":59,"585":59,"586":59,"587":59,"588":59,"589":59,"590":59,"591":60,"592":60,"593":60,"594":60,"595":60,"596":60,"597":60,"598":60,"599":60,"600":60,"601":60,"602":60,"603":60,"604":60};
+const SURAH_NAMES = {"1":"Al-Fatiha","2":"Al-Baqarah","3":"Al-Imran","4":"An-Nisa","5":"Al-Ma'idah","6":"Al-An'am","7":"Al-A'raf","8":"Al-Anfal","9":"At-Tawbah","10":"Yunus","11":"Hud","12":"Yusuf","13":"Ar-Ra'd","14":"Ibrahim","15":"Al-Hijr","16":"An-Nahl","17":"Al-Isra","18":"Al-Kahf","19":"Maryam","20":"Ta-Ha","21":"Al-Anbiya","22":"Al-Hajj","23":"Al-Mu'minun","24":"An-Nur","25":"Al-Furqan","26":"Ash-Shu'ara","27":"An-Naml","28":"Al-Qasas","29":"Al-Ankabut","30":"Ar-Rum","31":"Luqman","32":"As-Sajdah","33":"Al-Ahzab","34":"Saba","35":"Fatir","36":"Ya-Sin","37":"As-Saffat","38":"Sad","39":"Az-Zumar","40":"Ghafir","41":"Fussilat","42":"Ash-Shura","43":"Az-Zukhruf","44":"Ad-Dukhan","45":"Al-Jathiyah","46":"Al-Ahqaf","47":"Muhammad","48":"Al-Fath","49":"Al-Hujurat","50":"Qaf","51":"Adh-Dhariyat","52":"At-Tur","53":"An-Najm","54":"Al-Qamar","55":"Ar-Rahman","56":"Al-Waqi'ah","57":"Al-Hadid","58":"Al-Mujadila","59":"Al-Hashr","60":"Al-Mumtahanah","61":"As-Saf","62":"Al-Jumu'ah","63":"Al-Munafiqun","64":"At-Taghabun","65":"At-Talaq","66":"At-Tahrim","67":"Al-Mulk","68":"Al-Qalam","69":"Al-Haqqah","70":"Al-Ma'arij","71":"Nuh","72":"Al-Jinn","73":"Al-Muzzammil","74":"Al-Muddathir","75":"Al-Qiyamah","76":"Al-Insan","77":"Al-Mursalat","78":"An-Naba","79":"An-Nazi'at","80":"Abasa","81":"At-Takwir","82":"Al-Infitar","83":"Al-Mutaffifin","84":"Al-Inshiqaq","85":"Al-Buruj","86":"At-Tariq","87":"Al-A'la","88":"Al-Ghashiyah","89":"Al-Fajr","90":"Al-Balad","91":"Ash-Shams","92":"Al-Layl","93":"Ad-Duha","94":"Ash-Sharh","95":"At-Tin","96":"Al-Alaq","97":"Al-Qadr","98":"Al-Bayyinah","99":"Az-Zalzalah","100":"Al-Adiyat","101":"Al-Qari'ah","102":"At-Takathur","103":"Al-Asr","104":"Al-Humazah","105":"Al-Fil","106":"Quraysh","107":"Al-Ma'un","108":"Al-Kawthar","109":"Al-Kafirun","110":"An-Nasr","111":"Al-Masad","112":"Al-Ikhlas","113":"Al-Falaq","114":"An-Nas"};
+
+// ── Utilitaires Hizb officiels ────────────────────────────────────────────
+function getHizbForPage(page) {
+  return PAGE_TO_HIZB[Math.min(Math.max(page,1),604)] || 1;
+}
+function getHizbLabel(hizb) {
+  return 'Hizb ' + hizb;
+}
+function getSouratePourPage(page) {
+  var h = getHizbForPage(page);
+  var info = HIZB_TABLE[String(h)];
+  return info ? (SURAH_NAMES[String(info.s)] || '') : '';
+}
+
+
+const now = new Date();
+
+// Date grégorienne en français
+document.getElementById('date-gr').textContent = now.toLocaleDateString('fr-FR', {
+  weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+});
+
+// Date hégirienne en français
+const moisHijFr = [
+  'Mouharram','Safar','Rabi\' al-Awwal','Rabi\' al-Akhir',
+  'Joumada al-Oula','Joumada al-Akhira','Rajab','Chaabane',
+  'Ramadan','Chawwal','Dhou al-Qi\'da','Dhou al-Hijja'
+];
+try {
+  // On utilise la locale arabe pour extraire les composantes, puis on traduit
+  const fmtDay  = new Intl.DateTimeFormat('en-u-ca-islamic', { day: 'numeric' }).format(now);
+  const fmtMon  = new Intl.DateTimeFormat('en-u-ca-islamic',    { month: 'numeric' }).format(now);
+  const fmtYear = new Intl.DateTimeFormat('en-u-ca-islamic',    { year: 'numeric' }).format(now);
+  const day  = parseInt(fmtDay.replace(/[^0-9]/g,''));
+  const mon  = parseInt(fmtMon) - 1;
+  const year = parseInt(fmtYear.replace(/[^0-9]/g,''));
+  document.getElementById('date-hij').textContent = `${day} ${moisHijFr[mon]} ${year}`;
+} catch(e) {
+  document.getElementById('date-hij').textContent = '14 Dhou al-Qi\'da 1446';
+}
+
+(function() {
+  var jours = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+  var container = document.getElementById("week-plan-s");
+  if (!container) return;
+  var pagesJour = 20, hizbsJour = 2;
+  var dateDebut = new Date(); dateDebut.setHours(0,0,0,0);
+  try {
+    var raw = localStorage.getItem("tilawa_programme");
+    if (raw) {
+      var prog = JSON.parse(raw);
+      pagesJour = prog.pages_jour || 20;
+      hizbsJour = prog.hizbs_jour || 2;
+      if (prog.date_debut) dateDebut = new Date(prog.date_debut + "T00:00:00");
+    }
+  } catch(e) {}
+  var _lastP = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  var currentHizb = typeof PAGE_TO_HIZB !== 'undefined' ? (PAGE_TO_HIZB[Math.min(_lastP,604)] || 1) : Math.ceil(_lastP / 10);
+  function hizbLbl(i) {
+    if (hizbsJour === 0.5) { return 'Nisf ' + ((currentHizb - 1) * 2 + i + 1); }
+    var h = currentHizb + i * hizbsJour;
+    var e = h + hizbsJour - 1;
+    if (hizbsJour === 1) return 'Hizb ' + Math.min(Math.floor(h), 60);
+    return 'Hizb ' + Math.min(Math.floor(h), 60) + '-' + Math.min(Math.floor(e), 60);
+  }
+  var today = new Date(); today.setHours(0,0,0,0);
+  var nextPageToday = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  // Nombre de versets par sourate (index 1-114)
+  var SURAH_VC = [0,7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
+  function verseRange(i) {
+    if (hizbsJour < 1) {
+      var pd2 = Math.min(nextPageToday + i * pagesJour, 604);
+      return 'p.' + pd2 + '–' + Math.min(pd2 + pagesJour - 1, 604);
+    }
+    var sh = Math.min(Math.max(Math.floor(currentHizb + i * hizbsJour), 1), 60);
+    var eh = Math.min(sh + Math.round(hizbsJour) - 1, 60);
+    var startInfo = HIZB_TABLE[String(sh)];
+    var nextInfo  = HIZB_TABLE[String(eh + 1)];
+    if (!startInfo) return '';
+    var startStr = (SURAH_NAMES[String(startInfo.s)] || '') + ' v.' + startInfo.v;
+    var endStr;
+    if (!nextInfo || eh >= 60) {
+      endStr = 'An-Nas v.6';
+    } else if (nextInfo.v === 1) {
+      var prevS = nextInfo.s - 1;
+      endStr = (SURAH_NAMES[String(prevS)] || '') + ' v.' + (SURAH_VC[prevS] || '?');
+    } else {
+      endStr = (SURAH_NAMES[String(nextInfo.s)] || '') + ' v.' + (nextInfo.v - 1);
+    }
+    return startStr + ' — ' + endStr;
+  }
+  for (var i = 0; i < 7; i++) {
+    var dd = new Date(today); dd.setDate(today.getDate() + i);
+    var isToday = (i === 0);
+    var div = document.createElement("div");
+    div.className = "bg-surface-container-lowest p-5 rounded-2xl flex items-center gap-4 " +
+      (isToday ? "border border-secondary/20 shadow-sm" : "hover:bg-surface-container transition-all");
+    var badge = isToday ? "bg-secondary-container/40 text-secondary" : "bg-primary-container/30 text-primary";
+    var icon = isToday
+      ? "<span class='material-symbols-outlined text-secondary'>radio_button_checked</span>"
+      : "<span class='material-symbols-outlined text-on-surface-variant/30'>radio_button_unchecked</span>";
+    var todayTxt = isToday ? " - Aujourd'hui" : "";
+    // Vérifier si ce jour est marqué comme fait
+    var dayKey = localDate(dd);
+    var doneDays = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+    var isDone = !!doneDays[dayKey];
+
+    var btnsFait = '';
+
+    div.innerHTML =
+      "<div class='w-12 h-12 flex-shrink-0 " + badge + " rounded-xl flex flex-col items-center justify-center font-bold text-sm'>" +
+        "<span>" + dd.getDate() + "</span>" +
+        "<span class='font-label text-[8px] uppercase font-normal'>" + dd.toLocaleDateString("fr-FR",{month:"short"}) + "</span>" +
+      "</div>" +
+      "<div class='flex-grow min-w-0'>" +
+        "<p class='font-bold text-primary'>" + jours[dd.getDay()] + todayTxt + "</p>" +
+        "<p class='font-label text-xs text-on-surface-variant uppercase tracking-widest'>" + hizbLbl(i) + "</p>" +
+        "<p class='font-label text-[10px] text-on-surface-variant/60 mt-0.5 truncate'>" + verseRange(i) + "</p>" +
+        btnsFait +
+      "</div>" + icon;
+    container.appendChild(div);
+  }
+})();
+
+
+
+
+
+(function() {
+  var p2 = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+  var lp = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  var km = parseInt(localStorage.getItem('tilawa_khatmates_annee') || '0');
+  var pj = p2.pages_jour || 20;
+  var pct = Math.round((lp / 604) * 100);
+
+  // Objectif mensuel : jours faits ce mois / jours écoulés ce mois
+  var _now2 = new Date();
+  var _doneObj2 = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+  var _monthKey2 = _now2.getFullYear() + '-' + String(_now2.getMonth()+1).padStart(2,'0');
+  var _doneThisMonth2 = Object.keys(_doneObj2).filter(function(k){ return k.startsWith(_monthKey2); }).length;
+  var _dayOfMonth2 = _now2.getDate();
+  var _dateDebut2 = p2.date_debut ? new Date(p2.date_debut + 'T00:00:00') : null;
+  var _firstDayThisMonth2 = new Date(_now2.getFullYear(), _now2.getMonth(), 1);
+  var _startCount2 = _dateDebut2 && _dateDebut2 > _firstDayThisMonth2 ? _dateDebut2.getDate() : 1;
+  var _daysElapsed2 = Math.max(1, _dayOfMonth2 - _startCount2 + 1);
+  var _pctMois2 = Math.min(100, Math.round(_doneThisMonth2 / _daysElapsed2 * 100));
+
+  var gaugeEl = document.getElementById('gauge-circle');
+  var gaugePctEl = document.getElementById('gauge-pct');
+  if (gaugeEl) gaugeEl.setAttribute('stroke-dashoffset', (552.92 * (1 - _pctMois2 / 100)).toFixed(2));
+  if (gaugePctEl) gaugePctEl.textContent = _pctMois2 + '%';
+
+  var el = function(id) { return document.getElementById(id); };
+  if(el('streak-badge')) el('streak-badge').textContent = 'Page ' + lp + ' / 604';
+  if(el('objectif-bar')) el('objectif-bar').style.width = pct + '%';
+  if(el('objectif-txt')) el('objectif-txt').textContent = pct + '% accompli — ' + pj + ' pages/jour';
+
+  var SMAP = {1:'Al-Fatiha',2:'Al-Baqarah',50:"Al-'Imran",77:'An-Nisa',128:"Al-An'am",
+    208:'Yunus',267:'An-Nahl',293:'Al-Kahf',440:'Ya-Sin',528:"Al-Waqi'ah",560:'Al-Mulk',604:'An-Nas'};
+  var ARABIC = {1:'الفَاتِحَة',2:'البَقَرَة',50:'آل عِمْرَان',77:'النِّسَاء',293:'الكَهْف',440:'يس'};
+  function sdp(p) {
+    var keys = Object.keys(SMAP).map(Number).sort(function(a,b){return a-b;});
+    var n = 'Al-Fatiha';
+    for(var i=0;i<keys.length;i++){if(keys[i]<=p)n=SMAP[keys[i]];else break;}
+    return n;
+  }
+  function adp(p) {
+    var keys = Object.keys(ARABIC).map(Number).sort(function(a,b){return a-b;});
+    var n = 'الفَاتِحَة';
+    for(var i=0;i<keys.length;i++){if(keys[i]<=p)n=ARABIC[keys[i]];else break;}
+    return n;
+  }
+
+  if(el('last-page-sourate')) el('last-page-sourate').textContent = 'Sourate ' + sdp(Math.max(1, lp - 1));
+  if(el('last-page-info'))    el('last-page-info').textContent    = 'Page ' + Math.max(1, lp - 1);
+  if(el('last-page-arabic'))  el('last-page-arabic').textContent  = adp(Math.max(1, lp - 1));
+  if(el('stat-total'))        el('stat-total').textContent        = Math.max(0, lp - 1);
+  if(el('stat-pages-jour'))   el('stat-pages-jour').textContent   = pj;
+  if(el('stat-pct'))          el('stat-pct').textContent          = pct;
+  if(el('stat-khatmates'))    el('stat-khatmates').textContent    = km;
+})();
+
+// ── Fonctions programme du jour ───────────────────────────────────────────
+function marquerFait(dayKey) {
+  var doneDays = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+  doneDays[dayKey] = true;
+  localStorage.setItem('tilawa_done_days', JSON.stringify(doneDays));
+  // Avancer la page automatiquement
+  var prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+  var lastPage = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  var pagesJour = prog.pages_jour || 20;
+  var newPage = lastPage + pagesJour;
+  // Détection de Khatma complète
+  if (newPage > 604) {
+    var khatmates = parseInt(localStorage.getItem('tilawa_khatmates_annee') || '0') + 1;
+    localStorage.setItem('tilawa_khatmates_annee', String(khatmates));
+    localStorage.setItem('tilawa_last_page', '1');
+    window.location.href = 'celebration_{{THEME}}.html';
+    return;
+  }
+  localStorage.setItem('tilawa_last_page', String(newPage));
+  // Recharger pour mettre à jour l'affichage
+  window.location.reload();
+}
+
+function localDate(d){var dd=d||new Date();return dd.getFullYear()+'-'+String(dd.getMonth()+1).padStart(2,'0')+'-'+String(dd.getDate()).padStart(2,'0');}
+
+
+// ── Lecture + Programme + Reste à lire dynamiques ────────────────────────
+(function updateDashboard() {
+  var prog       = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+  var nextPage   = parseInt(localStorage.getItem('tilawa_last_page') || '1'); // prochaine page à lire
+  var lastPageLue = Math.max(1, nextPage - 1); // dernière page effectivement lue
+  var pagesJour  = prog.pages_jour || 20;
+  var hizbsJour  = prog.hizbs_jour || 2;
+
+  // Hizb du jour = hizb de la prochaine page à lire
+  // nextPage = première page à lire aujourd'hui
+  // Si cette page est la DERNIÈRE d'un hizb, on est au début du hizb suivant
+  var _h = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(nextPage,604)] || 1) : Math.ceil(nextPage / 10);
+  var _hNext = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(nextPage+1,604)] || 1) : _h;
+  // Si la page suivante est dans un hizb différent, on commence le hizb suivant
+  var hizbActuel = (_hNext > _h) ? _hNext : _h;
+  var hizbFin    = Math.min(hizbActuel + Math.ceil(hizbsJour) - 1, 60);
+  var hizbsRestants = 60 - hizbActuel + 1;
+  var pct = Math.round((lastPageLue / 604) * 100);
+  var joursRest = Math.ceil(hizbsRestants / hizbsJour);
+
+  // Bloc Lecture du jour
+  var labelH = hizbActuel === hizbFin ? 'Hizb ' + hizbActuel : 'Hizb ' + hizbActuel + ' & ' + hizbFin;
+  var elLabel = document.getElementById('hizb-label-jour');
+  if (elLabel) elLabel.textContent = labelH;
+
+  if (typeof HIZB_TABLE !== 'undefined' && SURAH_NAMES) {
+    var infoD     = HIZB_TABLE[String(hizbActuel)];
+    var infoFNext = HIZB_TABLE[String(hizbFin + 1)];
+    var debutEl = document.getElementById('hizb-debut');
+    var finEl   = document.getElementById('hizb-fin');
+    if (debutEl && infoD) {
+      debutEl.textContent = 'Sourate ' + (SURAH_NAMES[String(infoD.s)] || '') + ', v.' + infoD.v + ' — p.' + infoD.p;
+    }
+    if (finEl) {
+      if (infoFNext) {
+        finEl.textContent = 'Sourate ' + (SURAH_NAMES[String(infoFNext.s)] || '') + ', v.' + (infoFNext.v > 1 ? infoFNext.v - 1 : 1) + ' — p.' + (infoFNext.p - 1);
+      } else {
+        finEl.textContent = 'An-Nas — p.604';
+      }
+    }
+  }
+
+  // Bloc Programme du jour
+  var progLabel = document.getElementById('programme-label');
+  if (progLabel) progLabel.textContent = labelH;
+
+  // Bloc Reste à lire
+  var hrEl  = document.getElementById('hizbs-restants');
+  var barEl = document.getElementById('progress-bar-hizb');
+  var pctEl = document.getElementById('pct-hizb');
+  var jrEl  = document.getElementById('jours-restants');
+  if (hrEl)  hrEl.textContent  = hizbsRestants;
+  if (barEl) barEl.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+  if (jrEl)  jrEl.textContent  = joursRest + ' jour' + (joursRest > 1 ? 's' : '') + ' restants';
+
+  // Programme déjà fait aujourd'hui ?
+  var today = localDate();
+  var doneDays = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+  var btnContainer = document.getElementById('btn-programme-container');
+  if (doneDays[today] && btnContainer) {
+    btnContainer.innerHTML =
+      '<div class="flex flex-col items-center justify-center h-full gap-4 text-center">' +
+        '<span class="material-symbols-outlined text-5xl text-on-primary" style="font-variation-settings:' + "'" + 'FILL' + "'" + ' 1;">task_alt</span>' +
+        '<p class="font-headline text-2xl text-on-primary font-bold">Programme accompli !</p>' +
+        '<p class="font-label text-base text-on-primary/80">Barak Allahou fikoum</p>' +
+      '</div>';
+  }
+})();
+
+function marquerFaitDashboard() {
+  var today = localDate();
+  var doneDays = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+  doneDays[today] = true;
+  localStorage.setItem('tilawa_done_days', JSON.stringify(doneDays));
+  var prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+  var lastPage = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  var hizbsJour = prog.hizbs_jour || 2;
+  // Avancer au début du prochain hizb officiel
+  var hizbActuel = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(lastPage,604)] || 1) : 1;
+  var hizbSuivant = hizbActuel + Math.round(hizbsJour);
+  // Détection de Khatma complète
+  if (hizbSuivant > 60) {
+    var khatmates = parseInt(localStorage.getItem('tilawa_khatmates_annee') || '0') + 1;
+    localStorage.setItem('tilawa_khatmates_annee', String(khatmates));
+    localStorage.setItem('tilawa_last_page', '1');
+    window.location.href = 'celebration_{{THEME}}.html';
+    return;
+  }
+  var nextPage = (typeof HIZB_TABLE !== 'undefined' && HIZB_TABLE[String(hizbSuivant)])
+    ? HIZB_TABLE[String(hizbSuivant)].p
+    : Math.min(lastPage + (prog.pages_jour || 20), 604);
+  localStorage.setItem('tilawa_last_page', String(nextPage));
+  window.location.reload();
+}
+
+function arreterIciDashboard() {
+  var input = document.getElementById('input-page-arret');
+  if (!input) return;
+  var page = parseInt(input.value);
+  if (!isNaN(page) && page >= 1 && page <= 604) {
+    var today = localDate();
+    var doneDays = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+    doneDays[today] = true;
+    localStorage.setItem('tilawa_done_days', JSON.stringify(doneDays));
+    if (page === 604) {
+      var khatmates = parseInt(localStorage.getItem('tilawa_khatmates_annee') || '0') + 1;
+      localStorage.setItem('tilawa_khatmates_annee', String(khatmates));
+      localStorage.setItem('tilawa_last_page', '1');
+      window.location.href = 'celebration_{{THEME}}.html';
+      return;
+    }
+    localStorage.setItem('tilawa_last_page', String(page));
+    window.location.reload();
+  } else {
+    input.style.borderColor = 'rgba(255,100,100,0.6)';
+    input.placeholder = '1 à 604';
+  }
+}
+
+
+</script>
+
+
+
+</body>
+</html>
