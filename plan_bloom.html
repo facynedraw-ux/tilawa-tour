@@ -473,18 +473,42 @@ selectRythme(2);
 document.getElementById('date-input') && document.getElementById('date-input').addEventListener('change', function() {
   if (this.value) applyDate(new Date(this.value + 'T00:00:00'));
 });
-applyDate(new Date());
 
 // Gestion du programme déjà généré
 (function() {
   var existing = localStorage.getItem('tilawa_programme');
-  if (!existing) return;
+
+  // Pas de programme : afficher la date d'aujourd'hui et sortir
+  if (!existing) { applyDate(new Date()); return; }
+
+  var prog = JSON.parse(existing);
+
+  // Restaurer la date sauvegardée
+  applyDate(prog.date_debut ? new Date(prog.date_debut + 'T00:00:00') : new Date());
+
+  // Restaurer le rythme sauvegardé
+  if (typeof prog.rythme_idx === 'number') selectRythme(prog.rythme_idx);
+
+  // Griser la section date et la grille de rythme
+  var dateCard = document.getElementById('start-date').closest('.bg-surface-container-lowest');
+  var rythmeGrid = document.getElementById('rythme-grid');
+  function lockForm() {
+    if (dateCard)   { dateCard.classList.add('opacity-40', 'pointer-events-none'); }
+    if (rythmeGrid) { rythmeGrid.classList.add('opacity-40', 'pointer-events-none'); }
+  }
+  function unlockForm() {
+    if (dateCard)   { dateCard.classList.remove('opacity-40', 'pointer-events-none'); }
+    if (rythmeGrid) { rythmeGrid.classList.remove('opacity-40', 'pointer-events-none'); }
+  }
+  lockForm();
+
   var btn = document.querySelector('[onclick="genererProgramme()"]');
   if (!btn) return;
   btn.disabled = true;
   btn.classList.add('opacity-50', 'cursor-not-allowed');
   btn.classList.remove('hover:opacity-90', 'active:scale-98');
   btn.textContent = '✓ Programme enregistré';
+
   var modBtn = document.createElement('button');
   modBtn.textContent = 'Modifier mon programme';
   modBtn.type = 'button';
@@ -494,6 +518,7 @@ applyDate(new Date());
     btn.classList.remove('opacity-50', 'cursor-not-allowed');
     btn.classList.add('hover:opacity-90', 'active:scale-98');
     btn.textContent = 'Générer mon programme';
+    unlockForm();
     modBtn.remove();
   };
   btn.parentNode.insertBefore(modBtn, btn.nextSibling);

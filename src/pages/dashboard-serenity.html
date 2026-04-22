@@ -681,7 +681,7 @@ function marquerFaitDashboard() {
   }
   var nextPage = (typeof HIZB_TABLE !== 'undefined' && HIZB_TABLE[String(hizbSuivant)])
     ? HIZB_TABLE[String(hizbSuivant)].p
-    : Math.min(lastPage + (prog.pages_jour || 20), 604);
+    : Math.min(currentPM + pagesJourM, 604);
   localStorage.setItem('tilawa_last_page', String(nextPage));
   window.location.reload();
 }
