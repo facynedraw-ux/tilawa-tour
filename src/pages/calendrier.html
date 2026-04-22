@@ -202,10 +202,18 @@ function closeDrawer() {
     </div>
   </footer>
 
-<!-- FAB -->
-<button class="fixed bottom-28 right-6 z-40 bg-primary text-on-primary w-14 h-14 rounded-2xl shadow-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300">
-  <span class="material-symbols-outlined">auto_stories</span>
-</button>
+<!-- FAB : créer programme (masqué si programme déjà généré) -->
+<a href="plan_{{THEME}}.html" id="fab-programme"
+   class="fixed bottom-28 right-6 z-40 bg-primary text-on-primary w-14 h-14 rounded-2xl shadow-xl items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 hidden"
+   title="Créer mon programme">
+  <span class="material-symbols-outlined">edit_calendar</span>
+</a>
+<script>
+if (!localStorage.getItem('tilawa_programme')) {
+  document.getElementById('fab-programme').classList.remove('hidden');
+  document.getElementById('fab-programme').classList.add('flex');
+}
+</script>
 
 <!-- Bottom Nav -->
 <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pt-2 pb-5 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-4px_24px_rgba(106,91,83,0.06)]">
