@@ -6,14 +6,20 @@
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#fcf9f5",
-  "theme_color": "#6a5b53",
+  "theme_color": "#00917c",
   "lang": "fr",
   "icons": [
     {
       "src": "Images/logo_ok.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "Images/pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ]
 }
