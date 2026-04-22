@@ -295,9 +295,9 @@
   </footer>
 <!-- Bottom Nav -->
 <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pt-2 pb-5 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-4px_24px_rgba(106,91,83,0.06)]">
-  <a href="dashboard_bloom_v4.html" class="hidden sm:flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl bg-primary/10 text-primary">
+  <a href="dashboard_bloom_v4.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl bg-primary/10 text-primary">
     <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1;">dashboard</span>
-    <span class="font-label text-[10px] font-bold uppercase tracking-widest">Accueil</span>
+    <span class="font-label text-[10px] font-bold uppercase tracking-widest">Suivi</span>
   </a>
   <a href="lecteur_bloom.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary transition-all">
     <span class="material-symbols-outlined text-xl">menu_book</span>
@@ -310,10 +310,6 @@
   <a href="plan_bloom.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary transition-all">
     <span class="material-symbols-outlined text-xl">edit_calendar</span>
     <span class="font-label text-[10px] uppercase tracking-widest">Programme</span>
-  </a>
-  <a href="profil_bloom.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 text-on-surface-variant hover:text-primary transition-all">
-    <span class="material-symbols-outlined text-xl">person</span>
-    <span class="font-label text-[10px] uppercase tracking-widest">Profil</span>
   </a>
 </nav>
 
@@ -403,7 +399,10 @@ try {
     }
   } catch(e) {}
   var today = new Date(); today.setHours(0,0,0,0);
-  var nextPageToday = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  var _lastPB = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  // Calculer la page d'aujourd'hui selon le planning (date_debut + rythme)
+  var _joursW = Math.max(0, Math.floor((today - dateDebut) / 86400000));
+  var nextPageToday = Math.max(_lastPB, Math.min(1 + _joursW * pagesJour, 604));
   var currentHizb = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(nextPageToday,604)] || 1) : Math.ceil(nextPageToday / 10);
   function hizbLbl(i) {
     if (hizbsJour === 0.5) { return "Nisf " + ((currentHizb - 1) * 2 + i + 1); }
@@ -504,8 +503,17 @@ function localDate(d){var dd=d||new Date();return dd.getFullYear()+'-'+String(dd
   }
 
   var hizbsJour = prog.hizbs_jour || 2;
+  var pagesJourB = prog.pages_jour || 20;
+  // Page d'aujourd'hui selon le planning
+  var _nextPageB = lastPage;
+  if (prog.date_debut) {
+    var _dB = new Date(prog.date_debut + 'T00:00:00');
+    var _tB = new Date(); _tB.setHours(0,0,0,0);
+    var _jB = Math.max(0, Math.floor((_tB - _dB) / 86400000));
+    _nextPageB = Math.max(lastPage, Math.min(1 + _jB * pagesJourB, 604));
+  }
 
-  var hizbActuel = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(lastPage,604)] || 1) : Math.ceil(lastPage / 10);
+  var hizbActuel = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(_nextPageB,604)] || 1) : Math.ceil(_nextPageB / 10);
   var hizbFin    = Math.min(hizbActuel + Math.ceil(hizbsJour) - 1, 60);
 
   if (typeof HIZB_TABLE !== 'undefined' && SURAH_NAMES) {
@@ -576,13 +584,22 @@ function marquerFaitBloom() {
   doneDays[today] = true;
   localStorage.setItem('tilawa_done_days', JSON.stringify(doneDays));
   var prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
-  var lastPage = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  var _spMB = parseInt(localStorage.getItem('tilawa_last_page') || '1');
   var hizbsJour = prog.hizbs_jour || 2;
-  var hizbActuel = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(lastPage,604)] || 1) : 1;
+  var pagesJourMB = prog.pages_jour || 20;
+  // Calculer la page actuelle selon le planning
+  var currentPMB = _spMB;
+  if (prog.date_debut) {
+    var _dMB = new Date(prog.date_debut + 'T00:00:00');
+    var _tMB = new Date(); _tMB.setHours(0,0,0,0);
+    var _jMB = Math.max(0, Math.floor((_tMB - _dMB) / 86400000));
+    currentPMB = Math.max(_spMB, Math.min(1 + _jMB * pagesJourMB, 604));
+  }
+  var hizbActuel = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(currentPMB,604)] || 1) : 1;
   var hizbSuivant = Math.min(hizbActuel + Math.round(hizbsJour), 60);
   var nextPage = (typeof HIZB_TABLE !== 'undefined' && HIZB_TABLE[String(hizbSuivant)])
     ? HIZB_TABLE[String(hizbSuivant)].p
-    : Math.min(lastPage + (prog.pages_jour || 20), 604);
+    : Math.min(currentPMB + pagesJourMB, 604);
   localStorage.setItem('tilawa_last_page', String(nextPage));
   window.location.reload();
 }
