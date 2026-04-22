@@ -109,6 +109,7 @@ function closeDrawer() {
       <div id="avatar-main" class="relative w-28 h-28 rounded-full overflow-hidden ring-4 ring-surface shadow-xl mx-auto"></div>
     </div>
     <h2 class="font-headline text-2xl text-on-surface mb-1" id="nom-profil">Voyageuse</h2>
+    <p class="font-label text-sm text-primary font-semibold mb-1 hidden" id="prenom-kunya-display"></p>
     <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant mb-1" id="theme-badge">Bloom — Femme</p>
     <p class="font-label text-xs text-on-surface-variant" id="membre-depuis">Membre depuis Avril 2026</p>
   </section>
@@ -149,15 +150,17 @@ function closeDrawer() {
   <!-- Paramètres -->
   <section class="space-y-5 mb-10">
 
-    <!-- Prénom -->
+    <!-- Prénom & Kunya -->
     <div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10">
-      <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block mb-3">Prénom</label>
-      <div class="flex gap-3 items-center">
+      <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block mb-3">Identité</label>
+      <div class="flex flex-col gap-3">
         <input type="text" id="input-prenom" placeholder="Ton prénom"
-               class="flex-1 px-4 py-3 rounded-xl border border-outline-variant/40 bg-surface-container font-label text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"/>
-        <button onclick="sauvegarderPrenom()"
-                class="px-5 py-3 bg-primary text-on-primary rounded-xl font-label text-xs font-bold uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all flex-shrink-0">
-          Sauv.
+               class="w-full px-4 py-3 rounded-xl border border-outline-variant/40 bg-surface-container font-label text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"/>
+        <input type="text" id="input-kunya" placeholder="Ta kunya (ex : Abou Yusuf, Umm Maryam…)"
+               class="w-full px-4 py-3 rounded-xl border border-outline-variant/40 bg-surface-container font-label text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"/>
+        <button onclick="sauvegarderIdentite()"
+                class="w-full py-3 bg-primary text-on-primary rounded-xl font-label text-xs font-bold uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all">
+          Sauvegarder
         </button>
       </div>
     </div>
@@ -627,20 +630,35 @@ afficherObjectif();
 afficherHistorique();
 afficherBadges();
 
-// ── Prénom ────────────────────────────────────────────────────────────────
-const _prenom = localStorage.getItem('tilawa_prenom') || '';
-if (_prenom) {
-  document.getElementById('input-prenom').value = _prenom;
-  document.getElementById('nom-profil').textContent = _prenom;
+// ── Prénom & Kunya ────────────────────────────────────────────────────────
+function _afficherPrenomKunya() {
+  const prenom = localStorage.getItem('tilawa_prenom') || '';
+  const kunya  = localStorage.getItem('tilawa_kunya')  || '';
+  const display = document.getElementById('prenom-kunya-display');
+  if (prenom || kunya) {
+    const parts = [prenom, kunya].filter(Boolean);
+    display.textContent = parts.join(' — ');
+    display.classList.remove('hidden');
+  } else {
+    display.classList.add('hidden');
+  }
 }
 
-function sauvegarderPrenom() {
-  const val = (document.getElementById('input-prenom').value || '').trim();
-  localStorage.setItem('tilawa_prenom', val);
-  if (val) document.getElementById('nom-profil').textContent = val;
+const _prenom = localStorage.getItem('tilawa_prenom') || '';
+const _kunya  = localStorage.getItem('tilawa_kunya')  || '';
+if (_prenom) document.getElementById('input-prenom').value = _prenom;
+if (_kunya)  document.getElementById('input-kunya').value  = _kunya;
+_afficherPrenomKunya();
+
+function sauvegarderIdentite() {
+  const prenom = (document.getElementById('input-prenom').value || '').trim();
+  const kunya  = (document.getElementById('input-kunya').value  || '').trim();
+  localStorage.setItem('tilawa_prenom', prenom);
+  localStorage.setItem('tilawa_kunya',  kunya);
+  _afficherPrenomKunya();
   if (typeof saveToCloud === 'function') saveToCloud();
-  const btn = document.querySelector('[onclick="sauvegarderPrenom()"]');
-  if (btn) { btn.textContent = '✓'; setTimeout(() => { btn.textContent = 'Sauv.'; }, 1500); }
+  const btn = document.querySelector('[onclick="sauvegarderIdentite()"]');
+  if (btn) { btn.textContent = '✓ Sauvegardé'; setTimeout(() => { btn.textContent = 'Sauvegarder'; }, 1800); }
 }
 
 </script>

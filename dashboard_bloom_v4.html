@@ -120,7 +120,7 @@
       <p class="font-label text-[10px] tracking-[0.25em] text-primary mb-2 uppercase">Tableau de Bord</p>
       <h2 class="font-headline text-3xl md:text-4xl text-on-surface font-light leading-snug mb-4">
         As-salāmu ʿalaykum,<br/>
-        <span class="italic text-primary">chère voyageuse.</span>
+        <span class="italic text-primary" id="salutation-name">chère voyageuse.</span>
       </h2>
       <!-- Double date -->
       <div class="inline-flex items-center gap-3 bg-surface-container-lowest rounded-full px-5 py-2.5 shadow-sm border border-primary-container/40">
@@ -356,6 +356,18 @@ function getSouratePourPage(page) {
   return info ? (SURAH_NAMES[String(info.s)] || '') : '';
 }
 
+
+// ── Salutation personnalisée ──────────────────────────────────────────────
+(function() {
+  const prenom = (localStorage.getItem('tilawa_prenom') || '').trim();
+  if (prenom) {
+    const el = document.getElementById('salutation-name');
+    if (el) {
+      const honorific = el.textContent.split(' ')[0];
+      el.textContent = honorific + ' ' + prenom + '.';
+    }
+  }
+})();
 
 const now = new Date();
 document.getElementById('date-gr').textContent = now.toLocaleDateString('fr-FR', {

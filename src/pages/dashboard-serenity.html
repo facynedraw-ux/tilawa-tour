@@ -124,7 +124,7 @@
       <span class="font-label text-[11px] uppercase tracking-[0.15em] text-secondary font-bold mb-3 block">Tableau de Bord</span>
       <h2 class="font-headline text-3xl md:text-5xl text-primary leading-tight font-bold mb-4">
         As-salāmu ʿalaykum,<br/>
-        <span class="italic font-normal">{{GENRE_SALUTATION}}.</span>
+        <span class="italic font-normal" id="salutation-name">{{GENRE_SALUTATION}}.</span>
       </h2>
       <!-- Double date -->
       <div class="inline-flex items-center gap-3 bg-white rounded-full px-5 py-2.5 shadow-sm border border-outline-variant/30">
@@ -218,16 +218,16 @@
     </div>
 
     <!-- Régularité -->
-    <div class="md:col-span-6 bg-secondary-container/20 rounded-[2rem] p-8 border border-secondary-container/40">
+    <div class="md:col-span-6 bg-primary-container/20 rounded-[2rem] p-8 border border-primary-container/40">
       <div class="flex items-center justify-between mb-5">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-secondary">calendar_today</span>
+          <span class="material-symbols-outlined text-primary">calendar_today</span>
           <p class="font-headline text-xl">Régularité</p>
         </div>
-        <span class="font-label text-xs font-bold tracking-widest uppercase text-secondary bg-secondary-container/50 px-3 py-1 rounded-full" id="streak-badge">—</span>
+        <span class="font-label text-xs font-bold tracking-widest uppercase text-primary bg-primary-container/50 px-3 py-1 rounded-full" id="streak-badge">—</span>
       </div>
       <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-3">
-        <div class="bg-secondary h-full rounded-full" id="objectif-bar" style="width:0%"></div>
+        <div class="bg-primary h-full rounded-full" id="objectif-bar" style="width:0%"></div>
       </div>
       <p class="font-label text-sm text-on-surface-variant" id="objectif-txt">Chargement...</p>
     </div>
@@ -367,6 +367,18 @@ function getSouratePourPage(page) {
   return info ? (SURAH_NAMES[String(info.s)] || '') : '';
 }
 
+
+// ── Salutation personnalisée ──────────────────────────────────────────────
+(function() {
+  const prenom = (localStorage.getItem('tilawa_prenom') || '').trim();
+  if (prenom) {
+    const el = document.getElementById('salutation-name');
+    if (el) {
+      const honorific = el.textContent.split(' ')[0];
+      el.textContent = honorific + ' ' + prenom + '.';
+    }
+  }
+})();
 
 const now = new Date();
 
