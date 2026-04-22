@@ -151,9 +151,9 @@ function closeDrawer() {
       <button onclick="openDrawer()" class="text-on-surface hover:opacity-70 transition-opacity active:scale-95">
         <span class="material-symbols-outlined">menu</span>
       </button>
-      <a href="dashboard_serenity_v4.html" class="flex items-center gap-2.5 hover:opacity-80 transition-opacity flex-shrink-0">
+      <a href="dashboard_serenity_v4.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity flex-shrink-0">
         <img src="Images/logo_serenity.svg" class="w-7 h-7" alt="Tilawa Tour"/>
-        <span class="font-headline italic text-base font-bold text-primary">Tilawa <span class="text-secondary font-normal">Tour</span></span>
+        <span class="hidden sm:inline font-headline italic text-base font-bold text-primary">Tilawa <span class="text-secondary font-normal">Tour</span></span>
       </a>
     </div>
     <!-- Nom sourate centré -->
@@ -162,16 +162,16 @@ function closeDrawer() {
       <span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/60" id="page-info"></span>
     </div>
     <!-- Boutons droite -->
-    <div class="flex items-center gap-1.5">
+    <div class="flex items-center gap-1">
       <button onclick="toggleTranslation()" id="trad-btn"
-        class="flex items-center gap-1 px-2.5 py-1.5 rounded-full border transition-all font-label text-[9px] uppercase tracking-wider active:scale-95 btn-trad-off">
+        class="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 rounded-full border transition-all font-label text-[9px] uppercase tracking-wider active:scale-95 btn-trad-off">
         <span class="material-symbols-outlined text-sm leading-none">subtitles</span>
-        Trad.
+        <span class="hidden sm:inline">Trad.</span>
       </button>
       <button onclick="toggleTajwid()" id="tajwid-btn"
-        class="flex items-center gap-1 px-2.5 py-1.5 rounded-full border transition-all font-label text-[9px] uppercase tracking-wider active:scale-95 btn-tajwid-off">
+        class="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 rounded-full border transition-all font-label text-[9px] uppercase tracking-wider active:scale-95 btn-tajwid-off">
         <span class="material-symbols-outlined text-sm leading-none">format_color_text</span>
-        Tajwid
+        <span class="hidden sm:inline">Tajwid</span>
       </button>
       <button onclick="toggleFontPanel()" id="settings-btn"
         class="flex items-center justify-center w-8 h-8 rounded-full border transition-all border-outline-variant/40 text-on-surface-variant bg-transparent hover:bg-surface-container active:scale-95">
