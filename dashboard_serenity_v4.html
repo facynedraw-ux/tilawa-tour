@@ -40,10 +40,43 @@
 </head>
 <body class="bg-surface text-on-surface min-h-screen pb-32">
 
+<!-- Nav Drawer (mobile) -->
+<div id="drawer-overlay" onclick="closeDrawer()" class="fixed inset-0 bg-black/40 z-[60] hidden" style="opacity:0;transition:opacity 0.3s;"></div>
+<aside id="nav-drawer" class="fixed top-0 left-0 h-full w-72 z-[70] bg-surface shadow-2xl flex flex-col" style="transform:translateX(-100%);transition:transform 0.3s ease;">
+  <div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant/20">
+    <h2 class="font-headline italic text-lg font-bold text-primary">Tilawa Tour</h2>
+    <button onclick="closeDrawer()" class="text-on-surface-variant hover:opacity-70 transition-opacity active:scale-95">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+  <nav class="flex-1 p-4 flex flex-col gap-1">
+    <a href="dashboard_serenity_v4.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl bg-primary/10 text-primary">
+      <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24;">dashboard</span>
+      <span class="font-label text-sm font-semibold">Accueil</span>
+    </a>
+    <a href="lecteur_serenity.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all">
+      <span class="material-symbols-outlined">menu_book</span>
+      <span class="font-label text-sm">Coran</span>
+    </a>
+    <a href="calendrier_serenity.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all">
+      <span class="material-symbols-outlined">calendar_month</span>
+      <span class="font-label text-sm">Calendrier</span>
+    </a>
+    <a href="plan_serenity.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all">
+      <span class="material-symbols-outlined">edit_calendar</span>
+      <span class="font-label text-sm">Programme</span>
+    </a>
+    <a href="profil_serenity.html" class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all">
+      <span class="material-symbols-outlined">person</span>
+      <span class="font-label text-sm">Profil</span>
+    </a>
+  </nav>
+</aside>
+
 <!-- TopAppBar -->
 <header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20">
   <div class="flex justify-between items-center w-full px-6 py-3.5">
-    <button class="text-on-surface hover:opacity-70 transition-opacity active:scale-95 duration-200">
+    <button onclick="openDrawer()" class="text-on-surface hover:opacity-70 transition-opacity active:scale-95 duration-200">
       <span class="material-symbols-outlined">menu</span>
     </button>
 
@@ -86,10 +119,10 @@
 <main class="pt-24 px-6 max-w-5xl mx-auto">
 
   <!-- Hero : Salutation + date -->
-  <section class="mb-10 grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+  <section class="mb-10 grid grid-cols-[1fr_auto] md:grid-cols-12 gap-4 md:gap-8 items-center md:items-end">
     <div class="md:col-span-7">
       <span class="font-label text-[11px] uppercase tracking-[0.15em] text-secondary font-bold mb-3 block">Tableau de Bord</span>
-      <h2 class="font-headline text-4xl md:text-5xl text-primary leading-tight font-bold mb-4">
+      <h2 class="font-headline text-3xl md:text-5xl text-primary leading-tight font-bold mb-4">
         As-salāmu ʿalaykum,<br/>
         <span class="italic font-normal">cher voyageur.</span>
       </h2>
@@ -103,7 +136,7 @@
     </div>
     <!-- Jauge circulaire -->
     <div class="md:col-span-5 flex justify-end">
-      <div class="relative w-48 h-48 flex items-center justify-center">
+      <div class="relative w-20 h-20 md:w-48 md:h-48 flex items-center justify-center">
         <svg class="w-full h-full transform -rotate-90" viewBox="0 0 192 192">
           <circle class="text-surface-container-high" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-width="6"/>
           <circle id="gauge-circle" class="text-secondary" cx="96" cy="96" fill="transparent" r="88"
@@ -111,90 +144,80 @@
             stroke-linecap="round" stroke-width="10"/>
         </svg>
         <div class="absolute inset-0 flex flex-col items-center justify-center">
-          <span class="font-headline text-4xl font-bold text-primary" id="gauge-pct">0%</span>
-          <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold" style="text-align:center;max-width:80px;line-height:1.3;display:block;">Objectif<br/>mensuel</span>
+          <span class="font-headline text-lg md:text-4xl font-bold text-primary" id="gauge-pct">0%</span>
+          <span class="font-label text-[7px] md:text-[10px] uppercase tracking-widest text-on-surface-variant font-bold" style="text-align:center;max-width:80px;line-height:1.3;display:block;">Objectif<br/>mensuel</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Bento Grid -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:2rem;">
-    <div class="bg-surface-container-low rounded-3xl p-8 flex flex-col justify-between">
-      <div>
-        <span class="material-symbols-outlined text-secondary mb-4" style="font-variation-settings:'FILL' 1;">menu_book</span>
-        <h3 class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-2">Lecture du jour</h3>
-        <p class="font-headline text-3xl text-primary font-semibold mb-6" id="hizb-label-jour">—</p>
-        <div class="space-y-4">
-          <div class="flex flex-col gap-1">
-            <span class="text-[10px] uppercase tracking-widest font-bold text-secondary">Début</span>
-            <p class="text-sm text-primary font-medium" id="hizb-debut">—</p>
-          </div>
-          <div class="flex flex-col gap-1">
-            <span class="text-[10px] uppercase tracking-widest font-bold text-secondary">Fin</span>
-            <p class="text-sm text-primary font-medium" id="hizb-fin">—</p>
-          </div>
-        </div>
-      </div>
-      <div class="mt-6 border-t border-outline-variant pt-4 text-right">
-        <p class="font-arabic text-primary text-lg leading-relaxed" dir="rtl">اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ</p>
-        <p class="text-[9px] text-on-surface-variant mt-1 uppercase tracking-widest">Al-Baqarah • 255</p>
-      </div>
-    </div>
-    <div class="bg-primary rounded-3xl p-8 flex flex-col justify-between text-on-primary" id="btn-programme-container">
-      <div>
-        <span class="material-symbols-outlined text-secondary-fixed mb-4" style="font-variation-settings:'FILL' 1;">task_alt</span>
-        <h3 class="font-label text-xs uppercase tracking-widest text-primary-fixed-dim font-bold mb-2">Programme du jour</h3>
-        <p class="font-headline text-xl text-on-primary font-semibold mb-6" id="programme-label">Chargement...</p>
-      </div>
-      <div class="flex flex-col gap-3">
-        <!-- Bouton pleine largeur : J'ai fait -->
-        <button onclick="marquerFaitDashboard()"
-          class="w-full py-4 bg-secondary-container text-on-secondary-container rounded-2xl font-label text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 active:scale-95 transition-all hover:opacity-90 shadow-md">
-          <span class="material-symbols-outlined text-2xl leading-none ml-1" style="font-variation-settings:'FILL' 1,'wght' 600;">check_circle</span>
-          J'ai fait mon programme
-        </button>
-        <!-- Arrêt à la page — rangée horizontale compacte -->
-        <div class="flex items-center gap-2 px-1">
-          <p class="font-label text-[10px] uppercase tracking-widest text-on-primary/60 flex-shrink-0">Arrêté à</p>
-          <input type="number" id="input-page-arret" min="1" max="604" placeholder="page"
-            class="flex-1 py-2 px-3 rounded-xl border border-on-primary/30 bg-on-primary/10 text-on-primary placeholder-on-primary/40 font-label text-xs focus:outline-none focus:border-on-primary/60 text-center min-w-0"/>
-          <button onclick="arreterIciDashboard()"
-            class="py-2 px-4 bg-secondary-container text-on-secondary-container rounded-xl font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all flex-shrink-0">
-            OK
-          </button>
-        </div>
-        <div class="pt-2 border-t border-on-primary/20 flex items-center justify-between">
-          <div>
-            <p class="font-label text-sm font-medium text-on-primary/80">Reste à lire</p>
-            <p class="font-headline text-xl text-on-primary font-bold mt-0.5">
-              <span id="hizbs-restants">—</span>
-              <span class="font-label text-xs font-normal text-on-primary/70"> Hizbs • <span id="jours-restants">—</span></span>
-            </p>
-          </div>
-          <div class="w-20">
-            <div class="h-1.5 bg-on-primary/20 rounded-full overflow-hidden">
-              <div class="h-full bg-secondary-container rounded-full transition-all" id="progress-bar-hizb" style="width:0%"></div>
-            </div>
-            <p class="font-label text-[9px] text-right text-on-primary/60 mt-1" id="pct-hizb">0%</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="relative rounded-3xl overflow-hidden bg-primary-dark min-h-[200px] flex flex-col justify-end p-8">
-      <div class="absolute inset-0 opacity-10 flex items-center justify-center">
-        <span class="material-symbols-outlined text-white" style="font-size:120px;">auto_stories</span>
-      </div>
-      <p class="text-white/90 font-headline italic text-lg leading-snug relative z-10">"Le Coran est une guérison et une miséricorde pour les croyants."</p>
-      <p class="text-white/50 text-xs mt-2 uppercase tracking-widest relative z-10">Sourate Al-Isra • 17:82</p>
-    </div>
-  </div>
-
-
-  
-
-  <!-- Régularité + Dernière page -->
+  <!-- Grid principal (responsive) -->
   <div class="grid grid-cols-1 md:grid-cols-12 gap-5 mb-6">
+
+    <!-- Carte principale pleine largeur -->
+    <div class="md:col-span-12 bg-surface-container-lowest rounded-[2rem] p-6 sm:p-8 relative overflow-hidden border border-primary-container/20">
+      <div class="relative z-10">
+        <!-- Header : label + titre + bouton reprendre -->
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between mb-6 gap-4">
+          <div>
+            <span class="inline-block px-4 py-1.5 rounded-full bg-primary-container text-on-primary-container font-label text-[9px] tracking-widest uppercase mb-3">Lecture du jour</span>
+            <h3 class="font-headline text-2xl text-on-surface font-semibold mb-1" id="hizb-label-jour">—</h3>
+          </div>
+          <a href="lecteur_serenity.html" class="bg-primary text-on-primary px-6 py-3 rounded-xl font-label text-sm font-medium hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 w-fit flex-shrink-0">
+            Reprendre la lecture
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+        <!-- Début / Fin -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+          <div class="bg-surface-container-low rounded-2xl p-5">
+            <p class="font-label text-[10px] uppercase tracking-widest text-primary mb-2">Début</p>
+            <p class="font-label text-sm font-medium text-on-surface" id="hizb-debut">—</p>
+          </div>
+          <div class="bg-primary-container/20 rounded-2xl p-5">
+            <p class="font-label text-[10px] uppercase tracking-widest text-primary mb-2">Fin</p>
+            <p class="font-label text-sm font-medium text-on-surface" id="hizb-fin">—</p>
+          </div>
+        </div>
+        <!-- Programme du jour -->
+        <div id="btn-programme-container" class="bg-primary rounded-2xl p-5 text-on-primary">
+          <h3 class="font-label text-xs uppercase tracking-widest text-primary-fixed-dim font-bold mb-4">Programme du jour</h3>
+          <div class="flex flex-col gap-3">
+            <button onclick="marquerFaitDashboard()"
+              class="w-full py-4 bg-secondary-container text-on-secondary-container rounded-2xl font-label text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-all hover:opacity-90 shadow-md">
+              <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1,'wght' 600;">check_circle</span>
+              J'ai fait mon programme
+            </button>
+            <div class="flex items-center gap-2">
+              <p class="font-label text-[10px] uppercase tracking-widest text-on-primary/60 flex-shrink-0">Arrêté à</p>
+              <input type="number" id="input-page-arret" min="1" max="604" placeholder="page"
+                class="flex-1 py-2 px-3 rounded-xl border border-on-primary/30 bg-on-primary/10 text-on-primary placeholder-on-primary/40 font-label text-xs focus:outline-none focus:border-on-primary/60 text-center min-w-0"/>
+              <button onclick="arreterIciDashboard()"
+                class="py-2 px-4 bg-secondary-container text-on-secondary-container rounded-xl font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all flex-shrink-0">
+                OK
+              </button>
+            </div>
+            <div class="pt-3 border-t border-on-primary/20 flex items-center justify-between">
+              <div>
+                <p class="font-label text-sm font-medium text-on-primary/80">Reste à lire</p>
+                <p class="font-headline text-xl text-on-primary font-bold mt-0.5">
+                  <span id="hizbs-restants">—</span>
+                  <span class="font-label text-xs font-normal text-on-primary/70"> Hizbs • <span id="jours-restants">—</span></span>
+                </p>
+              </div>
+              <div class="w-20">
+                <div class="h-1.5 bg-on-primary/20 rounded-full overflow-hidden">
+                  <div class="h-full bg-secondary-container rounded-full transition-all" id="progress-bar-hizb" style="width:0%"></div>
+                </div>
+                <p class="font-label text-[9px] text-right text-on-primary/60 mt-1" id="pct-hizb">0%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Régularité -->
     <div class="md:col-span-6 bg-secondary-container/20 rounded-[2rem] p-8 border border-secondary-container/40">
       <div class="flex items-center justify-between mb-5">
         <div class="flex items-center gap-3">
@@ -208,6 +231,8 @@
       </div>
       <p class="font-label text-sm text-on-surface-variant" id="objectif-txt">Chargement...</p>
     </div>
+
+    <!-- Dernière page lue -->
     <div class="md:col-span-6 bg-surface-container rounded-[2rem] p-8 flex flex-col gap-6 border border-outline-variant/20">
       <div class="flex items-center gap-3">
         <span class="material-symbols-outlined text-primary">bookmark_heart</span>
@@ -281,7 +306,7 @@
   </footer>
 <!-- Bottom Nav -->
 <nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 pt-2 pb-5 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/20 shadow-[0_-4px_24px_rgba(0,145,124,0.06)]">
-  <a href="dashboard_serenity_v4.html" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl bg-primary/10 text-primary">
+  <a href="dashboard_serenity_v4.html" class="hidden sm:flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl bg-primary/10 text-primary">
     <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1;">dashboard</span>
     <span class="font-label text-[10px] font-bold uppercase tracking-widest">Accueil</span>
   </a>
@@ -304,6 +329,26 @@
 </nav>
 
 <script>
+
+function openDrawer() {
+  const overlay = document.getElementById('drawer-overlay');
+  const drawer = document.getElementById('nav-drawer');
+  overlay.classList.remove('hidden');
+  requestAnimationFrame(() => {
+    overlay.style.opacity = '1';
+    drawer.style.transform = 'translateX(0)';
+  });
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  const overlay = document.getElementById('drawer-overlay');
+  const drawer = document.getElementById('nav-drawer');
+  overlay.style.opacity = '0';
+  drawer.style.transform = 'translateX(-100%)';
+  setTimeout(() => overlay.classList.add('hidden'), 300);
+  document.body.style.overflow = '';
+}
 
 const HIZB_TABLE = {"1":{"hizb":1,"s":1,"v":1,"p":1},"2":{"hizb":2,"s":2,"v":75,"p":11},"3":{"hizb":3,"s":2,"v":142,"p":22},"4":{"hizb":4,"s":2,"v":203,"p":32},"5":{"hizb":5,"s":2,"v":253,"p":42},"6":{"hizb":6,"s":3,"v":15,"p":51},"7":{"hizb":7,"s":3,"v":93,"p":62},"8":{"hizb":8,"s":3,"v":171,"p":72},"9":{"hizb":9,"s":4,"v":24,"p":82},"10":{"hizb":10,"s":4,"v":88,"p":92},"11":{"hizb":11,"s":4,"v":148,"p":102},"12":{"hizb":12,"s":5,"v":27,"p":112},"13":{"hizb":13,"s":5,"v":82,"p":121},"14":{"hizb":14,"s":6,"v":36,"p":132},"15":{"hizb":15,"s":6,"v":111,"p":142},"16":{"hizb":16,"s":7,"v":1,"p":151},"17":{"hizb":17,"s":7,"v":88,"p":162},"18":{"hizb":18,"s":7,"v":171,"p":173},"19":{"hizb":19,"s":8,"v":41,"p":182},"20":{"hizb":20,"s":9,"v":34,"p":192},"21":{"hizb":21,"s":9,"v":93,"p":201},"22":{"hizb":22,"s":10,"v":26,"p":212},"23":{"hizb":23,"s":11,"v":6,"p":222},"24":{"hizb":24,"s":11,"v":84,"p":231},"25":{"hizb":25,"s":12,"v":53,"p":242},"26":{"hizb":26,"s":13,"v":19,"p":252},"27":{"hizb":27,"s":15,"v":1,"p":262},"28":{"hizb":28,"s":16,"v":51,"p":272},"29":{"hizb":29,"s":17,"v":1,"p":282},"30":{"hizb":30,"s":17,"v":99,"p":292},"31":{"hizb":31,"s":18,"v":75,"p":302},"32":{"hizb":32,"s":20,"v":1,"p":312},"33":{"hizb":33,"s":21,"v":1,"p":322},"34":{"hizb":34,"s":22,"v":1,"p":332},"35":{"hizb":35,"s":23,"v":1,"p":342},"36":{"hizb":36,"s":24,"v":21,"p":352},"37":{"hizb":37,"s":25,"v":21,"p":362},"38":{"hizb":38,"s":26,"v":111,"p":371},"39":{"hizb":39,"s":27,"v":56,"p":382},"40":{"hizb":40,"s":28,"v":51,"p":392},"41":{"hizb":41,"s":29,"v":46,"p":402},"42":{"hizb":42,"s":31,"v":22,"p":413},"43":{"hizb":43,"s":33,"v":31,"p":422},"44":{"hizb":44,"s":34,"v":24,"p":431},"45":{"hizb":45,"s":36,"v":28,"p":442},"46":{"hizb":46,"s":37,"v":145,"p":451},"47":{"hizb":47,"s":39,"v":32,"p":462},"48":{"hizb":48,"s":40,"v":41,"p":472},"49":{"hizb":49,"s":41,"v":47,"p":482},"50":{"hizb":50,"s":43,"v":24,"p":491},"51":{"hizb":51,"s":46,"v":1,"p":502},"52":{"hizb":52,"s":48,"v":18,"p":513},"53":{"hizb":53,"s":51,"v":31,"p":522},"54":{"hizb":54,"s":55,"v":1,"p":531},"55":{"hizb":55,"s":58,"v":1,"p":542},"56":{"hizb":56,"s":62,"v":1,"p":553},"57":{"hizb":57,"s":67,"v":1,"p":562},"58":{"hizb":58,"s":72,"v":1,"p":572},"59":{"hizb":59,"s":78,"v":1,"p":582},"60":{"hizb":60,"s":87,"v":1,"p":591}};
 const PAGE_TO_HIZB = {"1":1,"2":1,"3":1,"4":1,"5":1,"6":1,"7":1,"8":1,"9":1,"10":1,"11":2,"12":2,"13":2,"14":2,"15":2,"16":2,"17":2,"18":2,"19":2,"20":2,"21":2,"22":3,"23":3,"24":3,"25":3,"26":3,"27":3,"28":3,"29":3,"30":3,"31":3,"32":4,"33":4,"34":4,"35":4,"36":4,"37":4,"38":4,"39":4,"40":4,"41":4,"42":5,"43":5,"44":5,"45":5,"46":5,"47":5,"48":5,"49":5,"50":5,"51":6,"52":6,"53":6,"54":6,"55":6,"56":6,"57":6,"58":6,"59":6,"60":6,"61":6,"62":7,"63":7,"64":7,"65":7,"66":7,"67":7,"68":7,"69":7,"70":7,"71":7,"72":8,"73":8,"74":8,"75":8,"76":8,"77":8,"78":8,"79":8,"80":8,"81":8,"82":9,"83":9,"84":9,"85":9,"86":9,"87":9,"88":9,"89":9,"90":9,"91":9,"92":10,"93":10,"94":10,"95":10,"96":10,"97":10,"98":10,"99":10,"100":10,"101":10,"102":11,"103":11,"104":11,"105":11,"106":11,"107":11,"108":11,"109":11,"110":11,"111":11,"112":12,"113":12,"114":12,"115":12,"116":12,"117":12,"118":12,"119":12,"120":12,"121":13,"122":13,"123":13,"124":13,"125":13,"126":13,"127":13,"128":13,"129":13,"130":13,"131":13,"132":14,"133":14,"134":14,"135":14,"136":14,"137":14,"138":14,"139":14,"140":14,"141":14,"142":15,"143":15,"144":15,"145":15,"146":15,"147":15,"148":15,"149":15,"150":15,"151":16,"152":16,"153":16,"154":16,"155":16,"156":16,"157":16,"158":16,"159":16,"160":16,"161":16,"162":17,"163":17,"164":17,"165":17,"166":17,"167":17,"168":17,"169":17,"170":17,"171":17,"172":17,"173":18,"174":18,"175":18,"176":18,"177":18,"178":18,"179":18,"180":18,"181":18,"182":19,"183":19,"184":19,"185":19,"186":19,"187":19,"188":19,"189":19,"190":19,"191":19,"192":20,"193":20,"194":20,"195":20,"196":20,"197":20,"198":20,"199":20,"200":20,"201":21,"202":21,"203":21,"204":21,"205":21,"206":21,"207":21,"208":21,"209":21,"210":21,"211":21,"212":22,"213":22,"214":22,"215":22,"216":22,"217":22,"218":22,"219":22,"220":22,"221":22,"222":23,"223":23,"224":23,"225":23,"226":23,"227":23,"228":23,"229":23,"230":23,"231":24,"232":24,"233":24,"234":24,"235":24,"236":24,"237":24,"238":24,"239":24,"240":24,"241":24,"242":25,"243":25,"244":25,"245":25,"246":25,"247":25,"248":25,"249":25,"250":25,"251":25,"252":26,"253":26,"254":26,"255":26,"256":26,"257":26,"258":26,"259":26,"260":26,"261":26,"262":27,"263":27,"264":27,"265":27,"266":27,"267":27,"268":27,"269":27,"270":27,"271":27,"272":28,"273":28,"274":28,"275":28,"276":28,"277":28,"278":28,"279":28,"280":28,"281":28,"282":29,"283":29,"284":29,"285":29,"286":29,"287":29,"288":29,"289":29,"290":29,"291":29,"292":30,"293":30,"294":30,"295":30,"296":30,"297":30,"298":30,"299":30,"300":30,"301":30,"302":31,"303":31,"304":31,"305":31,"306":31,"307":31,"308":31,"309":31,"310":31,"311":31,"312":32,"313":32,"314":32,"315":32,"316":32,"317":32,"318":32,"319":32,"320":32,"321":32,"322":33,"323":33,"324":33,"325":33,"326":33,"327":33,"328":33,"329":33,"330":33,"331":33,"332":34,"333":34,"334":34,"335":34,"336":34,"337":34,"338":34,"339":34,"340":34,"341":34,"342":35,"343":35,"344":35,"345":35,"346":35,"347":35,"348":35,"349":35,"350":35,"351":35,"352":36,"353":36,"354":36,"355":36,"356":36,"357":36,"358":36,"359":36,"360":36,"361":36,"362":37,"363":37,"364":37,"365":37,"366":37,"367":37,"368":37,"369":37,"370":37,"371":38,"372":38,"373":38,"374":38,"375":38,"376":38,"377":38,"378":38,"379":38,"380":38,"381":38,"382":39,"383":39,"384":39,"385":39,"386":39,"387":39,"388":39,"389":39,"390":39,"391":39,"392":40,"393":40,"394":40,"395":40,"396":40,"397":40,"398":40,"399":40,"400":40,"401":40,"402":41,"403":41,"404":41,"405":41,"406":41,"407":41,"408":41,"409":41,"410":41,"411":41,"412":41,"413":42,"414":42,"415":42,"416":42,"417":42,"418":42,"419":42,"420":42,"421":42,"422":43,"423":43,"424":43,"425":43,"426":43,"427":43,"428":43,"429":43,"430":43,"431":44,"432":44,"433":44,"434":44,"435":44,"436":44,"437":44,"438":44,"439":44,"440":44,"441":44,"442":45,"443":45,"444":45,"445":45,"446":45,"447":45,"448":45,"449":45,"450":45,"451":46,"452":46,"453":46,"454":46,"455":46,"456":46,"457":46,"458":46,"459":46,"460":46,"461":46,"462":47,"463":47,"464":47,"465":47,"466":47,"467":47,"468":47,"469":47,"470":47,"471":47,"472":48,"473":48,"474":48,"475":48,"476":48,"477":48,"478":48,"479":48,"480":48,"481":48,"482":49,"483":49,"484":49,"485":49,"486":49,"487":49,"488":49,"489":49,"490":49,"491":50,"492":50,"493":50,"494":50,"495":50,"496":50,"497":50,"498":50,"499":50,"500":50,"501":50,"502":51,"503":51,"504":51,"505":51,"506":51,"507":51,"508":51,"509":51,"510":51,"511":51,"512":51,"513":52,"514":52,"515":52,"516":52,"517":52,"518":52,"519":52,"520":52,"521":52,"522":53,"523":53,"524":53,"525":53,"526":53,"527":53,"528":53,"529":53,"530":53,"531":54,"532":54,"533":54,"534":54,"535":54,"536":54,"537":54,"538":54,"539":54,"540":54,"541":54,"542":55,"543":55,"544":55,"545":55,"546":55,"547":55,"548":55,"549":55,"550":55,"551":55,"552":55,"553":56,"554":56,"555":56,"556":56,"557":56,"558":56,"559":56,"560":56,"561":56,"562":57,"563":57,"564":57,"565":57,"566":57,"567":57,"568":57,"569":57,"570":57,"571":57,"572":58,"573":58,"574":58,"575":58,"576":58,"577":58,"578":58,"579":58,"580":58,"581":58,"582":59,"583":59,"584":59,"585":59,"586":59,"587":59,"588":59,"589":59,"590":59,"591":60,"592":60,"593":60,"594":60,"595":60,"596":60,"597":60,"598":60,"599":60,"600":60,"601":60,"602":60,"603":60,"604":60};

@@ -23,15 +23,6 @@
   .delay-1 { animation-delay: 0.1s; }
   .delay-2 { animation-delay: 0.2s; }
   .delay-3 { animation-delay: 0.35s; }
-  .otp-input {
-    width: 44px; height: 52px;
-    text-align: center; font-size: 1.25rem; font-weight: 700;
-    border: 1.5px solid #c5ddd9; border-radius: 12px;
-    background: #f7faf9; color: #1a2e28;
-    outline: none; transition: border-color 0.15s;
-    caret-color: #00917c;
-  }
-  .otp-input:focus { border-color: #00917c; }
 </style>
 </head>
 <body class="min-h-dvh flex flex-col items-center justify-center px-5 py-10 relative overflow-hidden"
@@ -56,9 +47,9 @@
     </p>
   </div>
 
-  <!-- Étape 1 : saisie email -->
+  <!-- Formulaire connexion -->
   <div class="fade-up delay-1 w-full bg-white rounded-3xl shadow-sm border p-6 space-y-4"
-       style="border-color:#e0efec;" id="form-email">
+       style="border-color:#e0efec;" id="form-login">
 
     <div>
       <label class="block text-xs font-semibold uppercase tracking-widest mb-2" style="color:#4a6b62;">
@@ -72,46 +63,28 @@
              onblur="this.style.borderColor='#c5ddd9'"/>
     </div>
 
-    <button id="btn-send" onclick="sendOtp()"
+    <button id="btn-login" onclick="sendMagicLink()"
             class="w-full py-4 rounded-2xl text-white font-bold text-sm uppercase tracking-widest transition-all active:scale-95"
             style="background:linear-gradient(135deg,#00a98f,#00917c);box-shadow:0 4px 16px rgba(0,145,124,0.3);">
-      Recevoir mon code
+      Recevoir mon lien de connexion
     </button>
 
     <p class="text-[10px] text-center leading-relaxed" style="color:#8ab5af;">
-      Tu recevras un code à 6 chiffres par email — aucun mot de passe nécessaire.
+      Tu recevras un email avec un lien magique — aucun mot de passe nécessaire.
     </p>
   </div>
 
-  <!-- Étape 2 : saisie OTP -->
-  <div class="fade-up delay-1 w-full bg-white rounded-3xl shadow-sm border p-6 space-y-5 hidden"
-       style="border-color:#e0efec;" id="form-otp">
-
-    <div class="text-center space-y-1">
-      <p class="font-semibold text-sm" style="color:#1a2e28;">Code envoyé !</p>
-      <p class="text-xs leading-relaxed" style="color:#6b9088;" id="otp-hint">
-        Saisis le code reçu à <strong id="otp-email-display"></strong>
-      </p>
-    </div>
-
-    <!-- 6 cases OTP -->
-    <div class="flex justify-center gap-2" id="otp-boxes">
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]"/>
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]"/>
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]"/>
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]"/>
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]"/>
-      <input class="otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]"/>
-    </div>
-
-    <button id="btn-verify" onclick="verifyOtp()"
-            class="w-full py-4 rounded-2xl text-white font-bold text-sm uppercase tracking-widest transition-all active:scale-95"
-            style="background:linear-gradient(135deg,#00a98f,#00917c);box-shadow:0 4px 16px rgba(0,145,124,0.3);">
-      Vérifier le code
-    </button>
-
+  <!-- État : email envoyé -->
+  <div class="fade-up delay-2 w-full bg-white rounded-3xl shadow-sm border p-6 text-center space-y-3 hidden"
+       style="border-color:#e0efec;" id="form-sent">
+    <span class="material-symbols-outlined text-4xl" style="color:#00917c;font-variation-settings:'FILL' 1;">mark_email_read</span>
+    <p class="font-semibold text-sm" style="color:#1a2e28;">Email envoyé !</p>
+    <p class="text-xs leading-relaxed" style="color:#6b9088;">
+      Vérifie ta boîte mail et clique sur le lien pour te connecter.<br/>
+      <span style="color:#8ab5af;">Pense à regarder les spams.</span>
+    </p>
     <button onclick="resetForm()"
-            class="w-full text-xs font-semibold uppercase tracking-widest underline-offset-2 hover:underline"
+            class="text-xs font-semibold uppercase tracking-widest underline-offset-2 hover:underline"
             style="color:#00917c;">
       Utiliser une autre adresse
     </button>
@@ -129,99 +102,39 @@
 
 <script src="supabase-client.js"></script>
 <script>
-let _email = '';
-
 // Si déjà connecté → aller à l'accueil
 (async function() {
   const session = await getSession();
   if (session) window.location.replace('index.html');
 })();
 
-// Navigation entre cases OTP
-document.addEventListener('DOMContentLoaded', function() {
-  const boxes = document.querySelectorAll('.otp-input');
-
-  boxes.forEach((box, i) => {
-    box.addEventListener('input', function() {
-      // Ne garder que le dernier chiffre saisi
-      this.value = this.value.replace(/\D/g, '').slice(-1);
-      if (this.value && i < boxes.length - 1) {
-        boxes[i + 1].focus();
-      }
-      // Auto-submit quand la 6e case est remplie
-      if (i === boxes.length - 1 && this.value) {
-        verifyOtp();
-      }
-    });
-
-    box.addEventListener('keydown', function(e) {
-      if (e.key === 'Backspace' && !this.value && i > 0) {
-        boxes[i - 1].focus();
-      }
-    });
-
-    box.addEventListener('paste', function(e) {
-      e.preventDefault();
-      const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
-      boxes.forEach((b, j) => { b.value = pasted[j] || ''; });
-      const last = Math.min(pasted.length, boxes.length) - 1;
-      if (last >= 0) boxes[last].focus();
-      if (pasted.length >= 6) verifyOtp();
-    });
-  });
-});
-
-async function sendOtp() {
+async function sendMagicLink() {
   const email = document.getElementById('email-input').value.trim();
   if (!email || !email.includes('@')) {
     showError('Merci de saisir une adresse email valide.');
     return;
   }
 
-  const btn = document.getElementById('btn-send');
+  const btn = document.getElementById('btn-login');
   btn.textContent = 'Envoi en cours…';
   btn.disabled = true;
 
   try {
-    const { error } = await _sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+    const { error } = await _sb.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.origin + '/index.html' }
+    });
+
     if (error) throw error;
 
-    _email = email;
-    document.getElementById('otp-email-display').textContent = email;
-    document.getElementById('form-email').classList.add('hidden');
-    document.getElementById('form-otp').classList.remove('hidden');
+    document.getElementById('form-login').classList.add('hidden');
+    document.getElementById('form-sent').classList.remove('hidden');
     document.getElementById('error-msg').classList.add('hidden');
-    document.querySelectorAll('.otp-input')[0].focus();
 
   } catch (e) {
-    btn.textContent = 'Recevoir mon code';
+    btn.textContent = 'Recevoir mon lien de connexion';
     btn.disabled = false;
     showError('Une erreur est survenue. Vérifie ton email et réessaie.');
-    console.error(e);
-  }
-}
-
-async function verifyOtp() {
-  const boxes = document.querySelectorAll('.otp-input');
-  const token = Array.from(boxes).map(b => b.value).join('');
-
-  if (token.length < 6) {
-    showError('Saisis les 6 chiffres du code.');
-    return;
-  }
-
-  const btn = document.getElementById('btn-verify');
-  btn.textContent = 'Vérification…';
-  btn.disabled = true;
-
-  try {
-    const { error } = await _sb.auth.verifyOtp({ email: _email, token, type: 'email' });
-    if (error) throw error;
-    window.location.replace('index.html');
-  } catch (e) {
-    btn.textContent = 'Vérifier le code';
-    btn.disabled = false;
-    showError('Code incorrect ou expiré. Vérifie et réessaie.');
     console.error(e);
   }
 }
@@ -233,14 +146,11 @@ function showError(msg) {
 }
 
 function resetForm() {
-  _email = '';
-  document.getElementById('form-email').classList.remove('hidden');
-  document.getElementById('form-otp').classList.add('hidden');
+  document.getElementById('form-login').classList.remove('hidden');
+  document.getElementById('form-sent').classList.add('hidden');
   document.getElementById('email-input').value = '';
-  document.getElementById('btn-send').textContent = 'Recevoir mon code';
-  document.getElementById('btn-send').disabled = false;
-  document.querySelectorAll('.otp-input').forEach(b => b.value = '');
-  document.getElementById('error-msg').classList.add('hidden');
+  document.getElementById('btn-login').textContent = 'Recevoir mon lien de connexion';
+  document.getElementById('btn-login').disabled = false;
 }
 </script>
 </body>
