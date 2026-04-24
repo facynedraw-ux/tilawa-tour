@@ -127,7 +127,7 @@ function closeDrawer() {
   </section>
 
   <!-- Légende -->
-  <div class="flex gap-5 mb-6 px-2 flex-wrap">
+  <div class="flex gap-5 mb-3 px-2 flex-wrap">
     <div class="flex items-center gap-2">
       <div class="w-3 h-3 rounded-full bg-primary"></div>
       <span class="font-label text-xs font-bold uppercase tracking-wider text-on-surface-variant">Complété</span>
@@ -141,6 +141,10 @@ function closeDrawer() {
       <span class="font-label text-xs font-bold uppercase tracking-wider text-on-surface-variant">Planifié</span>
     </div>
   </div>
+  <p class="font-label text-xs text-on-surface-variant/60 px-2 mb-5 flex items-center gap-1.5">
+    <span class="material-symbols-outlined text-sm">touch_app</span>
+    Tapez sur un jour passé pour valider ou annuler votre lecture
+  </p>
 
   <!-- Grille calendrier -->
   <div class="bg-surface-container-lowest rounded-[2rem] p-1.5 sm:p-5 shadow-sm border border-outline-variant/10">
@@ -321,6 +325,8 @@ function renderCalendar() {
   const grid = document.getElementById('cal-grid');
   grid.innerHTML = '';
 
+  const todayFull = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
   // Pas de programme : message centré sans cases
   if (!prog.date_debut) {
     const msg = document.createElement('p');
@@ -370,23 +376,27 @@ function renderCalendar() {
                     : ('Hizb ' + hStart + '-' + hEnd);
     const pageDebut = Math.min(dayOfProg * pagesJour + 1, 604);
     const pageFin   = Math.min(pageDebut + pagesJour - 1, 604);
-    const isDone    = !!doneDays[dateKey];
+    const isDone      = !!doneDays[dateKey];
+    const isClickable = cellDate <= todayFull;
 
     if (isToday) {
-      cell.className = 'aspect-auto min-h-[72px] sm:min-h-[90px] md:min-h-[100px] bg-primary rounded-xl sm:rounded-2xl p-1.5 sm:p-2 md:p-3 shadow-lg cursor-pointer active:scale-95 transition-all flex flex-col justify-between';
+      cell.className = 'aspect-auto min-h-[72px] sm:min-h-[90px] md:min-h-[100px] rounded-xl sm:rounded-2xl p-1.5 sm:p-2 md:p-3 shadow-lg cursor-pointer active:scale-95 transition-all flex flex-col justify-between ' + (isDone ? 'bg-primary/70' : 'bg-primary');
       cell.innerHTML = `
         <div class="flex justify-between items-start">
           <span class="font-headline text-sm sm:text-base md:text-xl font-bold text-on-primary">${d}</span>
-          <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-secondary-fixed shadow-sm"></div>
+          ${isDone
+            ? `<span class="material-symbols-outlined text-on-primary text-xs sm:text-sm" style="font-variation-settings:'FILL' 1;">check_circle</span>`
+            : `<div class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-secondary-fixed shadow-sm"></div>`}
         </div>
         <div>
-          <p class="font-label text-[7px] sm:text-[8px] uppercase tracking-widest text-on-primary/60 font-bold mb-0.5">Auj.</p>
+          <p class="font-label text-[7px] sm:text-[8px] uppercase tracking-widest text-on-primary/60 font-bold mb-0.5">${isDone ? 'Fait ✓' : 'Auj.'}</p>
           <span class="font-label text-[8px] sm:text-[9px] uppercase tracking-tight text-secondary-fixed font-black block">${hizbLabel}</span>
           <p class="hidden sm:block font-label text-[8px] text-on-primary/80 mt-1 leading-tight">${sourateDeLaPage(pageDebut)}</p>
           <p class="hidden sm:block font-label text-[8px] text-on-primary/60">p.${pageDebut}–${pageFin}</p>
         </div>`;
+      cell.onclick = function() { toggleDay(dateKey); };
     } else if (isDone) {
-      cell.className = 'aspect-auto min-h-[72px] sm:min-h-[90px] md:min-h-[100px] bg-surface-container-lowest rounded-xl sm:rounded-2xl p-1.5 sm:p-2 md:p-3 cursor-pointer hover:bg-surface-container-low transition-all flex flex-col justify-between border border-primary/10';
+      cell.className = 'aspect-auto min-h-[72px] sm:min-h-[90px] md:min-h-[100px] bg-surface-container-lowest rounded-xl sm:rounded-2xl p-1.5 sm:p-2 md:p-3 cursor-pointer hover:bg-surface-container-low active:scale-95 transition-all flex flex-col justify-between border border-primary/10';
       cell.innerHTML = `
         <div class="flex justify-between items-start">
           <span class="font-headline text-xs sm:text-sm md:text-lg font-bold text-on-surface-variant/40">${d}</span>
@@ -397,14 +407,30 @@ function renderCalendar() {
           <span class="hidden md:block font-label text-[8px] text-primary/60 mt-0.5">${sourateDeLaPage(pageDebut)}</span>
           <span class="hidden md:block font-label text-[8px] text-primary/50">p.${pageDebut}–${pageFin}</span>
         </div>`;
-    } else {
-      cell.className = 'aspect-auto min-h-[72px] sm:min-h-[90px] md:min-h-[100px] bg-surface-container-lowest rounded-xl sm:rounded-2xl p-1.5 sm:p-2 md:p-3 cursor-pointer hover:bg-surface-container-low transition-all flex flex-col justify-between border border-outline-variant/20';
+      cell.onclick = function() { toggleDay(dateKey); };
+    } else if (isClickable) {
+      // Jour passé non fait — tappable pour valider
+      cell.className = 'aspect-auto min-h-[72px] sm:min-h-[90px] md:min-h-[100px] bg-surface-container-lowest rounded-xl sm:rounded-2xl p-1.5 sm:p-2 md:p-3 cursor-pointer hover:bg-surface-container-low active:scale-95 transition-all flex flex-col justify-between border border-outline-variant/20';
       cell.innerHTML = `
-        <span class="font-headline text-xs sm:text-sm md:text-lg font-bold text-on-surface">${d}</span>
+        <div class="flex justify-between items-start">
+          <span class="font-headline text-xs sm:text-sm md:text-lg font-bold text-on-surface">${d}</span>
+          <span class="material-symbols-outlined text-on-surface-variant/20 text-xs sm:text-sm">radio_button_unchecked</span>
+        </div>
         <div class="mt-0.5 sm:mt-1">
           <span class="font-label text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-tight text-on-surface-variant font-bold block">${hizbLabel}</span>
           <span class="hidden md:block font-label text-[8px] text-on-surface-variant/70 mt-0.5">${sourateDeLaPage(pageDebut)}</span>
           <span class="hidden md:block font-label text-[8px] text-on-surface-variant/60">p.${pageDebut}–${pageFin}</span>
+        </div>`;
+      cell.onclick = function() { toggleDay(dateKey); };
+    } else {
+      // Jour futur — non cliquable
+      cell.className = 'aspect-auto min-h-[72px] sm:min-h-[90px] md:min-h-[100px] bg-surface-container-lowest rounded-xl sm:rounded-2xl p-1.5 sm:p-2 md:p-3 transition-all flex flex-col justify-between border border-outline-variant/10 opacity-60';
+      cell.innerHTML = `
+        <span class="font-headline text-xs sm:text-sm md:text-lg font-bold text-on-surface-variant/60">${d}</span>
+        <div class="mt-0.5 sm:mt-1">
+          <span class="font-label text-[8px] sm:text-[9px] md:text-[10px] uppercase tracking-tight text-on-surface-variant/50 font-bold block">${hizbLabel}</span>
+          <span class="hidden md:block font-label text-[8px] text-on-surface-variant/40 mt-0.5">${sourateDeLaPage(pageDebut)}</span>
+          <span class="hidden md:block font-label text-[8px] text-on-surface-variant/30">p.${pageDebut}–${pageFin}</span>
         </div>`;
     }
     grid.appendChild(cell);
@@ -414,7 +440,7 @@ function renderCalendar() {
 renderCalendar();
 
 // ── Objectif dynamique ────────────────────────────────────────────────────
-(function() {
+function updateObjectif() {
   const prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
   const lastPage = parseInt(localStorage.getItem('tilawa_last_page') || '1');
   const pages = prog.pages_jour || 20;
@@ -444,7 +470,35 @@ renderCalendar();
     descEl.textContent = 'Page ' + lastPage + ' sur 604 — ' + pct + '% accompli. ' +
       (pages ? pages + ' pages par jour selon votre programme.' : '');
   }
-})();
+}
+updateObjectif();
+
+// ── Toggle jour (valider / annuler depuis le calendrier) ─────────────────
+function toggleDay(dateKey) {
+  var prog      = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+  var pagesJour = prog.pages_jour || 20;
+  var dateDebut = prog.date_debut ? new Date(prog.date_debut + 'T00:00:00') : null;
+  var doneDays  = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+
+  if (doneDays[dateKey]) {
+    delete doneDays[dateKey];
+  } else {
+    doneDays[dateKey] = true;
+  }
+
+  // Recalcule lastPage = 1 + (nombre de jours validés depuis le début du programme) × pages/jour
+  if (dateDebut) {
+    var doneCount = Object.keys(doneDays).filter(function(k) {
+      return doneDays[k] && new Date(k + 'T00:00:00') >= dateDebut;
+    }).length;
+    var newPage = Math.min(604, 1 + doneCount * pagesJour);
+    localStorage.setItem('tilawa_last_page', String(newPage));
+  }
+
+  localStorage.setItem('tilawa_done_days', JSON.stringify(doneDays));
+  renderCalendar();
+  updateObjectif();
+}
 
 </script>
 </body>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <title>Test Profils — Tilawa Tour</title>
+  <style>
+    body { font-family: sans-serif; padding: 30px; background: #f5f5f5; max-width: 700px; margin: 0 auto; }
+    h1 { color: #333; }
+    .profile { background: white; border-radius: 16px; padding: 24px; margin: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .profile h2 { margin-top: 0; }
+    .bloom h2 { color: #6a5b53; }
+    .serenity h2 { color: #00917c; }
+    button { padding: 12px 20px; border: none; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold; margin: 5px; color: white; }
+    .btn-bloom { background: #6a5b53; }
+    .btn-serenity { background: #00917c; }
+    .btn-clear { background: #e53935; }
+    .btn-open { background: #1565C0; }
+    code { background: #eee; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+    p { color: #555; line-height: 1.6; margin: 8px 0; }
+    .status { margin-top: 10px; font-weight: bold; color: #2e7d32; min-height: 20px; }
+    hr { border: none; border-top: 1px solid #e0e0e0; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <h1>Test Profils — Tilawa Tour</h1>
+  <p>Charge le localStorage d'un profil puis ouvre les pages correspondantes pour tester.</p>
+  <p><strong>Important :</strong> ouvre les pages dans le même navigateur (même domaine / localhost).</p>
+
+  <hr/>
+
+  <!-- FEMME BLOOM -->
+  <div class="profile bloom">
+    <h2>Femme — Bloom</h2>
+    <p><strong>Programme :</strong> 2 Hizbs/jour (20 pages/jour), début le <strong>1er avril 2026</strong></p>
+    <p><strong>Scénario :</strong> Elle a déjà lu depuis le 1er avril. On va valider les 23 jours passés via le calendrier.</p>
+    <p>Page actuelle après 23 jours validés = 1 + 23×20 = <strong>461</strong></p>
+
+    <button class="btn-bloom" onclick="loadBloom()">① Charger profil Bloom</button>
+    <button class="btn-open" onclick="window.open('../dashboard_bloom_v4.html')">② Ouvrir Dashboard Bloom</button>
+    <button class="btn-open" onclick="window.open('../calendrier_bloom.html')">② Ouvrir Calendrier Bloom</button>
+    <button class="btn-open" onclick="window.open('../plan_bloom.html')">② Ouvrir Programme Bloom</button>
+    <p class="status" id="status-bloom"></p>
+  </div>
+
+  <!-- HOMME SERENITY -->
+  <div class="profile serenity">
+    <h2>Homme — Serenity</h2>
+    <p><strong>Programme :</strong> 3 Hizbs/jour (30 pages/jour), début <strong>aujourd'hui (24 avril 2026)</strong></p>
+    <p><strong>Scénario :</strong> Il commence aujourd'hui. Page actuelle = 1.</p>
+
+    <button class="btn-serenity" onclick="loadSerenity()">① Charger profil Serenity</button>
+    <button class="btn-open" onclick="window.open('../dashboard_serenity_v4.html')">② Ouvrir Dashboard Serenity</button>
+    <button class="btn-open" onclick="window.open('../calendrier_serenity.html')">② Ouvrir Calendrier Serenity</button>
+    <button class="btn-open" onclick="window.open('../plan_serenity.html')">② Ouvrir Programme Serenity</button>
+    <p class="status" id="status-serenity"></p>
+  </div>
+
+  <hr/>
+  <button class="btn-clear" onclick="clearAll()">🗑 Effacer tout le localStorage (reset complet)</button>
+  <p class="status" id="status-clear"></p>
+
+  <script>
+  // ── Profil Bloom (Femme) ─────────────────────────────────────────────────
+  function loadBloom() {
+    // Programme : 2 hizbs/jour, début 1er avril
+    const programme = {
+      theme:       'bloom',
+      rythme_idx:  2,
+      hizbs_jour:  2,
+      pages_jour:  20,
+      date_debut:  '2026-04-01',
+      langue:      'fr',
+      traduction:  'maach',
+      recitant:    'basfar',
+      pause_active: false,
+      pause_jours:  7
+    };
+
+    // Valider les 23 jours passés (1er avril → 23 avril)
+    const doneDays = {};
+    for (let d = 1; d <= 23; d++) {
+      const key = '2026-04-' + String(d).padStart(2,'0');
+      doneDays[key] = true;
+    }
+
+    // Page actuelle = 1 + 23 × 20 = 461
+    localStorage.setItem('tilawa_programme', JSON.stringify(programme));
+    localStorage.setItem('tilawa_done_days', JSON.stringify(doneDays));
+    localStorage.setItem('tilawa_last_page', '461');
+    localStorage.setItem('tilawa_khatmates_annee', '0');
+    localStorage.removeItem('tilawa_prenom');
+
+    document.getElementById('status-bloom').textContent =
+      '✓ Profil Bloom chargé — 23 jours validés, page 461, programme depuis le 1er avril.';
+  }
+
+  // ── Profil Serenity (Homme) ──────────────────────────────────────────────
+  function loadSerenity() {
+    // Programme : 3 hizbs/jour, début aujourd'hui
+    const today = new Date();
+    const todayStr = today.getFullYear() + '-' +
+      String(today.getMonth()+1).padStart(2,'0') + '-' +
+      String(today.getDate()).padStart(2,'0');
+
+    const programme = {
+      theme:       'serenity',
+      rythme_idx:  3,
+      hizbs_jour:  3,
+      pages_jour:  30,
+      date_debut:  todayStr,
+      langue:      'fr',
+      traduction:  'maach',
+      recitant:    'basfar',
+      pause_active: false,
+      pause_jours:  7
+    };
+
+    localStorage.setItem('tilawa_programme', JSON.stringify(programme));
+    localStorage.setItem('tilawa_done_days', JSON.stringify({}));
+    localStorage.setItem('tilawa_last_page', '1');
+    localStorage.setItem('tilawa_khatmates_annee', '0');
+    localStorage.removeItem('tilawa_prenom');
+
+    document.getElementById('status-serenity').textContent =
+      '✓ Profil Serenity chargé — programme commence aujourd\'hui (' + todayStr + '), page 1.';
+  }
+
+  // ── Effacement complet ────────────────────────────────────────────────────
+  function clearAll() {
+    ['tilawa_programme','tilawa_done_days','tilawa_last_page',
+     'tilawa_khatmates_annee','tilawa_bookmark','tilawa_langue',
+     'tilawa_meditated','tilawa_objectif_ramadan','tilawa_prenom'].forEach(function(k) {
+      localStorage.removeItem(k);
+    });
+    document.getElementById('status-clear').textContent = '✓ localStorage vidé.';
+  }
+  </script>
+</body>
+</html>

@@ -10,8 +10,8 @@
     </linearGradient>
     <linearGradient id="iR2" x1="82.92" y1="363.27" x2="159.2" y2="363.27" xlink:href="#iR"/>
   </defs>
-  <!-- Fond carré avec coins arrondis -->
-  <rect width="512" height="512" fill="#f0f7f5" rx="80"/>
+  <!-- Fond plein (pas de rx : le système applique sa propre forme pour le maskable) -->
+  <rect width="512" height="512" fill="#f0f7f5"/>
   <!-- Artwork logo centré — viewBox "150 270 280 230" → zone 56,91 → 456,421 -->
   <svg x="56" y="91" width="400" height="330" viewBox="150 270 280 230" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Chemin sinueux (jade) -->
