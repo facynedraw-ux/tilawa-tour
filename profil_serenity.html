@@ -685,11 +685,12 @@ function sauvegarderIdentite() {
   setTimeout(() => { window.location.reload(); }, 700);
 }
 
-function resetProfil() {
+async function resetProfil() {
   if (!confirm('Réinitialiser votre profil ? Prénom, programme et thème seront effacés.')) return;
   ['tilawa_programme','tilawa_done_days','tilawa_last_page','tilawa_khatmates_annee',
    'tilawa_prenom','tilawa_kunya','tilawa_bookmark','tilawa_meditated',
    'tilawa_objectif_ramadan'].forEach(function(k) { localStorage.removeItem(k); });
+  if (typeof resetCloud === 'function') await resetCloud();
   window.location.replace('index.html');
 }
 

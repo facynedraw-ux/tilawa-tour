@@ -416,7 +416,11 @@ try {
   var _todayW = new Date(); _todayW.setHours(0,0,0,0);
   var _joursW = Math.max(0, Math.floor((_todayW - dateDebut) / 86400000));
   var _nextPW = Math.max(_lastP, Math.min(1 + _joursW * pagesJour, 604));
-  var currentHizb = typeof PAGE_TO_HIZB !== 'undefined' ? (PAGE_TO_HIZB[Math.min(_nextPW,604)] || 1) : Math.ceil(_nextPW / 10);
+  // currentHizb : calculé depuis les jours écoulés (pas depuis la page) pour éviter
+  // un décalage quand la page tombe encore dans le hizb précédent.
+  var _hizbFromDate = Math.min(Math.floor(1 + _joursW * hizbsJour), 60);
+  var _hizbFromPage = typeof PAGE_TO_HIZB !== 'undefined' ? (PAGE_TO_HIZB[Math.min(_lastP,604)] || 1) : Math.ceil(_lastP / 10);
+  var currentHizb = Math.max(_hizbFromDate, _hizbFromPage);
   function hizbLbl(i) {
     if (hizbsJour === 0.5) { return 'Nisf ' + ((currentHizb - 1) * 2 + i + 1); }
     var h = currentHizb + i * hizbsJour;

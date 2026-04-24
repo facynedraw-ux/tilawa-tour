@@ -90,6 +90,16 @@ async function requireAuth() {
   return session;
 }
 
+// ── Réinitialisation cloud ────────────────────────────────────────────────
+async function resetCloud() {
+  if (!_sb) return;
+  try {
+    const session = await getSession();
+    if (!session) return;
+    await _sb.from('user_data').delete().eq('user_id', session.user.id);
+  } catch (e) { console.warn('[Tilawa] resetCloud:', e); }
+}
+
 // ── Déconnexion ───────────────────────────────────────────────────────────
 async function tilawa_signOut() {
   if (_sb) await _sb.auth.signOut();

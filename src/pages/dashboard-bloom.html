@@ -400,9 +400,11 @@ try {
   // Calculer la page d'aujourd'hui selon le planning (date_debut + rythme)
   var _joursW = Math.max(0, Math.floor((today - dateDebut) / 86400000));
   var nextPageToday = Math.max(_lastPB, Math.min(1 + _joursW * pagesJour, 604));
-  var _hW = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(nextPageToday,604)] || 1) : Math.ceil(nextPageToday / 10);
-  var _hWN = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(nextPageToday+1,604)] || 1) : _hW;
-  var currentHizb = (_hWN > _hW) ? _hWN : _hW;
+  // currentHizb : calculé depuis les jours écoulés (pas depuis la page) pour éviter
+  // un décalage quand la page 581 tombe encore en hizb 58 alors qu'on devrait lire hizb 59.
+  var _hizbFromDate = Math.min(Math.floor(1 + _joursW * hizbsJour), 60);
+  var _hizbFromPage = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(_lastPB,604)] || 1) : Math.ceil(_lastPB / 10);
+  var currentHizb = Math.max(_hizbFromDate, _hizbFromPage);
   function hizbLbl(i) {
     if (hizbsJour === 0.5) { return "Nisf " + ((currentHizb - 1) * 2 + i + 1); }
     var h = currentHizb + i * hizbsJour;
