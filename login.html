@@ -79,7 +79,7 @@
     </button>
 
     <p class="text-[10px] text-center leading-relaxed" style="color:#8ab5af;">
-      Tu recevras un code à 6 chiffres par email — aucun mot de passe nécessaire.
+      Tu recevras un code à 8 chiffres par email — aucun mot de passe nécessaire.
     </p>
   </div>
 
@@ -90,12 +90,12 @@
     <div class="text-center space-y-1">
       <span class="material-symbols-outlined text-3xl" style="color:#00917c;font-variation-settings:'FILL' 1;">mark_email_read</span>
       <p class="font-semibold text-sm" style="color:#1a2e28;">Code envoyé !</p>
-      <p class="text-xs" style="color:#6b9088;">Saisis le code à 6 chiffres reçu à<br/><span id="email-display" class="font-semibold" style="color:#1a2e28;"></span></p>
+      <p class="text-xs" style="color:#6b9088;">Saisis le code à 8 chiffres reçu à<br/><span id="email-display" class="font-semibold" style="color:#1a2e28;"></span></p>
     </div>
 
     <div>
-      <input type="text" id="code-input" placeholder="000000"
-             inputmode="numeric" maxlength="6" autocomplete="one-time-code"
+      <input type="text" id="code-input" placeholder="00000000"
+             inputmode="numeric" maxlength="8" autocomplete="one-time-code"
              class="w-full px-4 py-3.5 rounded-2xl border outline-none transition-all"
              style="border-color:#c5ddd9; background:#f7faf9; color:#1a2e28;"
              onfocus="this.style.borderColor='#00917c'"
@@ -172,8 +172,8 @@ async function sendCode() {
 
 async function verifyCode() {
   const token = document.getElementById('code-input').value.trim();
-  if (token.length !== 6) {
-    showError('Le code doit contenir 6 chiffres.');
+  if (token.length !== 8) {
+    showError('Le code doit contenir 8 chiffres.');
     return;
   }
 
