@@ -1,13 +1,89 @@
 # Tilawa Tour — État du projet
 
 ## Déploiement
-- Plateforme : Netlify (static, PWA)
+- Plateforme actuelle : Netlify (Personal plan, 1000 crédits, 75 crédits/build, 20 crédits/GB bande passante)
 - Auth + sync : Supabase (`user_data` table, clé dans `supabase-client.js`)
 - **IMPORTANT : chaque push Netlify consomme des crédits → grouper tous les fichiers, pousser une seule fois par session**
 - Flux build : modifier `src/pages/<page>.html` → `npm run build` → commit les fichiers générés `*_bloom.html` + `*_serenity.html`
+- **À FAIRE après validation complète : migrer vers Cloudflare Pages** (gratuit, bande passante illimitée, builds illimités — indispensable si beaucoup d'utilisateurs)
 
 ## Phase actuelle
 Application en **phase de test** (Avril 2026).
+
+---
+
+## Session du 25 Avril 2026 — ce qui a été fait
+
+### ✅ Corrigé et buildé (pas encore pushé sur Netlify)
+
+#### Profil (`src/pages/profil.html` → `profil_bloom.html` + `profil_serenity.html`)
+- **Prénom/kunya ne se sauvegardaient pas** : crash silencieux dans `setTraduction()` (null.classList) bloquait tout le script d'init
+  - Fix : null-check ajouté avant accès `.classList` sur les boutons
+  - Fix : initialisation prénom/kunya déplacée dans un IIFE indépendant (avant les autres inits)
+  - Fix : `window.location.reload()` supprimé → UI mise à jour en place (champ grisé, bouton masqué)
+  - Fix : `type="button"` ajouté sur le bouton pour éviter submit implicite
+- **Bouton "Sauvegarder" masqué** dès que le prénom est saisi ; réapparaît uniquement après reset
+
+#### Dashboard (`src/pages/dashboard-bloom.html` + `src/pages/dashboard-serenity.html`)
+- **Carte de bienvenue** pour nouveaux utilisateurs sans prénom (champ + bouton inline)
+- **"Hizb 60-60" après Khatma** : formule modulo 60 appliquée → `((Math.floor(h) - 1) % 60) + 1`
+- **Détection Khatma manquante dans Bloom** : ajoutée dans `marquerFaitBloom` et `arreterIciBloom`
+- **date_debut non réinitialisée** après Khatma : fix → reset à J+1 dans localStorage pour que le programme du mois suivant soit correct
+- Fichiers générés : `dashboard_bloom_v4.html` + `dashboard_serenity_v4.html`
+
+#### Calendrier (`src/pages/calendrier.html` → `calendrier_bloom.html` + `calendrier_serenity.html`)
+- **Message rétro-validation** : si `date_debut` est dans le passé, affiche une info-bulle expliquant qu'on peut cocher les jours passés directement dans le calendrier
+
+#### Lecteur (`src/pages/lecteur.html` → `lecteur_bloom.html` + `lecteur_serenity.html`)
+- **"Page non encore indexée"** (page 461 et toutes pages > 380) : `PAGE_TO_AYAHS` était incomplète (380 pages, mauvais format de mushaf). Remplacée par le mapping complet 604 pages basé sur `quran-uthmani.json`
+- **Sommaire des 114 sourates** : tap sur le nom de la sourate dans le header → ouvre un panneau plein écran avec liste des 114 sourates (numéro + nom arabe + numéro de page), barre de recherche, scroll auto sur la sourate active, tap = navigation directe
+- **Saut de page** : tap sur `p. X` (numéro français) sous le numéro arabe dans le pied de page → ouvre un champ numérique pour aller à n'importe quelle page (1–604)
+
+#### Footers Instagram (`_blank`)
+- Lien Instagram dans le footer de toutes les pages ne s'ouvrait pas dans un nouvel onglet
+- Fix : `target="_blank" rel="noopener"` ajouté dans les 8 pages concernées :
+  `bilan`, `plan`, `lexique`, `calendrier`, `profil`, `lecteur`, `celebration`, `dashboard`
+
+---
+
+### 📦 Fichiers à uploader sur Netlify (16 fichiers, tous buildés le 25 avril)
+
+| Fichier | Raison |
+|---|---|
+| `profil_bloom.html` + `profil_serenity.html` | Prénom/kunya + bouton masqué |
+| `dashboard_bloom_v4.html` + `dashboard_serenity_v4.html` | Carte bienvenue + modulo hizb + khatma |
+| `calendrier_bloom.html` + `calendrier_serenity.html` | Message date passée |
+| `lecteur_bloom.html` + `lecteur_serenity.html` | PAGE_TO_AYAHS 604p + sommaire + saut de page |
+| `bilan_bloom.html` + `bilan_serenity.html` | Instagram `_blank` |
+| `plan_bloom.html` + `plan_serenity.html` | Instagram `_blank` |
+| `lexique_bloom.html` + `lexique_serenity.html` | Instagram `_blank` |
+| `celebration_bloom.html` + `celebration_serenity.html` | Instagram `_blank` |
+
+> `index.html` et `login.html` non touchés → ne pas re-uploader.
+
+---
+
+### ⚠️ À tester après upload
+- Prénom/kunya : sauvegarde → champ grisé → persistance après navigation
+- Dashboard : "Hizb X-X" correct après Khatma, repartir de Hizb 1 le lendemain
+- Calendrier : message rétro-validation visible si date_debut passée
+- Lecteur : plus de "Page non encore indexée", page 461 affiche Az-Zumar 22-31
+- Lecteur : sommaire 114 sourates → navigation par tap
+- Lecteur : tap `p. X` → saisie libre → navigation
+- Instagram : lien s'ouvre bien dans un nouvel onglet
+
+---
+
+## Session du 24 Avril 2026 — ce qui a été fait
+
+### Corrigé et uploadé sur Netlify
+- **Reset profil** : `supabase-client.js` (nouvelle fonction `resetCloud()`) + `src/pages/profil.html` → le reset vide maintenant aussi le cloud Supabase, plus de résurrection des données après reset
+- **Calcul hizbs dashboard** : `src/pages/dashboard-bloom.html` + `src/pages/dashboard-serenity.html` → `currentHizb` calculé depuis les jours écoulés (`1 + jours × hizbsJour`) au lieu de la page, corrige l'affichage "58-59" → "59-60" pour le 30 avril
+- **Login OTP code** : `login.html` → remplacé magic link par OTP 6 chiffres (`signInWithOtp` sans `emailRedirectTo` + `verifyOtp`)
+- **Template email Supabase** : modifié pour afficher `{{ .Token }}` en texte brut au lieu du lien magic link
+- **OTP length Supabase** : changé de 8 à 6 chiffres
+
+---
 
 ## Architecture technique
 - Pas de framework JS, pas de bundler
@@ -20,7 +96,7 @@ Application en **phase de test** (Avril 2026).
 |---|---|---|
 | index.html (statique) | — | Choix du thème (homme/femme), auto-redirect si déjà connecté |
 | login.html (statique) | — | Auth Supabase |
-| src/pages/dashboard.html | dashboard_bloom_v4.html + dashboard_serenity_v4.html | Hub principal |
+| src/pages/dashboard-bloom.html + dashboard-serenity.html | dashboard_bloom_v4.html + dashboard_serenity_v4.html | Hub principal (sources séparées par thème) |
 | src/pages/lecteur.html | lecteur_bloom.html + lecteur_serenity.html | Lecteur Coran |
 | src/pages/calendrier.html | calendrier_bloom.html + calendrier_serenity.html | Calendrier mensuel |
 | src/pages/plan.html | plan_bloom.html + plan_serenity.html | Config programme |
@@ -33,40 +109,35 @@ Application en **phase de test** (Avril 2026).
 - **Serenity** = Homme, vert émeraude #00917c, font Manrope
 - **Bloom** = Femme, terracotta #6a5b53, font Plus Jakarta Sans
 
-## Flux utilisateur (ordre obligatoire)
-
-### Première configuration
-1. `login.html` → OTP Supabase → `index.html`
-2. `index.html` → choix Homme/Femme → `plan_*.html`
-3. `plan_*.html` → configuration programme → `dashboard_*.html`
-4. Depuis dashboard → `profil_*.html` : saisir prénom + kunya + confirmer thème → bouton **Sauvegarder** → verrou + redirect `plan_*.html` si pas encore configuré
-
-### Retour utilisateur (déjà configuré)
-- `index.html` → si `tilawa_programme.hizbs_jour` ET `.theme` présents → dashboard directement
-- Profil : prénom/kunya grisés, thème verrouillé, bouton Sauvegarder masqué
-
-### Reset
-- Bouton Reset dans profil → efface localStorage + cloud → **recharge la page profil** (pas de redirect index.html pour éviter le re-check session Supabase)
-- Page profil rechargée : tout déverrouillé, bouton Sauvegarder visible → même flux que première configuration
-
 ## État des fonctionnalités (Avril 2026)
 
 ### ✅ Fait et fonctionnel
-- Choix thème initial (index.html) — redirect dashboard seulement si `hizbs_jour` ET `theme` présents
+- Choix thème initial (index.html)
 - Configuration programme (plan_*.html)
 - Dashboard principal (bilan, jauge, programme semaine)
 - Lecteur Coran avec audio (cdn.islamic.network + fallback everyayah.com)
+- Lecteur : sommaire 114 sourates (tap sur nom de sourate)
+- Lecteur : saut de page direct (tap sur numéro français)
+- Lecteur : PAGE_TO_AYAHS complet 604 pages (Mushaf Médina)
 - Calendrier mensuel
 - Profil : sélection langue, traduction, récitant
-- Profil : nom/kunya grisés une fois saisis (unlock uniquement via reset)
-- Profil : boutons Homme/Femme verrouillés une fois sélectionnés (unlock uniquement via reset)
-- Profil : bouton Sauvegarder positionné **après** le choix du thème, masqué si déjà enregistré
-- Profil : Sauvegarder valide que le thème est choisi avant d'accepter
+- Profil : prénom/kunya sauvegardés et grisés une fois saisis (unlock uniquement via reset)
+- Profil : boutons Homme/Femme grisés une fois sélectionné (unlock uniquement via reset)
 - Sync cloud Supabase (toutes les clés dans SYNC_KEYS)
-- Bouton reset dans profil (réinitialise localStorage + cloud + recharge profil)
+- Bouton reset dans profil (réinitialise localStorage + cloud + redirect index.html)
+- Login OTP 6 chiffres (à confirmer après test)
+- Instagram footer : `_blank` sur toutes les pages
 
-### ⚠️ Bugs connus / en cours
-- *(vide — à remplir au fil des corrections)*
+### ⚠️ À tester / en suspens
+- Login OTP : était en rate limit Supabase le 24 soir — retester
+- Reset profil : fonctionnel en théorie, à confirmer en vrai device
+
+### ❌ Bugs connus (non corrigés)
+- Dashboard : avatar non cliquable
+- Lecteur : audio + ergonomie à améliorer
+- Lecteur : marquer comme médité ne fonctionne pas
+- Calendrier : commence au 1er du mois au lieu de date_debut
+- Profil : flèche retour ne fonctionne pas
 
 ## Clés localStorage
 | Clé | Type | Description |
@@ -84,11 +155,9 @@ Application en **phase de test** (Avril 2026).
 
 ## Règles critiques
 - **Jamais modifier `*_bloom.html` ou `*_serenity.html` directement** → toujours `src/pages/` puis `npm run build`
+- **Dashboard exception** : sources séparées `src/pages/dashboard-bloom.html` et `src/pages/dashboard-serenity.html`
 - Jamais `toISOString()` pour les dates → `getFullYear/getMonth/getDate`
 - Jamais `prompt()` → toujours inputs inline
 - `tilawa_last_page` = prochaine page À LIRE (pas la dernière lue)
 - `window._arabicData` et `window._maachData` doivent être en tête du HTML (script 1)
-- **`setTheme(t, true)`** ne redirige jamais — c'est le bouton Sauvegarder qui gère la redirection
-- **`setTheme(t, false)`** = affichage visuel uniquement, n'écrit pas dans localStorage
-- **index.html** ne redirige vers le dashboard que si `tilawa_programme.hizbs_jour` ET `.theme` sont définis
-- **Reset** → `window.location.reload()` sur la page profil (pas `index.html`) pour éviter le re-check session Supabase qui peut expirer et renvoyer vers OTP
+- Formule hizb modulo : `((Math.floor(h) - 1) % 60) + 1` pour wrap 1→60 après Khatma

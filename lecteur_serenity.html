@@ -157,10 +157,10 @@ function closeDrawer() {
       </a>
     </div>
     <!-- Nom sourate centré -->
-    <div class="absolute left-1/2 -translate-x-1/2 text-center pointer-events-none">
+    <button onclick="openSommaire()" class="absolute left-1/2 -translate-x-1/2 text-center active:scale-95 transition-transform">
       <h1 class="font-headline text-sm font-semibold text-primary leading-tight" id="surah-name">—</h1>
       <span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/60" id="page-info"></span>
-    </div>
+    </button>
     <!-- Boutons droite -->
     <div class="flex items-center gap-1">
       <button onclick="toggleTranslation()" id="trad-btn"
@@ -256,6 +256,8 @@ function updateProgress() {
   // Pied de page mushaf dynamique
   const pageNumEl = document.getElementById('page-num');
   if (pageNumEl) pageNumEl.textContent = toArabicNumerals(currentPage);
+  const pageNumFrEl = document.getElementById('page-num-fr');
+  if (pageNumFrEl) pageNumFrEl.textContent = 'p. ' + currentPage;
   const hizbLabelEl = document.getElementById('hizb-label');
   if (hizbLabelEl) hizbLabelEl.textContent = 'Hizb ' + hizbNum;
   const juzLabelEl = document.getElementById('juz-label');
@@ -367,7 +369,7 @@ let tradActive = (function() {
 let tradCache = {};
 
 // Correspondance page → sourate + versets (Mushaf Médina)
-const PAGE_TO_AYAHS = {1:{s:1,a:1,b:7},2:{s:2,a:1,b:5},3:{s:2,a:6,b:16},4:{s:2,a:17,b:24},5:{s:2,a:25,b:29},6:{s:2,a:30,b:38},7:{s:2,a:39,b:46},8:{s:2,a:47,b:59},9:{s:2,a:60,b:74},10:{s:2,a:75,b:82},11:{s:2,a:83,b:92},12:{s:2,a:93,b:101},13:{s:2,a:102,b:110},14:{s:2,a:111,b:118},15:{s:2,a:119,b:126},16:{s:2,a:127,b:134},17:{s:2,a:135,b:141},18:{s:2,a:142,b:150},19:{s:2,a:151,b:157},20:{s:2,a:158,b:167},21:{s:2,a:168,b:176},22:{s:2,a:177,b:182},23:{s:2,a:183,b:187},24:{s:2,a:188,b:196},25:{s:2,a:197,b:202},26:{s:2,a:203,b:210},27:{s:2,a:211,b:216},28:{s:2,a:217,b:221},29:{s:2,a:222,b:227},30:{s:2,a:228,b:231},31:{s:2,a:232,b:237},32:{s:2,a:238,b:242},33:{s:2,a:243,b:248},34:{s:2,a:249,b:252},35:{s:2,a:253,b:257},36:{s:2,a:258,b:260},37:{s:2,a:261,b:265},38:{s:2,a:266,b:271},39:{s:2,a:272,b:276},40:{s:2,a:277,b:281},41:{s:2,a:282,b:283},42:{s:2,a:284,b:286},43:{s:3,a:1,b:9},44:{s:3,a:10,b:18},45:{s:3,a:19,b:32},46:{s:3,a:33,b:41},47:{s:3,a:42,b:54},48:{s:3,a:55,b:62},49:{s:3,a:63,b:75},50:{s:3,a:76,b:92},51:{s:3,a:93,b:101},52:{s:3,a:102,b:109},53:{s:3,a:110,b:118},54:{s:3,a:119,b:128},55:{s:3,a:129,b:138},56:{s:3,a:139,b:148},57:{s:3,a:149,b:158},58:{s:3,a:159,b:168},59:{s:3,a:169,b:180},60:{s:3,a:181,b:187},61:{s:3,a:188,b:194},62:{s:3,a:195,b:200},63:{s:4,a:1,b:12},64:{s:4,a:13,b:18},65:{s:4,a:19,b:25},66:{s:4,a:26,b:34},67:{s:4,a:35,b:41},68:{s:4,a:42,b:52},69:{s:4,a:53,b:59},70:{s:4,a:60,b:70},71:{s:4,a:71,b:80},72:{s:4,a:81,b:91},73:{s:4,a:92,b:96},74:{s:4,a:97,b:104},75:{s:4,a:105,b:112},76:{s:4,a:113,b:121},77:{s:4,a:122,b:130},78:{s:4,a:131,b:141},79:{s:4,a:142,b:152},80:{s:4,a:153,b:162},81:{s:4,a:163,b:171},82:{s:4,a:172,b:177},83:{s:5,a:1,b:5},84:{s:5,a:6,b:11},85:{s:5,a:12,b:19},86:{s:5,a:20,b:27},87:{s:5,a:28,b:36},88:{s:5,a:37,b:43},89:{s:5,a:44,b:51},90:{s:5,a:52,b:59},91:{s:5,a:60,b:66},92:{s:5,a:67,b:71},93:{s:5,a:72,b:77},94:{s:5,a:78,b:83},95:{s:5,a:84,b:90},96:{s:5,a:91,b:97},97:{s:5,a:98,b:104},98:{s:5,a:105,b:109},99:{s:5,a:110,b:115},100:{s:5,a:116,b:120},101:{s:6,a:1,b:12},102:{s:6,a:13,b:26},103:{s:6,a:27,b:36},104:{s:6,a:37,b:45},105:{s:6,a:46,b:55},106:{s:6,a:56,b:70},107:{s:6,a:71,b:82},108:{s:6,a:83,b:92},109:{s:6,a:93,b:100},110:{s:6,a:101,b:110},111:{s:6,a:111,b:121},112:{s:6,a:122,b:132},113:{s:6,a:133,b:140},114:{s:6,a:141,b:149},115:{s:6,a:150,b:157},116:{s:6,a:158,b:163},117:{s:6,a:164,b:165},118:{s:7,a:1,b:18},119:{s:7,a:19,b:31},120:{s:7,a:32,b:46},121:{s:7,a:47,b:58},122:{s:7,a:59,b:74},123:{s:7,a:75,b:93},124:{s:7,a:94,b:109},125:{s:7,a:110,b:126},126:{s:7,a:127,b:141},127:{s:7,a:142,b:155},128:{s:7,a:156,b:170},129:{s:7,a:171,b:182},130:{s:7,a:183,b:196},131:{s:7,a:197,b:206},132:{s:8,a:1,b:16},133:{s:8,a:17,b:29},134:{s:8,a:30,b:42},135:{s:8,a:43,b:54},136:{s:8,a:55,b:66},137:{s:8,a:67,b:75},138:{s:9,a:1,b:12},139:{s:9,a:13,b:24},140:{s:9,a:25,b:37},141:{s:9,a:38,b:49},142:{s:9,a:50,b:61},143:{s:9,a:62,b:72},144:{s:9,a:73,b:84},145:{s:9,a:85,b:96},146:{s:9,a:97,b:106},147:{s:9,a:107,b:116},148:{s:9,a:117,b:122},149:{s:9,a:123,b:129},150:{s:10,a:1,b:10},151:{s:10,a:11,b:25},152:{s:10,a:26,b:40},153:{s:10,a:41,b:55},154:{s:10,a:56,b:70},155:{s:10,a:71,b:89},156:{s:10,a:90,b:109},157:{s:11,a:1,b:18},158:{s:11,a:19,b:35},159:{s:11,a:36,b:49},160:{s:11,a:50,b:66},161:{s:11,a:67,b:83},162:{s:11,a:84,b:99},163:{s:11,a:100,b:109},164:{s:11,a:110,b:123},165:{s:12,a:1,b:20},166:{s:12,a:21,b:38},167:{s:12,a:39,b:52},168:{s:12,a:53,b:68},169:{s:12,a:69,b:85},170:{s:12,a:86,b:101},171:{s:12,a:102,b:111},172:{s:13,a:1,b:15},173:{s:13,a:16,b:28},174:{s:13,a:29,b:38},175:{s:13,a:39,b:43},176:{s:14,a:1,b:21},177:{s:14,a:22,b:34},178:{s:14,a:35,b:52},179:{s:15,a:1,b:48},180:{s:15,a:49,b:77},181:{s:15,a:78,b:99},182:{s:16,a:1,b:21},183:{s:16,a:22,b:42},184:{s:16,a:43,b:64},185:{s:16,a:65,b:85},186:{s:16,a:86,b:100},187:{s:16,a:101,b:110},188:{s:16,a:111,b:119},189:{s:16,a:120,b:128},190:{s:17,a:1,b:22},191:{s:17,a:23,b:44},192:{s:17,a:45,b:60},193:{s:17,a:61,b:80},194:{s:17,a:81,b:98},195:{s:17,a:99,b:111},196:{s:18,a:1,b:16},197:{s:18,a:17,b:31},198:{s:18,a:32,b:46},199:{s:18,a:47,b:59},200:{s:18,a:60,b:74},201:{s:18,a:75,b:90},202:{s:18,a:91,b:106},203:{s:18,a:107,b:110},204:{s:19,a:1,b:21},205:{s:19,a:22,b:40},206:{s:19,a:41,b:63},207:{s:19,a:64,b:77},208:{s:19,a:78,b:98},209:{s:20,a:1,b:40},210:{s:20,a:41,b:76},211:{s:20,a:77,b:104},212:{s:20,a:105,b:121},213:{s:20,a:122,b:130},214:{s:21,a:1,b:28},215:{s:21,a:29,b:50},216:{s:21,a:51,b:73},217:{s:21,a:74,b:91},218:{s:21,a:92,b:106},219:{s:21,a:107,b:112},220:{s:22,a:1,b:18},221:{s:22,a:19,b:37},222:{s:22,a:38,b:57},223:{s:22,a:58,b:72},224:{s:22,a:73,b:78},225:{s:23,a:1,b:22},226:{s:23,a:23,b:50},227:{s:23,a:51,b:74},228:{s:23,a:75,b:98},229:{s:23,a:99,b:118},230:{s:24,a:1,b:20},231:{s:24,a:21,b:35},232:{s:24,a:36,b:52},233:{s:24,a:53,b:64},234:{s:25,a:1,b:20},235:{s:25,a:21,b:40},236:{s:25,a:41,b:60},237:{s:25,a:61,b:77},238:{s:26,a:1,b:51},239:{s:26,a:52,b:111},240:{s:26,a:112,b:175},241:{s:26,a:176,b:212},242:{s:26,a:213,b:227},243:{s:27,a:1,b:26},244:{s:27,a:27,b:55},245:{s:27,a:56,b:81},246:{s:27,a:82,b:93},247:{s:28,a:1,b:28},248:{s:28,a:29,b:50},249:{s:28,a:51,b:74},250:{s:28,a:75,b:85},251:{s:29,a:1,b:25},252:{s:29,a:26,b:45},253:{s:29,a:46,b:69},254:{s:30,a:1,b:30},255:{s:30,a:31,b:53},256:{s:30,a:54,b:60},257:{s:31,a:1,b:21},258:{s:31,a:22,b:34},259:{s:32,a:1,b:20},260:{s:32,a:21,b:30},261:{s:33,a:1,b:17},262:{s:33,a:18,b:30},263:{s:33,a:31,b:43},264:{s:33,a:44,b:52},265:{s:33,a:53,b:58},266:{s:33,a:59,b:73},267:{s:34,a:1,b:21},268:{s:34,a:22,b:39},269:{s:34,a:40,b:54},270:{s:35,a:1,b:18},271:{s:35,a:19,b:37},272:{s:35,a:38,b:45},273:{s:36,a:1,b:27},274:{s:36,a:28,b:50},275:{s:36,a:51,b:76},276:{s:36,a:77,b:83},277:{s:37,a:1,b:74},278:{s:37,a:75,b:137},279:{s:37,a:138,b:182},280:{s:38,a:1,b:40},281:{s:38,a:41,b:86},282:{s:38,a:87,b:88},283:{s:39,a:1,b:21},284:{s:39,a:22,b:42},285:{s:39,a:43,b:60},286:{s:39,a:61,b:75},287:{s:40,a:1,b:20},288:{s:40,a:21,b:40},289:{s:40,a:41,b:55},290:{s:40,a:56,b:75},291:{s:40,a:76,b:85},292:{s:41,a:1,b:21},293:{s:41,a:22,b:36},294:{s:41,a:37,b:46},295:{s:41,a:47,b:54},296:{s:42,a:1,b:23},297:{s:42,a:24,b:43},298:{s:42,a:44,b:53},299:{s:43,a:1,b:35},300:{s:43,a:36,b:69},301:{s:43,a:70,b:89},302:{s:44,a:1,b:59},303:{s:45,a:1,b:21},304:{s:45,a:22,b:37},305:{s:46,a:1,b:20},306:{s:46,a:21,b:35},307:{s:47,a:1,b:19},308:{s:47,a:20,b:38},309:{s:48,a:1,b:17},310:{s:48,a:18,b:29},311:{s:49,a:1,b:18},312:{s:50,a:1,b:40},313:{s:51,a:1,b:60},314:{s:52,a:1,b:49},315:{s:53,a:1,b:62},316:{s:54,a:1,b:55},317:{s:55,a:1,b:78},318:{s:56,a:1,b:74},319:{s:56,a:75,b:96},320:{s:57,a:1,b:15},321:{s:57,a:16,b:29},322:{s:58,a:1,b:13},323:{s:58,a:14,b:22},324:{s:59,a:1,b:17},325:{s:59,a:18,b:24},326:{s:60,a:1,b:13},327:{s:61,a:1,b:14},328:{s:62,a:1,b:11},329:{s:63,a:1,b:11},330:{s:64,a:1,b:18},331:{s:65,a:1,b:12},332:{s:66,a:1,b:12},333:{s:67,a:1,b:30},334:{s:68,a:1,b:52},335:{s:69,a:1,b:52},336:{s:70,a:1,b:44},337:{s:71,a:1,b:28},338:{s:72,a:1,b:28},339:{s:73,a:1,b:20},340:{s:74,a:1,b:56},341:{s:75,a:1,b:40},342:{s:76,a:1,b:31},343:{s:77,a:1,b:50},344:{s:78,a:1,b:40},345:{s:79,a:1,b:46},346:{s:80,a:1,b:42},347:{s:81,a:1,b:29},348:{s:82,a:1,b:19},349:{s:83,a:1,b:36},350:{s:84,a:1,b:25},351:{s:85,a:1,b:22},352:{s:86,a:1,b:17},353:{s:87,a:1,b:19},354:{s:88,a:1,b:26},355:{s:89,a:1,b:30},356:{s:90,a:1,b:20},357:{s:91,a:1,b:15},358:{s:92,a:1,b:21},359:{s:93,a:1,b:11},360:{s:94,a:1,b:8},361:{s:95,a:1,b:8},362:{s:96,a:1,b:19},363:{s:97,a:1,b:5},364:{s:98,a:1,b:8},365:{s:99,a:1,b:8},366:{s:100,a:1,b:11},367:{s:101,a:1,b:11},368:{s:102,a:1,b:8},369:{s:103,a:1,b:3},370:{s:104,a:1,b:9},371:{s:105,a:1,b:5},372:{s:106,a:1,b:4},373:{s:107,a:1,b:7},374:{s:108,a:1,b:3},375:{s:109,a:1,b:6},376:{s:110,a:1,b:3},377:{s:111,a:1,b:5},378:{s:112,a:1,b:4},379:{s:113,a:1,b:5},380:{s:114,a:1,b:6}};
+const PAGE_TO_AYAHS = {1:{s:1,a:1,b:7},2:{s:2,a:1,b:5},3:{s:2,a:6,b:16},4:{s:2,a:17,b:24},5:{s:2,a:25,b:29},6:{s:2,a:30,b:37},7:{s:2,a:38,b:48},8:{s:2,a:49,b:57},9:{s:2,a:58,b:61},10:{s:2,a:62,b:69},11:{s:2,a:70,b:76},12:{s:2,a:77,b:83},13:{s:2,a:84,b:88},14:{s:2,a:89,b:93},15:{s:2,a:94,b:101},16:{s:2,a:102,b:105},17:{s:2,a:106,b:112},18:{s:2,a:113,b:119},19:{s:2,a:120,b:126},20:{s:2,a:127,b:134},21:{s:2,a:135,b:141},22:{s:2,a:142,b:145},23:{s:2,a:146,b:153},24:{s:2,a:154,b:163},25:{s:2,a:164,b:169},26:{s:2,a:170,b:176},27:{s:2,a:177,b:181},28:{s:2,a:182,b:186},29:{s:2,a:187,b:190},30:{s:2,a:191,b:196},31:{s:2,a:197,b:202},32:{s:2,a:203,b:210},33:{s:2,a:211,b:215},34:{s:2,a:216,b:219},35:{s:2,a:220,b:224},36:{s:2,a:225,b:230},37:{s:2,a:231,b:233},38:{s:2,a:234,b:237},39:{s:2,a:238,b:245},40:{s:2,a:246,b:248},41:{s:2,a:249,b:252},42:{s:2,a:253,b:256},43:{s:2,a:257,b:259},44:{s:2,a:260,b:264},45:{s:2,a:265,b:269},46:{s:2,a:270,b:274},47:{s:2,a:275,b:281},48:{s:2,a:282,b:282},49:{s:2,a:283,b:286},50:{s:3,a:1,b:9},51:{s:3,a:10,b:15},52:{s:3,a:16,b:22},53:{s:3,a:23,b:29},54:{s:3,a:30,b:37},55:{s:3,a:38,b:45},56:{s:3,a:46,b:52},57:{s:3,a:53,b:61},58:{s:3,a:62,b:70},59:{s:3,a:71,b:77},60:{s:3,a:78,b:83},61:{s:3,a:84,b:91},62:{s:3,a:92,b:100},63:{s:3,a:101,b:108},64:{s:3,a:109,b:115},65:{s:3,a:116,b:121},66:{s:3,a:122,b:132},67:{s:3,a:133,b:140},68:{s:3,a:141,b:148},69:{s:3,a:149,b:153},70:{s:3,a:154,b:157},71:{s:3,a:158,b:165},72:{s:3,a:166,b:173},73:{s:3,a:174,b:180},74:{s:3,a:181,b:186},75:{s:3,a:187,b:194},76:{s:3,a:195,b:200},77:{s:4,a:1,b:6},78:{s:4,a:7,b:11},79:{s:4,a:12,b:14},80:{s:4,a:15,b:19},81:{s:4,a:20,b:23},82:{s:4,a:24,b:26},83:{s:4,a:27,b:33},84:{s:4,a:34,b:37},85:{s:4,a:38,b:44},86:{s:4,a:45,b:51},87:{s:4,a:52,b:59},88:{s:4,a:60,b:65},89:{s:4,a:66,b:74},90:{s:4,a:75,b:79},91:{s:4,a:80,b:86},92:{s:4,a:87,b:91},93:{s:4,a:92,b:94},94:{s:4,a:95,b:101},95:{s:4,a:102,b:105},96:{s:4,a:106,b:113},97:{s:4,a:114,b:121},98:{s:4,a:122,b:127},99:{s:4,a:128,b:134},100:{s:4,a:135,b:140},101:{s:4,a:141,b:147},102:{s:4,a:148,b:154},103:{s:4,a:155,b:162},104:{s:4,a:163,b:170},105:{s:4,a:171,b:175},106:{s:4,a:176,b:176},107:{s:5,a:3,b:5},108:{s:5,a:6,b:9},109:{s:5,a:10,b:13},110:{s:5,a:14,b:17},111:{s:5,a:18,b:23},112:{s:5,a:24,b:31},113:{s:5,a:32,b:36},114:{s:5,a:37,b:41},115:{s:5,a:42,b:45},116:{s:5,a:46,b:50},117:{s:5,a:51,b:57},118:{s:5,a:58,b:64},119:{s:5,a:65,b:70},120:{s:5,a:71,b:76},121:{s:5,a:77,b:82},122:{s:5,a:83,b:89},123:{s:5,a:90,b:95},124:{s:5,a:96,b:103},125:{s:5,a:104,b:108},126:{s:5,a:109,b:113},127:{s:5,a:114,b:120},128:{s:6,a:1,b:8},129:{s:6,a:9,b:18},130:{s:6,a:19,b:27},131:{s:6,a:28,b:35},132:{s:6,a:36,b:44},133:{s:6,a:45,b:52},134:{s:6,a:53,b:59},135:{s:6,a:60,b:68},136:{s:6,a:69,b:73},137:{s:6,a:74,b:81},138:{s:6,a:82,b:90},139:{s:6,a:91,b:94},140:{s:6,a:95,b:101},141:{s:6,a:102,b:110},142:{s:6,a:111,b:118},143:{s:6,a:119,b:124},144:{s:6,a:125,b:131},145:{s:6,a:132,b:137},146:{s:6,a:138,b:142},147:{s:6,a:143,b:146},148:{s:6,a:147,b:151},149:{s:6,a:152,b:157},150:{s:6,a:158,b:165},151:{s:7,a:1,b:11},152:{s:7,a:12,b:22},153:{s:7,a:23,b:30},154:{s:7,a:31,b:37},155:{s:7,a:38,b:43},156:{s:7,a:44,b:51},157:{s:7,a:52,b:57},158:{s:7,a:58,b:67},159:{s:7,a:68,b:73},160:{s:7,a:74,b:81},161:{s:7,a:82,b:87},162:{s:7,a:88,b:95},163:{s:7,a:96,b:104},164:{s:7,a:105,b:120},165:{s:7,a:121,b:130},166:{s:7,a:131,b:137},167:{s:7,a:138,b:143},168:{s:7,a:144,b:149},169:{s:7,a:150,b:155},170:{s:7,a:156,b:159},171:{s:7,a:160,b:163},172:{s:7,a:164,b:170},173:{s:7,a:171,b:178},174:{s:7,a:179,b:187},175:{s:7,a:188,b:195},176:{s:7,a:196,b:206},177:{s:8,a:1,b:8},178:{s:8,a:9,b:16},179:{s:8,a:17,b:25},180:{s:8,a:26,b:33},181:{s:8,a:34,b:40},182:{s:8,a:41,b:45},183:{s:8,a:46,b:52},184:{s:8,a:53,b:61},185:{s:8,a:62,b:69},186:{s:8,a:70,b:75},187:{s:9,a:1,b:6},188:{s:9,a:7,b:13},189:{s:9,a:14,b:20},190:{s:9,a:21,b:26},191:{s:9,a:27,b:31},192:{s:9,a:32,b:36},193:{s:9,a:37,b:40},194:{s:9,a:41,b:47},195:{s:9,a:48,b:54},196:{s:9,a:55,b:61},197:{s:9,a:62,b:68},198:{s:9,a:69,b:72},199:{s:9,a:73,b:79},200:{s:9,a:80,b:86},201:{s:9,a:87,b:93},202:{s:9,a:94,b:99},203:{s:9,a:100,b:106},204:{s:9,a:107,b:111},205:{s:9,a:112,b:117},206:{s:9,a:118,b:122},207:{s:9,a:123,b:129},208:{s:10,a:1,b:6},209:{s:10,a:7,b:14},210:{s:10,a:15,b:20},211:{s:10,a:21,b:25},212:{s:10,a:26,b:33},213:{s:10,a:34,b:42},214:{s:10,a:43,b:53},215:{s:10,a:54,b:61},216:{s:10,a:62,b:70},217:{s:10,a:71,b:78},218:{s:10,a:79,b:88},219:{s:10,a:89,b:97},220:{s:10,a:98,b:106},221:{s:10,a:107,b:109},222:{s:11,a:6,b:12},223:{s:11,a:13,b:19},224:{s:11,a:20,b:28},225:{s:11,a:29,b:37},226:{s:11,a:38,b:45},227:{s:11,a:46,b:53},228:{s:11,a:54,b:62},229:{s:11,a:63,b:71},230:{s:11,a:72,b:81},231:{s:11,a:82,b:88},232:{s:11,a:89,b:97},233:{s:11,a:98,b:108},234:{s:11,a:109,b:117},235:{s:11,a:118,b:123},236:{s:12,a:5,b:14},237:{s:12,a:15,b:22},238:{s:12,a:23,b:30},239:{s:12,a:31,b:37},240:{s:12,a:38,b:43},241:{s:12,a:44,b:52},242:{s:12,a:53,b:63},243:{s:12,a:64,b:69},244:{s:12,a:70,b:78},245:{s:12,a:79,b:86},246:{s:12,a:87,b:95},247:{s:12,a:96,b:103},248:{s:12,a:104,b:111},249:{s:13,a:1,b:5},250:{s:13,a:6,b:13},251:{s:13,a:14,b:18},252:{s:13,a:19,b:28},253:{s:13,a:29,b:34},254:{s:13,a:35,b:42},255:{s:13,a:43,b:43},256:{s:14,a:6,b:10},257:{s:14,a:11,b:18},258:{s:14,a:19,b:24},259:{s:14,a:25,b:33},260:{s:14,a:34,b:42},261:{s:14,a:43,b:52},262:{s:15,a:1,b:15},263:{s:15,a:16,b:31},264:{s:15,a:32,b:51},265:{s:15,a:52,b:70},266:{s:15,a:71,b:90},267:{s:15,a:91,b:99},268:{s:16,a:7,b:14},269:{s:16,a:15,b:26},270:{s:16,a:27,b:34},271:{s:16,a:35,b:42},272:{s:16,a:43,b:54},273:{s:16,a:55,b:64},274:{s:16,a:65,b:72},275:{s:16,a:73,b:79},276:{s:16,a:80,b:87},277:{s:16,a:88,b:93},278:{s:16,a:94,b:102},279:{s:16,a:103,b:110},280:{s:16,a:111,b:118},281:{s:16,a:119,b:128},282:{s:17,a:1,b:7},283:{s:17,a:8,b:17},284:{s:17,a:18,b:27},285:{s:17,a:28,b:38},286:{s:17,a:39,b:49},287:{s:17,a:50,b:58},288:{s:17,a:59,b:66},289:{s:17,a:67,b:75},290:{s:17,a:76,b:86},291:{s:17,a:87,b:96},292:{s:17,a:97,b:104},293:{s:17,a:105,b:111},294:{s:18,a:5,b:15},295:{s:18,a:16,b:20},296:{s:18,a:21,b:27},297:{s:18,a:28,b:34},298:{s:18,a:35,b:45},299:{s:18,a:46,b:53},300:{s:18,a:54,b:61},301:{s:18,a:62,b:74},302:{s:18,a:75,b:83},303:{s:18,a:84,b:97},304:{s:18,a:98,b:110},305:{s:19,a:1,b:11},306:{s:19,a:12,b:25},307:{s:19,a:26,b:38},308:{s:19,a:39,b:51},309:{s:19,a:52,b:64},310:{s:19,a:65,b:76},311:{s:19,a:77,b:95},312:{s:19,a:96,b:98},313:{s:20,a:13,b:37},314:{s:20,a:38,b:51},315:{s:20,a:52,b:64},316:{s:20,a:65,b:76},317:{s:20,a:77,b:87},318:{s:20,a:88,b:98},319:{s:20,a:99,b:113},320:{s:20,a:114,b:125},321:{s:20,a:126,b:135},322:{s:21,a:1,b:10},323:{s:21,a:11,b:24},324:{s:21,a:25,b:35},325:{s:21,a:36,b:44},326:{s:21,a:45,b:57},327:{s:21,a:58,b:72},328:{s:21,a:73,b:81},329:{s:21,a:82,b:90},330:{s:21,a:91,b:101},331:{s:21,a:102,b:112},332:{s:22,a:1,b:5},333:{s:22,a:6,b:15},334:{s:22,a:16,b:23},335:{s:22,a:24,b:30},336:{s:22,a:31,b:38},337:{s:22,a:39,b:46},338:{s:22,a:47,b:55},339:{s:22,a:56,b:64},340:{s:22,a:65,b:72},341:{s:22,a:73,b:78},342:{s:23,a:1,b:17},343:{s:23,a:18,b:27},344:{s:23,a:28,b:42},345:{s:23,a:43,b:59},346:{s:23,a:60,b:74},347:{s:23,a:75,b:89},348:{s:23,a:90,b:104},349:{s:23,a:105,b:118},350:{s:24,a:1,b:10},351:{s:24,a:11,b:20},352:{s:24,a:21,b:27},353:{s:24,a:28,b:31},354:{s:24,a:32,b:36},355:{s:24,a:37,b:43},356:{s:24,a:44,b:53},357:{s:24,a:54,b:58},358:{s:24,a:59,b:61},359:{s:24,a:62,b:64},360:{s:25,a:3,b:11},361:{s:25,a:12,b:20},362:{s:25,a:21,b:32},363:{s:25,a:33,b:43},364:{s:25,a:44,b:55},365:{s:25,a:56,b:67},366:{s:25,a:68,b:77},367:{s:26,a:1,b:19},368:{s:26,a:20,b:39},369:{s:26,a:40,b:60},370:{s:26,a:61,b:83},371:{s:26,a:84,b:111},372:{s:26,a:112,b:136},373:{s:26,a:137,b:159},374:{s:26,a:160,b:183},375:{s:26,a:184,b:206},376:{s:26,a:207,b:227},377:{s:27,a:1,b:13},378:{s:27,a:14,b:22},379:{s:27,a:23,b:35},380:{s:27,a:36,b:44},381:{s:27,a:45,b:55},382:{s:27,a:56,b:63},383:{s:27,a:64,b:76},384:{s:27,a:77,b:88},385:{s:27,a:89,b:93},386:{s:28,a:6,b:13},387:{s:28,a:14,b:21},388:{s:28,a:22,b:28},389:{s:28,a:29,b:35},390:{s:28,a:36,b:43},391:{s:28,a:44,b:50},392:{s:28,a:51,b:59},393:{s:28,a:60,b:70},394:{s:28,a:71,b:77},395:{s:28,a:78,b:84},396:{s:28,a:85,b:88},397:{s:29,a:7,b:14},398:{s:29,a:15,b:23},399:{s:29,a:24,b:30},400:{s:29,a:31,b:38},401:{s:29,a:39,b:45},402:{s:29,a:46,b:52},403:{s:29,a:53,b:63},404:{s:29,a:64,b:69},405:{s:30,a:6,b:15},406:{s:30,a:16,b:24},407:{s:30,a:25,b:32},408:{s:30,a:33,b:41},409:{s:30,a:42,b:50},410:{s:30,a:51,b:60},411:{s:31,a:1,b:11},412:{s:31,a:12,b:19},413:{s:31,a:20,b:28},414:{s:31,a:29,b:34},415:{s:32,a:1,b:11},416:{s:32,a:12,b:20},417:{s:32,a:21,b:30},418:{s:33,a:1,b:6},419:{s:33,a:7,b:15},420:{s:33,a:16,b:22},421:{s:33,a:23,b:30},422:{s:33,a:31,b:35},423:{s:33,a:36,b:43},424:{s:33,a:44,b:50},425:{s:33,a:51,b:54},426:{s:33,a:55,b:62},427:{s:33,a:63,b:73},428:{s:34,a:1,b:7},429:{s:34,a:8,b:14},430:{s:34,a:15,b:22},431:{s:34,a:23,b:31},432:{s:34,a:32,b:39},433:{s:34,a:40,b:48},434:{s:34,a:49,b:54},435:{s:35,a:4,b:11},436:{s:35,a:12,b:18},437:{s:35,a:19,b:30},438:{s:35,a:31,b:38},439:{s:35,a:39,b:44},440:{s:35,a:45,b:45},441:{s:36,a:13,b:27},442:{s:36,a:28,b:40},443:{s:36,a:41,b:54},444:{s:36,a:55,b:70},445:{s:36,a:71,b:83},446:{s:37,a:1,b:24},447:{s:37,a:25,b:51},448:{s:37,a:52,b:76},449:{s:37,a:77,b:102},450:{s:37,a:103,b:126},451:{s:37,a:127,b:153},452:{s:37,a:154,b:182},453:{s:38,a:1,b:16},454:{s:38,a:17,b:26},455:{s:38,a:27,b:42},456:{s:38,a:43,b:61},457:{s:38,a:62,b:83},458:{s:38,a:84,b:88},459:{s:39,a:6,b:10},460:{s:39,a:11,b:21},461:{s:39,a:22,b:31},462:{s:39,a:32,b:40},463:{s:39,a:41,b:47},464:{s:39,a:48,b:56},465:{s:39,a:57,b:67},466:{s:39,a:68,b:74},467:{s:39,a:75,b:75},468:{s:40,a:8,b:16},469:{s:40,a:17,b:25},470:{s:40,a:26,b:33},471:{s:40,a:34,b:40},472:{s:40,a:41,b:49},473:{s:40,a:50,b:58},474:{s:40,a:59,b:66},475:{s:40,a:67,b:77},476:{s:40,a:78,b:85},477:{s:41,a:1,b:11},478:{s:41,a:12,b:20},479:{s:41,a:21,b:29},480:{s:41,a:30,b:38},481:{s:41,a:39,b:46},482:{s:41,a:47,b:54},483:{s:42,a:1,b:10},484:{s:42,a:11,b:15},485:{s:42,a:16,b:22},486:{s:42,a:23,b:31},487:{s:42,a:32,b:44},488:{s:42,a:45,b:51},489:{s:42,a:52,b:53},490:{s:43,a:11,b:22},491:{s:43,a:23,b:33},492:{s:43,a:34,b:47},493:{s:43,a:48,b:60},494:{s:43,a:61,b:73},495:{s:43,a:74,b:89},496:{s:44,a:1,b:18},497:{s:44,a:19,b:39},498:{s:44,a:40,b:59},499:{s:45,a:1,b:13},500:{s:45,a:14,b:22},501:{s:45,a:23,b:32},502:{s:45,a:33,b:37},503:{s:46,a:6,b:14},504:{s:46,a:15,b:20},505:{s:46,a:21,b:28},506:{s:46,a:29,b:35},507:{s:47,a:1,b:11},508:{s:47,a:12,b:19},509:{s:47,a:20,b:29},510:{s:47,a:30,b:38},511:{s:48,a:1,b:9},512:{s:48,a:10,b:15},513:{s:48,a:16,b:23},514:{s:48,a:24,b:28},515:{s:48,a:29,b:29},516:{s:49,a:5,b:11},517:{s:49,a:12,b:18},518:{s:50,a:1,b:15},519:{s:50,a:16,b:35},520:{s:50,a:36,b:45},521:{s:51,a:7,b:30},522:{s:51,a:31,b:51},523:{s:51,a:52,b:60},524:{s:52,a:15,b:31},525:{s:52,a:32,b:49},526:{s:53,a:1,b:26},527:{s:53,a:27,b:44},528:{s:53,a:45,b:62},529:{s:54,a:7,b:27},530:{s:54,a:28,b:49},531:{s:54,a:50,b:55},532:{s:55,a:17,b:40},533:{s:55,a:41,b:67},534:{s:55,a:68,b:78},535:{s:56,a:17,b:50},536:{s:56,a:51,b:76},537:{s:56,a:77,b:96},538:{s:57,a:4,b:11},539:{s:57,a:12,b:18},540:{s:57,a:19,b:24},541:{s:57,a:25,b:29},542:{s:58,a:1,b:6},543:{s:58,a:7,b:11},544:{s:58,a:12,b:21},545:{s:58,a:22,b:22},546:{s:59,a:4,b:9},547:{s:59,a:10,b:16},548:{s:59,a:17,b:24},549:{s:60,a:1,b:5},550:{s:60,a:6,b:11},551:{s:60,a:12,b:13},552:{s:61,a:6,b:14},553:{s:62,a:1,b:8},554:{s:62,a:9,b:11},555:{s:63,a:5,b:11},556:{s:64,a:1,b:9},557:{s:64,a:10,b:18},558:{s:65,a:1,b:5},559:{s:65,a:6,b:12},560:{s:66,a:1,b:7},561:{s:66,a:8,b:12},562:{s:67,a:1,b:12},563:{s:67,a:13,b:26},564:{s:67,a:27,b:30},565:{s:68,a:16,b:42},566:{s:68,a:43,b:52},567:{s:69,a:9,b:34},568:{s:69,a:35,b:52},569:{s:70,a:11,b:39},570:{s:70,a:40,b:44},571:{s:71,a:11,b:28},572:{s:72,a:1,b:13},573:{s:72,a:14,b:28},574:{s:73,a:1,b:19},575:{s:73,a:20,b:20},576:{s:74,a:18,b:47},577:{s:74,a:48,b:56},578:{s:75,a:20,b:40},579:{s:76,a:6,b:25},580:{s:76,a:26,b:31},581:{s:77,a:20,b:50},582:{s:78,a:1,b:30},583:{s:78,a:31,b:40},584:{s:79,a:16,b:46},585:{s:80,a:1,b:42},586:{s:81,a:1,b:29},587:{s:82,a:1,b:19},588:{s:83,a:7,b:34},589:{s:83,a:35,b:36},590:{s:85,a:1,b:22},591:{s:86,a:1,b:17},592:{s:87,a:16,b:19},593:{s:89,a:1,b:23},594:{s:89,a:24,b:30},595:{s:91,a:1,b:15},596:{s:92,a:15,b:21},597:{s:95,a:1,b:8},598:{s:97,a:1,b:5},599:{s:98,a:8,b:8},600:{s:100,a:10,b:11},601:{s:103,a:1,b:3},602:{s:106,a:1,b:4},603:{s:109,a:1,b:6},604:{s:112,a:1,b:4}};
 
 async function loadHamidullah(page) {
   const key = 'h_' + page;
@@ -893,7 +895,10 @@ nextPage = function() { if (ayahAudio) ayahAudio.pause(); origNext(); };
     <!-- Pied de page mushaf -->
     <div class="mt-6 flex justify-between items-center border-t border-outline-variant/10 pt-4">
       <span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest" id="juz-label">—</span>
+      <div class="flex flex-col items-center gap-0.5">
       <span class="font-quran text-sm text-secondary font-bold" id="page-num">—</span>
+      <button onclick="openPageJump()" id="page-num-fr" class="font-label text-[9px] text-on-surface-variant/50 hover:text-primary active:scale-95 transition-all">p. —</button>
+    </div>
       <span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest" id="hizb-label">—</span>
     </div>
   </div>
@@ -904,7 +909,7 @@ nextPage = function() { if (ayahAudio) ayahAudio.pause(); origNext(); };
 <footer class="text-center pt-0 border-t border-outline-variant/10 mb-8">
     <div class="flex flex-col items-center gap-4">
       <a class="font-headline text-sm text-on-surface-variant hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">Proposé par JUMUA &amp; Me</a>
-      <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me">
+      <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">
         <span class="material-symbols-outlined text-lg">photo_camera</span>
         <span class="font-label text-xs uppercase tracking-widest">@jumua_and_me</span>
       </a>
@@ -971,5 +976,136 @@ updateProgress();
 updateArabicText();
 updateMaxAyah();
 </script>
+
+<!-- ══ Page Jump Modal ══════════════════════════════════════════ -->
+<div id="page-jump-overlay" onclick="closePageJump()" class="fixed inset-0 bg-black/40 z-[80] hidden" style="opacity:0;transition:opacity 0.25s"></div>
+<div id="page-jump-sheet" class="fixed bottom-0 left-0 right-0 z-[81] bg-surface rounded-t-3xl p-6 pb-10 shadow-2xl hidden" style="transform:translateY(100%);transition:transform 0.3s ease">
+  <div class="flex items-center justify-between mb-5">
+    <h3 class="font-headline text-base font-bold text-on-surface">Aller à la page</h3>
+    <button onclick="closePageJump()" class="text-on-surface-variant hover:opacity-70 active:scale-95 transition-all">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+  <div class="flex gap-3">
+    <input type="number" id="page-jump-input" min="1" max="604" placeholder="1 – 604"
+      class="flex-1 border border-outline-variant rounded-2xl px-4 py-3 text-center font-label text-base bg-surface-container text-on-surface focus:outline-none focus:border-primary"
+      onkeydown="if(event.key==='Enter')doPageJump()">
+    <button onclick="doPageJump()" class="px-5 py-3 bg-primary text-white rounded-2xl font-label text-sm font-semibold active:scale-95 transition-all">
+      Aller
+    </button>
+  </div>
+  <p class="font-label text-[10px] text-on-surface-variant/50 text-center mt-3">Page 1 à 604</p>
+</div>
+
+<!-- ══ Sommaire Modal ════════════════════════════════════════════ -->
+<div id="sommaire-overlay" onclick="closeSommaire()" class="fixed inset-0 bg-black/40 z-[80] hidden" style="opacity:0;transition:opacity 0.25s"></div>
+<div id="sommaire-sheet" class="fixed inset-0 z-[81] bg-surface flex flex-col hidden" style="transform:translateY(100%);transition:transform 0.35s ease">
+  <div class="flex items-center justify-between px-5 py-4 border-b border-outline-variant/20 flex-shrink-0">
+    <h3 class="font-headline text-base font-bold text-on-surface">114 Sourates</h3>
+    <button onclick="closeSommaire()" class="text-on-surface-variant hover:opacity-70 active:scale-95 transition-all">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+  <div class="px-4 py-3 flex-shrink-0">
+    <div class="relative">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-base pointer-events-none">search</span>
+      <input type="text" id="sommaire-search" placeholder="Rechercher…"
+        oninput="filterSommaire(this.value)"
+        class="w-full border border-outline-variant/40 rounded-2xl pl-9 pr-4 py-2.5 font-label text-sm bg-surface-container text-on-surface focus:outline-none focus:border-primary">
+    </div>
+  </div>
+  <div id="sommaire-list" class="flex-1 overflow-y-auto px-4 pb-20"></div>
+</div>
+
+<script>
+// ── Sommaire & Page Jump ────────────────────────────────────────
+(function() {
+  // Build surah → first page index
+  const SURAH_PAGES = {};
+  for (const [page, info] of Object.entries(PAGE_TO_AYAHS)) {
+    const p = parseInt(page);
+    if (!SURAH_PAGES[info.s] || p < SURAH_PAGES[info.s]) SURAH_PAGES[info.s] = p;
+  }
+
+  function buildSommaireList(query) {
+    const listEl = document.getElementById('sommaire-list');
+    const q = query.trim().toLowerCase();
+    let html = '';
+    for (let s = 1; s <= 114; s++) {
+      const name = (typeof SURAH_NAMES_AR !== 'undefined' && SURAH_NAMES_AR[s]) || String(s);
+      const page = SURAH_PAGES[s] || '?';
+      const nameNorm = name.toLowerCase().replace(/[؀-ۿ]/g, '');
+      if (q && !String(s).includes(q) && !nameNorm.includes(q)) continue;
+      const active = PAGE_TO_AYAHS[currentPage] && PAGE_TO_AYAHS[currentPage].s === s;
+      html += `<button onclick="jumpToSurahPage(${page});closeSommaire()"
+        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl text-left transition-all active:scale-[0.98] ${active ? 'bg-primary/10' : 'hover:bg-surface-container'}">
+        <span class="font-label text-xs text-on-surface-variant/50 w-6 text-right flex-shrink-0">${s}</span>
+        <span class="font-quran text-lg flex-1 text-right ${active ? 'text-primary font-bold' : 'text-on-surface'}" dir="rtl">${name}</span>
+        <span class="font-label text-[10px] text-on-surface-variant/50 flex-shrink-0 tabular-nums">p.${page}</span>
+      </button>`;
+    }
+    listEl.innerHTML = html || '<p class="text-center text-on-surface-variant/50 font-label text-sm py-10">Aucun résultat</p>';
+  }
+
+  window.filterSommaire = function(val) { buildSommaireList(val); };
+
+  window.openSommaire = function() {
+    const overlay = document.getElementById('sommaire-overlay');
+    const sheet = document.getElementById('sommaire-sheet');
+    buildSommaireList('');
+    overlay.classList.remove('hidden');
+    sheet.classList.remove('hidden');
+    requestAnimationFrame(() => { overlay.style.opacity = '1'; sheet.style.transform = 'translateY(0)'; });
+    document.body.style.overflow = 'hidden';
+    // Scroll active surah into view
+    setTimeout(() => {
+      const active = sheet.querySelector('.bg-primary/10');
+      if (active) active.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }, 400);
+  };
+
+  window.closeSommaire = function() {
+    const overlay = document.getElementById('sommaire-overlay');
+    const sheet = document.getElementById('sommaire-sheet');
+    overlay.style.opacity = '0';
+    sheet.style.transform = 'translateY(100%)';
+    setTimeout(() => { overlay.classList.add('hidden'); sheet.classList.add('hidden'); }, 350);
+    document.body.style.overflow = '';
+    const search = document.getElementById('sommaire-search');
+    if (search) search.value = '';
+  };
+
+  window.jumpToSurahPage = function(page) {
+    currentPage = page;
+    updateProgress();
+  };
+
+  window.openPageJump = function() {
+    const overlay = document.getElementById('page-jump-overlay');
+    const sheet = document.getElementById('page-jump-sheet');
+    overlay.classList.remove('hidden');
+    sheet.classList.remove('hidden');
+    requestAnimationFrame(() => { overlay.style.opacity = '1'; sheet.style.transform = 'translateY(0)'; });
+    document.body.style.overflow = 'hidden';
+    const input = document.getElementById('page-jump-input');
+    if (input) { input.value = currentPage; setTimeout(() => { input.focus(); input.select(); }, 320); }
+  };
+
+  window.closePageJump = function() {
+    const overlay = document.getElementById('page-jump-overlay');
+    const sheet = document.getElementById('page-jump-sheet');
+    overlay.style.opacity = '0';
+    sheet.style.transform = 'translateY(100%)';
+    setTimeout(() => { overlay.classList.add('hidden'); sheet.classList.add('hidden'); }, 300);
+    document.body.style.overflow = '';
+  };
+
+  window.doPageJump = function() {
+    const input = document.getElementById('page-jump-input');
+    const p = parseInt(input ? input.value : '');
+    if (p >= 1 && p <= 604) { currentPage = p; updateProgress(); closePageJump(); }
+  };
+})();
+</script>
+
 </body>
-</html>

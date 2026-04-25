@@ -123,7 +123,7 @@ function closeDrawer() {
              class="w-full px-4 py-3 rounded-xl border border-outline-variant/40 bg-surface-container font-label text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"/>
       <input type="text" id="input-kunya" placeholder="Ta kunya (ex : Abou Yusuf, Umm Maryam…)"
              class="w-full px-4 py-3 rounded-xl border border-outline-variant/40 bg-surface-container font-label text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"/>
-      <button type="button" onclick="sauvegarderIdentite()"
+      <button type="button" id="btn-sauvegarder-identite" onclick="sauvegarderIdentite()"
               class="w-full py-3 bg-primary text-on-primary rounded-xl font-label text-xs font-bold uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all">
         Sauvegarder
       </button>
@@ -328,7 +328,7 @@ function closeDrawer() {
   <footer class="text-center pt-8 border-t border-outline-variant/10 mb-8">
     <div class="flex flex-col items-center gap-4">
       <a class="font-headline text-sm text-on-surface-variant hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">Proposé par JUMUA &amp; Me</a>
-      <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me">
+      <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">
         <span class="material-symbols-outlined text-lg">photo_camera</span>
         <span class="font-label text-xs uppercase tracking-widest">@jumua_and_me</span>
       </a>
@@ -646,6 +646,7 @@ function _afficherPrenomKunya() {
   const kunya  = localStorage.getItem('tilawa_kunya')  || '';
   const ip = document.getElementById('input-prenom');
   const ik = document.getElementById('input-kunya');
+  const btn = document.getElementById('btn-sauvegarder-identite');
   if (prenom && ip) {
     ip.value = prenom;
     ip.disabled = true;
@@ -656,6 +657,7 @@ function _afficherPrenomKunya() {
     ik.disabled = true;
     ik.classList.add('opacity-50', 'cursor-not-allowed');
   }
+  if (prenom && btn) btn.style.display = 'none';
   _afficherPrenomKunya();
 })();
 
@@ -691,8 +693,8 @@ function sauvegarderIdentite() {
     ik.classList.add('opacity-50', 'cursor-not-allowed');
   }
   _afficherPrenomKunya();
-  const btn = document.querySelector('[onclick="sauvegarderIdentite()"]');
-  if (btn) { btn.textContent = '✓ Sauvegardé'; btn.disabled = true; }
+  const btn = document.getElementById('btn-sauvegarder-identite');
+  if (btn) btn.style.display = 'none';
 }
 
 async function resetProfil() {

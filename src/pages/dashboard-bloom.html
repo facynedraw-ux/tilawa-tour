@@ -114,6 +114,20 @@
 
 <main class="max-w-screen-xl mx-auto px-6 pt-24 pb-32">
 
+  <!-- Carte de bienvenue — visible uniquement si prénom absent -->
+  <div id="carte-bienvenue" class="hidden mb-8 bg-primary-container/30 border border-primary/20 rounded-2xl p-6">
+    <p class="font-headline text-lg text-primary mb-1">Bienvenue dans Tilawa Tour</p>
+    <p class="font-label text-sm text-on-surface-variant mb-4">Comment souhaites-tu être appelé(e) ?</p>
+    <div class="flex gap-3">
+      <input type="text" id="bienvenue-prenom" placeholder="Ton prénom ou kunya…"
+             class="flex-1 px-4 py-2.5 rounded-xl border border-outline-variant/40 bg-surface font-label text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"/>
+      <button type="button" onclick="sauvegarderBienvenue()"
+              class="px-5 py-2.5 bg-primary text-on-primary rounded-xl font-label text-xs font-bold uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all whitespace-nowrap">
+        OK
+      </button>
+    </div>
+  </div>
+
   <!-- Salutation + double date + jauge -->
   <section class="mb-10 grid grid-cols-[1fr_auto] md:grid-cols-12 gap-4 md:gap-8 items-center md:items-end">
     <div class="md:col-span-7">
@@ -286,7 +300,7 @@
 <footer class="text-center pt-8 border-t border-outline-variant/10 mb-8">
     <div class="flex flex-col items-center gap-4">
       <a class="font-headline text-sm text-on-surface-variant hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">Proposé par JUMUA &amp; Me</a>
-      <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me">
+      <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">
         <span class="material-symbols-outlined text-lg">photo_camera</span>
         <span class="font-label text-xs uppercase tracking-widest">@jumua_and_me</span>
       </a>
@@ -353,14 +367,29 @@ function getSouratePourPage(page) {
 }
 
 
-// ── Salutation personnalisée ──────────────────────────────────────────────
+// ── Salutation + carte de bienvenue ──────────────────────────────────────
 (function() {
   const prenom = (localStorage.getItem('tilawa_prenom') || '').trim();
+  const el = document.getElementById('salutation-name');
   if (prenom) {
-    const el = document.getElementById('salutation-name');
     if (el) el.textContent = prenom + '.';
+  } else {
+    const carte = document.getElementById('carte-bienvenue');
+    if (carte) carte.classList.remove('hidden');
   }
 })();
+
+function sauvegarderBienvenue() {
+  const input = document.getElementById('bienvenue-prenom');
+  const prenom = (input ? input.value : '').trim();
+  if (!prenom) return;
+  localStorage.setItem('tilawa_prenom', prenom);
+  if (typeof saveToCloud === 'function') saveToCloud();
+  const el = document.getElementById('salutation-name');
+  if (el) el.textContent = prenom + '.';
+  const carte = document.getElementById('carte-bienvenue');
+  if (carte) carte.classList.add('hidden');
+}
 
 const now = new Date();
 document.getElementById('date-gr').textContent = now.toLocaleDateString('fr-FR', {
@@ -402,15 +431,15 @@ try {
   var nextPageToday = Math.max(_lastPB, Math.min(1 + _joursW * pagesJour, 604));
   // currentHizb : calculé depuis les jours écoulés (pas depuis la page) pour éviter
   // un décalage quand la page 581 tombe encore en hizb 58 alors qu'on devrait lire hizb 59.
-  var _hizbFromDate = Math.min(Math.floor(1 + _joursW * hizbsJour), 60);
-  var _hizbFromPage = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(_lastPB,604)] || 1) : Math.ceil(_lastPB / 10);
-  var currentHizb = Math.max(_hizbFromDate, _hizbFromPage);
+  var currentHizb = ((Math.floor(1 + _joursW * hizbsJour) - 1) % 60) + 1;
   function hizbLbl(i) {
     if (hizbsJour === 0.5) { return "Nisf " + ((currentHizb - 1) * 2 + i + 1); }
     var h = currentHizb + i * hizbsJour;
     var e = h + hizbsJour - 1;
-    if (hizbsJour === 1) return "Hizb " + Math.min(Math.floor(h), 60);
-    return "Hizb " + Math.min(Math.floor(h), 60) + "-" + Math.min(Math.floor(e), 60);
+    var hW = ((Math.floor(h) - 1) % 60) + 1;
+    var eW = ((Math.floor(e) - 1) % 60) + 1;
+    if (hizbsJour === 1) return "Hizb " + hW;
+    return "Hizb " + hW + "-" + eW;
   }
   // Nombre de versets par sourate (index 1-114)
   var SURAH_VC = [0,7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
@@ -419,7 +448,7 @@ try {
       var pd2 = Math.min(nextPageToday + i * pagesJour, 604);
       return 'p.' + pd2 + '–' + Math.min(pd2 + pagesJour - 1, 604);
     }
-    var sh = Math.min(Math.max(Math.floor(currentHizb + i * hizbsJour), 1), 60);
+    var sh = ((Math.floor(currentHizb + i * hizbsJour) - 1) % 60) + 1;
     var eh = Math.min(sh + Math.round(hizbsJour) - 1, 60);
     var startInfo = HIZB_TABLE[String(sh)];
     var nextInfo  = HIZB_TABLE[String(eh + 1)];
@@ -602,7 +631,18 @@ function marquerFaitBloom() {
   var _hMB = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(currentPMB,604)] || 1) : 1;
   var _hMBN = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(currentPMB+1,604)] || 1) : _hMB;
   var hizbActuel = (_hMBN > _hMB) ? _hMBN : _hMB;
-  var hizbSuivant = Math.min(hizbActuel + Math.round(hizbsJour), 60);
+  var hizbSuivant = hizbActuel + Math.round(hizbsJour);
+  if (hizbSuivant > 60) {
+    var khatmates = parseInt(localStorage.getItem('tilawa_khatmates_annee') || '0') + 1;
+    localStorage.setItem('tilawa_khatmates_annee', String(khatmates));
+    localStorage.setItem('tilawa_last_page', '1');
+    var _tomorrow = new Date(); _tomorrow.setDate(_tomorrow.getDate() + 1);
+    var _prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+    _prog.date_debut = localDate(_tomorrow);
+    localStorage.setItem('tilawa_programme', JSON.stringify(_prog));
+    window.location.href = 'celebration_{{THEME}}.html';
+    return;
+  }
   var nextPage = (typeof HIZB_TABLE !== 'undefined' && HIZB_TABLE[String(hizbSuivant)])
     ? HIZB_TABLE[String(hizbSuivant)].p
     : Math.min(currentPMB + pagesJourMB, 604);
@@ -623,6 +663,10 @@ function arreterIciBloom() {
       var khatmates = parseInt(localStorage.getItem('tilawa_khatmates_annee') || '0') + 1;
       localStorage.setItem('tilawa_khatmates_annee', String(khatmates));
       localStorage.setItem('tilawa_last_page', '1');
+      var _tomorrow = new Date(); _tomorrow.setDate(_tomorrow.getDate() + 1);
+      var _prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+      _prog.date_debut = localDate(_tomorrow);
+      localStorage.setItem('tilawa_programme', JSON.stringify(_prog));
       window.location.href = 'celebration_{{THEME}}.html';
       return;
     }

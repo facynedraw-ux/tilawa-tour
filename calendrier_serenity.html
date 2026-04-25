@@ -107,6 +107,12 @@ function closeDrawer() {
 
 <main class="pt-24 pb-8 px-2 sm:px-4 max-w-5xl mx-auto">
 
+  <!-- Message rétro-validation (si date_debut est dans le passé) -->
+  <div id="msg-retro" class="hidden mx-2 mb-6 flex items-start gap-3 bg-primary-container/30 border border-primary/20 rounded-2xl px-5 py-4">
+    <span class="material-symbols-outlined text-primary mt-0.5 flex-shrink-0">info</span>
+    <p class="font-label text-sm text-on-surface">Tu as commencé ton programme avant aujourd'hui. Coche les jours passés directement sur le calendrier pour les marquer comme accomplis.</p>
+  </div>
+
   <!-- En-tête -->
   <section class="mb-8 px-2 flex flex-col md:flex-row md:items-end justify-between gap-5">
     <div>
@@ -198,7 +204,7 @@ function closeDrawer() {
 <footer class="text-center pt-8 border-t border-outline-variant/10 mb-8">
     <div class="flex flex-col items-center gap-4">
       <a class="font-headline text-sm text-on-surface-variant hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">Proposé par JUMUA &amp; Me</a>
-      <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me">
+      <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">
         <span class="material-symbols-outlined text-lg">photo_camera</span>
         <span class="font-label text-xs uppercase tracking-widest">@jumua_and_me</span>
       </a>
@@ -268,6 +274,15 @@ function getSouratePourPage(page) {
     const prog = JSON.parse(raw);
     window.PROG_PAGES_JOUR = prog.pages_jour || 20;
     window.PROG_DATE_DEBUT = prog.date_debut ? new Date(prog.date_debut + 'T00:00:00') : new Date();
+    // Afficher le message si date_debut est strictement avant aujourd'hui
+    if (prog.date_debut) {
+      const debut = new Date(prog.date_debut + 'T00:00:00');
+      const today = new Date(); today.setHours(0,0,0,0);
+      if (debut < today) {
+        const msg = document.getElementById('msg-retro');
+        if (msg) msg.classList.remove('hidden');
+      }
+    }
   } catch(e) {}
 })();
 

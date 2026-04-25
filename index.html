@@ -166,9 +166,9 @@ tailwind.config = {
   await syncFromCloud();
   try {
     var prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
-    if (prog.hizbs_jour && prog.theme === 'serenity') {
+    if (prog.theme === 'serenity') {
       window.location.replace('dashboard_serenity_v4.html');
-    } else if (prog.hizbs_jour && prog.theme === 'bloom') {
+    } else if (prog.theme === 'bloom') {
       window.location.replace('dashboard_bloom_v4.html');
     }
   } catch(e) {}

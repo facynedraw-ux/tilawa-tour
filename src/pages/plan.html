@@ -293,7 +293,7 @@ function closeDrawer() {
 <footer class="text-center pt-8 border-t border-outline-variant/10 mb-8">
     <div class="flex flex-col items-center gap-4">
       <a class="font-headline text-sm text-on-surface-variant hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">Proposé par JUMUA &amp; Me</a>
-      <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me">
+      <a class="flex items-center gap-2 text-primary hover:opacity-70 transition-opacity" href="https://www.instagram.com/jumua_and_me" target="_blank" rel="noopener">
         <span class="material-symbols-outlined text-lg">photo_camera</span>
         <span class="font-label text-xs uppercase tracking-widest">@jumua_and_me</span>
       </a>
@@ -478,13 +478,10 @@ document.getElementById('date-input') && document.getElementById('date-input').a
 (function() {
   var existing = localStorage.getItem('tilawa_programme');
 
-  // Pas de programme complet : afficher la date d'aujourd'hui et sortir
+  // Pas de programme : afficher la date d'aujourd'hui et sortir
   if (!existing) { applyDate(new Date()); return; }
 
   var prog = JSON.parse(existing);
-
-  // Programme partiel (thème seul, sans rythme configuré) : ne pas verrouiller
-  if (!prog.hizbs_jour) { applyDate(new Date()); return; }
 
   // Restaurer la date sauvegardée
   applyDate(prog.date_debut ? new Date(prog.date_debut + 'T00:00:00') : new Date());
