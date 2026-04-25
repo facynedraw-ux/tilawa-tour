@@ -33,19 +33,37 @@ Application en **phase de test** (Avril 2026).
 - **Serenity** = Homme, vert émeraude #00917c, font Manrope
 - **Bloom** = Femme, terracotta #6a5b53, font Plus Jakarta Sans
 
+## Flux utilisateur (ordre obligatoire)
+
+### Première configuration
+1. `login.html` → OTP Supabase → `index.html`
+2. `index.html` → choix Homme/Femme → `plan_*.html`
+3. `plan_*.html` → configuration programme → `dashboard_*.html`
+4. Depuis dashboard → `profil_*.html` : saisir prénom + kunya + confirmer thème → bouton **Sauvegarder** → verrou + redirect `plan_*.html` si pas encore configuré
+
+### Retour utilisateur (déjà configuré)
+- `index.html` → si `tilawa_programme.hizbs_jour` ET `.theme` présents → dashboard directement
+- Profil : prénom/kunya grisés, thème verrouillé, bouton Sauvegarder masqué
+
+### Reset
+- Bouton Reset dans profil → efface localStorage + cloud → **recharge la page profil** (pas de redirect index.html pour éviter le re-check session Supabase)
+- Page profil rechargée : tout déverrouillé, bouton Sauvegarder visible → même flux que première configuration
+
 ## État des fonctionnalités (Avril 2026)
 
 ### ✅ Fait et fonctionnel
-- Choix thème initial (index.html)
+- Choix thème initial (index.html) — redirect dashboard seulement si `hizbs_jour` ET `theme` présents
 - Configuration programme (plan_*.html)
 - Dashboard principal (bilan, jauge, programme semaine)
 - Lecteur Coran avec audio (cdn.islamic.network + fallback everyayah.com)
 - Calendrier mensuel
 - Profil : sélection langue, traduction, récitant
 - Profil : nom/kunya grisés une fois saisis (unlock uniquement via reset)
-- Profil : boutons Homme/Femme grisés une fois sélectionné (unlock uniquement via reset)
+- Profil : boutons Homme/Femme verrouillés une fois sélectionnés (unlock uniquement via reset)
+- Profil : bouton Sauvegarder positionné **après** le choix du thème, masqué si déjà enregistré
+- Profil : Sauvegarder valide que le thème est choisi avant d'accepter
 - Sync cloud Supabase (toutes les clés dans SYNC_KEYS)
-- Bouton reset dans profil (réinitialise localStorage + cloud + redirect index.html)
+- Bouton reset dans profil (réinitialise localStorage + cloud + recharge profil)
 
 ### ⚠️ Bugs connus / en cours
 - *(vide — à remplir au fil des corrections)*
@@ -70,3 +88,7 @@ Application en **phase de test** (Avril 2026).
 - Jamais `prompt()` → toujours inputs inline
 - `tilawa_last_page` = prochaine page À LIRE (pas la dernière lue)
 - `window._arabicData` et `window._maachData` doivent être en tête du HTML (script 1)
+- **`setTheme(t, true)`** ne redirige jamais — c'est le bouton Sauvegarder qui gère la redirection
+- **`setTheme(t, false)`** = affichage visuel uniquement, n'écrit pas dans localStorage
+- **index.html** ne redirige vers le dashboard que si `tilawa_programme.hizbs_jour` ET `.theme` sont définis
+- **Reset** → `window.location.reload()` sur la page profil (pas `index.html`) pour éviter le re-check session Supabase qui peut expirer et renvoyer vers OTP
