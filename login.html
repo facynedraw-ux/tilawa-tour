@@ -190,7 +190,13 @@ async function verifyCode() {
     });
     if (error) throw error;
 
-    window.location.replace('index.html');
+    // Restaurer les données cloud avant de rediriger
+    await syncFromCloud();
+    const prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+    const theme = prog.theme || '';
+    if (theme === 'bloom') window.location.replace('dashboard_bloom_v4.html');
+    else if (theme === 'serenity') window.location.replace('dashboard_serenity_v4.html');
+    else window.location.replace('index.html');
 
   } catch (e) {
     btn.textContent = 'Valider';
