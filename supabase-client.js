@@ -75,21 +75,11 @@ async function saveToCloud() {
   } catch (e) { console.warn('[Tilawa] saveToCloud:', e); }
 }
 
-// Sauvegarde automatique uniquement si l'utilisateur a fait des changements locaux
-// (pas juste après un syncFromCloud, pour éviter d'écraser un autre appareil)
-let _localDirty = false;
-const _origSetItem = localStorage.setItem.bind(localStorage);
-localStorage.setItem = function(key, value) {
-  if (key.startsWith('tilawa_')) _localDirty = true;
-  return _origSetItem(key, value);
-};
-
+// Sauvegarde automatique quand l'utilisateur quitte la page / passe en arrière-plan
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden && _localDirty) saveToCloud();
+  if (document.hidden) saveToCloud();
 });
-window.addEventListener('pagehide', () => {
-  if (_localDirty) saveToCloud();
-});
+window.addEventListener('pagehide', saveToCloud);
 
 // ── Guard : redirige vers login si non connecté ────────────────────────────
 async function requireAuth() {

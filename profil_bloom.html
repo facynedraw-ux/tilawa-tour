@@ -732,12 +732,34 @@ async async function resetProfil() {
   window.toggleNotif = async function() {
     var on = localStorage.getItem('tilawa_notif_enabled') === '1';
     if (!on) {
-      if (!('Notification' in window)) { showStatus('Notifications non supportées sur cet appareil.'); return; }
-      if (Notification.permission === 'denied') { showStatus('Notifications bloquées — autorise-les dans les réglages du navigateur.'); return; }
-      var perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
-      if (perm !== 'granted') { showStatus('Permission refusée.'); return; }
-      localStorage.setItem('tilawa_notif_enabled', '1');
+      // Réponse visuelle immédiate
       applyNotifUI(true);
+
+      // Vérifier le support
+      if (!('Notification' in window)) {
+        applyNotifUI(false);
+        showStatus('Notifications non disponibles. Installe l\'app sur ton écran d\'accueil pour les activer.', true);
+        return;
+      }
+      if (Notification.permission === 'denied') {
+        applyNotifUI(false);
+        showStatus('Notifications bloquées — autorise-les dans les réglages de ton navigateur.', true);
+        return;
+      }
+
+      // Demander la permission
+      var perm = Notification.permission;
+      if (perm !== 'granted') {
+        try { perm = await Notification.requestPermission(); } catch(e) { perm = 'denied'; }
+      }
+      if (perm !== 'granted') {
+        applyNotifUI(false);
+        showStatus('Permission refusée — les rappels ne pourront pas s\'afficher.', true);
+        return;
+      }
+
+      localStorage.setItem('tilawa_notif_enabled', '1');
+      showStatus('Rappels activés !', false);
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw-tilawa.js').then(function(reg) {
           if ('periodicSync' in reg) reg.periodicSync.register('check-lecture', { minInterval: 6 * 60 * 60 * 1000 }).catch(function(){});
@@ -746,6 +768,7 @@ async async function resetProfil() {
     } else {
       localStorage.setItem('tilawa_notif_enabled', '0');
       applyNotifUI(false);
+      showStatus('Rappels désactivés.', false);
     }
   };
 
@@ -754,12 +777,13 @@ async async function resetProfil() {
     if (input) localStorage.setItem('tilawa_notif_heure', input.value);
   };
 
-  function showStatus(msg) {
+  function showStatus(msg, isError) {
     var el = document.getElementById('notif-status');
     if (!el) return;
     el.textContent = msg;
+    el.className = 'font-label text-xs mt-3 ' + (isError ? 'text-error' : 'text-primary');
     el.classList.remove('hidden');
-    setTimeout(function() { el.classList.add('hidden'); }, 5000);
+    setTimeout(function() { el.classList.add('hidden'); }, 6000);
   }
 })();
 
