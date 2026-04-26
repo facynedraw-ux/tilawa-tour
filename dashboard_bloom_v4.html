@@ -128,6 +128,39 @@
     </div>
   </div>
 
+  <!-- Carte retard programme — visible si ≥ 2 hizbs de retard et non ignorée aujourd'hui -->
+  <div id="carte-retard" class="hidden mb-8 bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-6">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="material-symbols-outlined text-secondary mt-0.5">schedule</span>
+      <div>
+        <p class="font-headline text-base text-on-surface" id="retard-titre">—</p>
+        <p class="font-label text-sm text-on-surface-variant mt-1" id="retard-desc">Deux options pour recalibrer ton programme.</p>
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <button type="button" onclick="choisirRattraper()" class="flex-1 py-3 px-4 bg-primary text-on-primary rounded-xl font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all">
+        <span id="btn-rattraper-label">—</span>
+        <span class="block text-on-primary/70 text-[10px] mt-0.5 normal-case tracking-normal font-normal" id="btn-rattraper-detail">—</span>
+      </button>
+      <button type="button" onclick="choisirRepousser()" class="flex-1 py-3 px-4 bg-surface-container text-on-surface rounded-xl font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all border border-outline-variant/20">
+        <span id="btn-repousser-label">—</span>
+        <span class="block text-on-surface-variant text-[10px] mt-0.5 normal-case tracking-normal font-normal">Rythme inchangé</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Bannière rappel (Option A) — visible si lecture du jour pas encore faite -->
+  <div id="banniere-rappel" class="hidden mb-6 bg-secondary-container/30 border border-secondary/20 rounded-2xl px-5 py-4 flex items-center gap-4">
+    <span class="material-symbols-outlined text-secondary text-2xl flex-shrink-0">notifications_active</span>
+    <div class="flex-1 min-w-0">
+      <p class="font-label text-sm font-bold text-on-surface">Tu n'as pas encore lu aujourd'hui</p>
+      <p class="font-label text-xs text-on-surface-variant mt-0.5">Quelques pages suffisent pour garder le rythme.</p>
+    </div>
+    <a href="lecteur_bloom.html" class="flex-shrink-0 px-4 py-2 bg-secondary text-on-secondary rounded-xl font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all whitespace-nowrap">
+      Lire
+    </a>
+  </div>
+
   <!-- Salutation + double date + jauge -->
   <section class="mb-10 grid grid-cols-[1fr_auto] md:grid-cols-12 gap-4 md:gap-8 items-center md:items-end">
     <div class="md:col-span-7">
@@ -352,6 +385,7 @@ function closeDrawer() {
 const HIZB_TABLE = {"1":{"hizb":1,"s":1,"v":1,"p":1},"2":{"hizb":2,"s":2,"v":75,"p":11},"3":{"hizb":3,"s":2,"v":142,"p":22},"4":{"hizb":4,"s":2,"v":203,"p":32},"5":{"hizb":5,"s":2,"v":253,"p":42},"6":{"hizb":6,"s":3,"v":15,"p":51},"7":{"hizb":7,"s":3,"v":93,"p":62},"8":{"hizb":8,"s":3,"v":171,"p":72},"9":{"hizb":9,"s":4,"v":24,"p":82},"10":{"hizb":10,"s":4,"v":88,"p":92},"11":{"hizb":11,"s":4,"v":148,"p":102},"12":{"hizb":12,"s":5,"v":27,"p":112},"13":{"hizb":13,"s":5,"v":82,"p":121},"14":{"hizb":14,"s":6,"v":36,"p":132},"15":{"hizb":15,"s":6,"v":111,"p":142},"16":{"hizb":16,"s":7,"v":1,"p":151},"17":{"hizb":17,"s":7,"v":88,"p":162},"18":{"hizb":18,"s":7,"v":171,"p":173},"19":{"hizb":19,"s":8,"v":41,"p":182},"20":{"hizb":20,"s":9,"v":34,"p":192},"21":{"hizb":21,"s":9,"v":93,"p":201},"22":{"hizb":22,"s":10,"v":26,"p":212},"23":{"hizb":23,"s":11,"v":6,"p":222},"24":{"hizb":24,"s":11,"v":84,"p":231},"25":{"hizb":25,"s":12,"v":53,"p":242},"26":{"hizb":26,"s":13,"v":19,"p":252},"27":{"hizb":27,"s":15,"v":1,"p":262},"28":{"hizb":28,"s":16,"v":51,"p":272},"29":{"hizb":29,"s":17,"v":1,"p":282},"30":{"hizb":30,"s":17,"v":99,"p":292},"31":{"hizb":31,"s":18,"v":75,"p":302},"32":{"hizb":32,"s":20,"v":1,"p":312},"33":{"hizb":33,"s":21,"v":1,"p":322},"34":{"hizb":34,"s":22,"v":1,"p":332},"35":{"hizb":35,"s":23,"v":1,"p":342},"36":{"hizb":36,"s":24,"v":21,"p":352},"37":{"hizb":37,"s":25,"v":21,"p":362},"38":{"hizb":38,"s":26,"v":111,"p":371},"39":{"hizb":39,"s":27,"v":56,"p":382},"40":{"hizb":40,"s":28,"v":51,"p":392},"41":{"hizb":41,"s":29,"v":46,"p":402},"42":{"hizb":42,"s":31,"v":22,"p":413},"43":{"hizb":43,"s":33,"v":31,"p":422},"44":{"hizb":44,"s":34,"v":24,"p":431},"45":{"hizb":45,"s":36,"v":28,"p":442},"46":{"hizb":46,"s":37,"v":145,"p":451},"47":{"hizb":47,"s":39,"v":32,"p":462},"48":{"hizb":48,"s":40,"v":41,"p":472},"49":{"hizb":49,"s":41,"v":47,"p":482},"50":{"hizb":50,"s":43,"v":24,"p":491},"51":{"hizb":51,"s":46,"v":1,"p":502},"52":{"hizb":52,"s":48,"v":18,"p":513},"53":{"hizb":53,"s":51,"v":31,"p":522},"54":{"hizb":54,"s":55,"v":1,"p":531},"55":{"hizb":55,"s":58,"v":1,"p":542},"56":{"hizb":56,"s":62,"v":1,"p":553},"57":{"hizb":57,"s":67,"v":1,"p":562},"58":{"hizb":58,"s":72,"v":1,"p":572},"59":{"hizb":59,"s":78,"v":1,"p":582},"60":{"hizb":60,"s":87,"v":1,"p":591}};
 const PAGE_TO_HIZB = {"1":1,"2":1,"3":1,"4":1,"5":1,"6":1,"7":1,"8":1,"9":1,"10":1,"11":2,"12":2,"13":2,"14":2,"15":2,"16":2,"17":2,"18":2,"19":2,"20":2,"21":2,"22":3,"23":3,"24":3,"25":3,"26":3,"27":3,"28":3,"29":3,"30":3,"31":3,"32":4,"33":4,"34":4,"35":4,"36":4,"37":4,"38":4,"39":4,"40":4,"41":4,"42":5,"43":5,"44":5,"45":5,"46":5,"47":5,"48":5,"49":5,"50":5,"51":6,"52":6,"53":6,"54":6,"55":6,"56":6,"57":6,"58":6,"59":6,"60":6,"61":6,"62":7,"63":7,"64":7,"65":7,"66":7,"67":7,"68":7,"69":7,"70":7,"71":7,"72":8,"73":8,"74":8,"75":8,"76":8,"77":8,"78":8,"79":8,"80":8,"81":8,"82":9,"83":9,"84":9,"85":9,"86":9,"87":9,"88":9,"89":9,"90":9,"91":9,"92":10,"93":10,"94":10,"95":10,"96":10,"97":10,"98":10,"99":10,"100":10,"101":10,"102":11,"103":11,"104":11,"105":11,"106":11,"107":11,"108":11,"109":11,"110":11,"111":11,"112":12,"113":12,"114":12,"115":12,"116":12,"117":12,"118":12,"119":12,"120":12,"121":13,"122":13,"123":13,"124":13,"125":13,"126":13,"127":13,"128":13,"129":13,"130":13,"131":13,"132":14,"133":14,"134":14,"135":14,"136":14,"137":14,"138":14,"139":14,"140":14,"141":14,"142":15,"143":15,"144":15,"145":15,"146":15,"147":15,"148":15,"149":15,"150":15,"151":16,"152":16,"153":16,"154":16,"155":16,"156":16,"157":16,"158":16,"159":16,"160":16,"161":16,"162":17,"163":17,"164":17,"165":17,"166":17,"167":17,"168":17,"169":17,"170":17,"171":17,"172":17,"173":18,"174":18,"175":18,"176":18,"177":18,"178":18,"179":18,"180":18,"181":18,"182":19,"183":19,"184":19,"185":19,"186":19,"187":19,"188":19,"189":19,"190":19,"191":19,"192":20,"193":20,"194":20,"195":20,"196":20,"197":20,"198":20,"199":20,"200":20,"201":21,"202":21,"203":21,"204":21,"205":21,"206":21,"207":21,"208":21,"209":21,"210":21,"211":21,"212":22,"213":22,"214":22,"215":22,"216":22,"217":22,"218":22,"219":22,"220":22,"221":22,"222":23,"223":23,"224":23,"225":23,"226":23,"227":23,"228":23,"229":23,"230":23,"231":24,"232":24,"233":24,"234":24,"235":24,"236":24,"237":24,"238":24,"239":24,"240":24,"241":24,"242":25,"243":25,"244":25,"245":25,"246":25,"247":25,"248":25,"249":25,"250":25,"251":25,"252":26,"253":26,"254":26,"255":26,"256":26,"257":26,"258":26,"259":26,"260":26,"261":26,"262":27,"263":27,"264":27,"265":27,"266":27,"267":27,"268":27,"269":27,"270":27,"271":27,"272":28,"273":28,"274":28,"275":28,"276":28,"277":28,"278":28,"279":28,"280":28,"281":28,"282":29,"283":29,"284":29,"285":29,"286":29,"287":29,"288":29,"289":29,"290":29,"291":29,"292":30,"293":30,"294":30,"295":30,"296":30,"297":30,"298":30,"299":30,"300":30,"301":30,"302":31,"303":31,"304":31,"305":31,"306":31,"307":31,"308":31,"309":31,"310":31,"311":31,"312":32,"313":32,"314":32,"315":32,"316":32,"317":32,"318":32,"319":32,"320":32,"321":32,"322":33,"323":33,"324":33,"325":33,"326":33,"327":33,"328":33,"329":33,"330":33,"331":33,"332":34,"333":34,"334":34,"335":34,"336":34,"337":34,"338":34,"339":34,"340":34,"341":34,"342":35,"343":35,"344":35,"345":35,"346":35,"347":35,"348":35,"349":35,"350":35,"351":35,"352":36,"353":36,"354":36,"355":36,"356":36,"357":36,"358":36,"359":36,"360":36,"361":36,"362":37,"363":37,"364":37,"365":37,"366":37,"367":37,"368":37,"369":37,"370":37,"371":38,"372":38,"373":38,"374":38,"375":38,"376":38,"377":38,"378":38,"379":38,"380":38,"381":38,"382":39,"383":39,"384":39,"385":39,"386":39,"387":39,"388":39,"389":39,"390":39,"391":39,"392":40,"393":40,"394":40,"395":40,"396":40,"397":40,"398":40,"399":40,"400":40,"401":40,"402":41,"403":41,"404":41,"405":41,"406":41,"407":41,"408":41,"409":41,"410":41,"411":41,"412":41,"413":42,"414":42,"415":42,"416":42,"417":42,"418":42,"419":42,"420":42,"421":42,"422":43,"423":43,"424":43,"425":43,"426":43,"427":43,"428":43,"429":43,"430":43,"431":44,"432":44,"433":44,"434":44,"435":44,"436":44,"437":44,"438":44,"439":44,"440":44,"441":44,"442":45,"443":45,"444":45,"445":45,"446":45,"447":45,"448":45,"449":45,"450":45,"451":46,"452":46,"453":46,"454":46,"455":46,"456":46,"457":46,"458":46,"459":46,"460":46,"461":46,"462":47,"463":47,"464":47,"465":47,"466":47,"467":47,"468":47,"469":47,"470":47,"471":47,"472":48,"473":48,"474":48,"475":48,"476":48,"477":48,"478":48,"479":48,"480":48,"481":48,"482":49,"483":49,"484":49,"485":49,"486":49,"487":49,"488":49,"489":49,"490":49,"491":50,"492":50,"493":50,"494":50,"495":50,"496":50,"497":50,"498":50,"499":50,"500":50,"501":50,"502":51,"503":51,"504":51,"505":51,"506":51,"507":51,"508":51,"509":51,"510":51,"511":51,"512":51,"513":52,"514":52,"515":52,"516":52,"517":52,"518":52,"519":52,"520":52,"521":52,"522":53,"523":53,"524":53,"525":53,"526":53,"527":53,"528":53,"529":53,"530":53,"531":54,"532":54,"533":54,"534":54,"535":54,"536":54,"537":54,"538":54,"539":54,"540":54,"541":54,"542":55,"543":55,"544":55,"545":55,"546":55,"547":55,"548":55,"549":55,"550":55,"551":55,"552":55,"553":56,"554":56,"555":56,"556":56,"557":56,"558":56,"559":56,"560":56,"561":56,"562":57,"563":57,"564":57,"565":57,"566":57,"567":57,"568":57,"569":57,"570":57,"571":57,"572":58,"573":58,"574":58,"575":58,"576":58,"577":58,"578":58,"579":58,"580":58,"581":58,"582":59,"583":59,"584":59,"585":59,"586":59,"587":59,"588":59,"589":59,"590":59,"591":60,"592":60,"593":60,"594":60,"595":60,"596":60,"597":60,"598":60,"599":60,"600":60,"601":60,"602":60,"603":60,"604":60};
 const SURAH_NAMES = {"1":"Al-Fatiha","2":"Al-Baqarah","3":"Al-Imran","4":"An-Nisa","5":"Al-Ma'idah","6":"Al-An'am","7":"Al-A'raf","8":"Al-Anfal","9":"At-Tawbah","10":"Yunus","11":"Hud","12":"Yusuf","13":"Ar-Ra'd","14":"Ibrahim","15":"Al-Hijr","16":"An-Nahl","17":"Al-Isra","18":"Al-Kahf","19":"Maryam","20":"Ta-Ha","21":"Al-Anbiya","22":"Al-Hajj","23":"Al-Mu'minun","24":"An-Nur","25":"Al-Furqan","26":"Ash-Shu'ara","27":"An-Naml","28":"Al-Qasas","29":"Al-Ankabut","30":"Ar-Rum","31":"Luqman","32":"As-Sajdah","33":"Al-Ahzab","34":"Saba","35":"Fatir","36":"Ya-Sin","37":"As-Saffat","38":"Sad","39":"Az-Zumar","40":"Ghafir","41":"Fussilat","42":"Ash-Shura","43":"Az-Zukhruf","44":"Ad-Dukhan","45":"Al-Jathiyah","46":"Al-Ahqaf","47":"Muhammad","48":"Al-Fath","49":"Al-Hujurat","50":"Qaf","51":"Adh-Dhariyat","52":"At-Tur","53":"An-Najm","54":"Al-Qamar","55":"Ar-Rahman","56":"Al-Waqi'ah","57":"Al-Hadid","58":"Al-Mujadila","59":"Al-Hashr","60":"Al-Mumtahanah","61":"As-Saf","62":"Al-Jumu'ah","63":"Al-Munafiqun","64":"At-Taghabun","65":"At-Talaq","66":"At-Tahrim","67":"Al-Mulk","68":"Al-Qalam","69":"Al-Haqqah","70":"Al-Ma'arij","71":"Nuh","72":"Al-Jinn","73":"Al-Muzzammil","74":"Al-Muddathir","75":"Al-Qiyamah","76":"Al-Insan","77":"Al-Mursalat","78":"An-Naba","79":"An-Nazi'at","80":"Abasa","81":"At-Takwir","82":"Al-Infitar","83":"Al-Mutaffifin","84":"Al-Inshiqaq","85":"Al-Buruj","86":"At-Tariq","87":"Al-A'la","88":"Al-Ghashiyah","89":"Al-Fajr","90":"Al-Balad","91":"Ash-Shams","92":"Al-Layl","93":"Ad-Duha","94":"Ash-Sharh","95":"At-Tin","96":"Al-Alaq","97":"Al-Qadr","98":"Al-Bayyinah","99":"Az-Zalzalah","100":"Al-Adiyat","101":"Al-Qari'ah","102":"At-Takathur","103":"Al-Asr","104":"Al-Humazah","105":"Al-Fil","106":"Quraysh","107":"Al-Ma'un","108":"Al-Kawthar","109":"Al-Kafirun","110":"An-Nasr","111":"Al-Masad","112":"Al-Ikhlas","113":"Al-Falaq","114":"An-Nas"};
+const PAGE_TO_SURAH = {"1":1,"2":2,"3":2,"4":2,"5":2,"6":2,"7":2,"8":2,"9":2,"10":2,"11":2,"12":2,"13":2,"14":2,"15":2,"16":2,"17":2,"18":2,"19":2,"20":2,"21":2,"22":2,"23":2,"24":2,"25":2,"26":2,"27":2,"28":2,"29":2,"30":2,"31":2,"32":2,"33":2,"34":2,"35":2,"36":2,"37":2,"38":2,"39":2,"40":2,"41":2,"42":2,"43":2,"44":2,"45":2,"46":2,"47":2,"48":2,"49":2,"50":3,"51":3,"52":3,"53":3,"54":3,"55":3,"56":3,"57":3,"58":3,"59":3,"60":3,"61":3,"62":3,"63":3,"64":3,"65":3,"66":3,"67":3,"68":3,"69":3,"70":3,"71":3,"72":3,"73":3,"74":3,"75":3,"76":3,"77":4,"78":4,"79":4,"80":4,"81":4,"82":4,"83":4,"84":4,"85":4,"86":4,"87":4,"88":4,"89":4,"90":4,"91":4,"92":4,"93":4,"94":4,"95":4,"96":4,"97":4,"98":4,"99":4,"100":4,"101":4,"102":4,"103":4,"104":4,"105":4,"106":4,"107":5,"108":5,"109":5,"110":5,"111":5,"112":5,"113":5,"114":5,"115":5,"116":5,"117":5,"118":5,"119":5,"120":5,"121":5,"122":5,"123":5,"124":5,"125":5,"126":5,"127":5,"128":6,"129":6,"130":6,"131":6,"132":6,"133":6,"134":6,"135":6,"136":6,"137":6,"138":6,"139":6,"140":6,"141":6,"142":6,"143":6,"144":6,"145":6,"146":6,"147":6,"148":6,"149":6,"150":6,"151":7,"152":7,"153":7,"154":7,"155":7,"156":7,"157":7,"158":7,"159":7,"160":7,"161":7,"162":7,"163":7,"164":7,"165":7,"166":7,"167":7,"168":7,"169":7,"170":7,"171":7,"172":7,"173":7,"174":7,"175":7,"176":7,"177":8,"178":8,"179":8,"180":8,"181":8,"182":8,"183":8,"184":8,"185":8,"186":8,"187":9,"188":9,"189":9,"190":9,"191":9,"192":9,"193":9,"194":9,"195":9,"196":9,"197":9,"198":9,"199":9,"200":9,"201":9,"202":9,"203":9,"204":9,"205":9,"206":9,"207":10,"208":10,"209":10,"210":10,"211":10,"212":10,"213":10,"214":10,"215":10,"216":10,"217":10,"218":10,"219":10,"220":10,"221":10,"222":11,"223":11,"224":11,"225":11,"226":11,"227":11,"228":11,"229":11,"230":11,"231":11,"232":11,"233":11,"234":11,"235":11,"236":12,"237":12,"238":12,"239":12,"240":12,"241":12,"242":12,"243":12,"244":12,"245":12,"246":12,"247":12,"248":12,"249":13,"250":13,"251":13,"252":13,"253":13,"254":13,"255":13,"256":14,"257":14,"258":14,"259":14,"260":14,"261":14,"262":15,"263":15,"264":15,"265":15,"266":15,"267":15,"268":16,"269":16,"270":16,"271":16,"272":16,"273":16,"274":16,"275":16,"276":16,"277":16,"278":16,"279":16,"280":16,"281":16,"282":17,"283":17,"284":17,"285":17,"286":17,"287":17,"288":17,"289":17,"290":17,"291":17,"292":17,"293":17,"294":18,"295":18,"296":18,"297":18,"298":18,"299":18,"300":18,"301":18,"302":18,"303":18,"304":18,"305":19,"306":19,"307":19,"308":19,"309":19,"310":19,"311":19,"312":19,"313":20,"314":20,"315":20,"316":20,"317":20,"318":20,"319":20,"320":20,"321":20,"322":21,"323":21,"324":21,"325":21,"326":21,"327":21,"328":21,"329":21,"330":21,"331":21,"332":22,"333":22,"334":22,"335":22,"336":22,"337":22,"338":22,"339":22,"340":22,"341":22,"342":23,"343":23,"344":23,"345":23,"346":23,"347":23,"348":23,"349":23,"350":24,"351":24,"352":24,"353":24,"354":24,"355":24,"356":24,"357":24,"358":24,"359":24,"360":25,"361":25,"362":25,"363":25,"364":25,"365":25,"366":25,"367":26,"368":26,"369":26,"370":26,"371":26,"372":26,"373":26,"374":26,"375":26,"376":26,"377":27,"378":27,"379":27,"380":27,"381":27,"382":27,"383":27,"384":27,"385":27,"386":28,"387":28,"388":28,"389":28,"390":28,"391":28,"392":28,"393":28,"394":28,"395":28,"396":28,"397":29,"398":29,"399":29,"400":29,"401":29,"402":29,"403":29,"404":29,"405":30,"406":30,"407":30,"408":30,"409":30,"410":30,"411":31,"412":31,"413":31,"414":31,"415":32,"416":32,"417":32,"418":33,"419":33,"420":33,"421":33,"422":33,"423":33,"424":33,"425":33,"426":33,"427":33,"428":34,"429":34,"430":34,"431":34,"432":34,"433":34,"434":34,"435":35,"436":35,"437":35,"438":35,"439":35,"440":35,"441":36,"442":36,"443":36,"444":36,"445":36,"446":37,"447":37,"448":37,"449":37,"450":37,"451":37,"452":37,"453":38,"454":38,"455":38,"456":38,"457":38,"458":38,"459":39,"460":39,"461":39,"462":39,"463":39,"464":39,"465":39,"466":39,"467":39,"468":40,"469":40,"470":40,"471":40,"472":40,"473":40,"474":40,"475":40,"476":40,"477":41,"478":41,"479":41,"480":41,"481":41,"482":41,"483":42,"484":42,"485":42,"486":42,"487":42,"488":42,"489":42,"490":43,"491":43,"492":43,"493":43,"494":43,"495":43,"496":44,"497":44,"498":44,"499":45,"500":45,"501":45,"502":45,"503":46,"504":46,"505":46,"506":46,"507":47,"508":47,"509":47,"510":47,"511":48,"512":48,"513":48,"514":48,"515":48,"516":49,"517":49,"518":50,"519":50,"520":50,"521":51,"522":51,"523":51,"524":52,"525":52,"526":53,"527":53,"528":53,"529":54,"530":54,"531":54,"532":55,"533":55,"534":55,"535":56,"536":56,"537":56,"538":57,"539":57,"540":57,"541":57,"542":58,"543":58,"544":58,"545":58,"546":59,"547":59,"548":59,"549":60,"550":60,"551":60,"552":61,"553":62,"554":62,"555":63,"556":64,"557":64,"558":65,"559":65,"560":66,"561":66,"562":67,"563":67,"564":67,"565":68,"566":68,"567":69,"568":69,"569":70,"570":70,"571":71,"572":72,"573":72,"574":73,"575":73,"576":74,"577":74,"578":75,"579":76,"580":76,"581":77,"582":78,"583":78,"584":79,"585":80,"586":81,"587":82,"588":83,"589":83,"590":85,"591":86,"592":87,"593":89,"594":89,"595":91,"596":92,"597":95,"598":97,"599":98,"600":100,"601":103,"602":106,"603":109,"604":112};
 
 // ── Utilitaires Hizb officiels ────────────────────────────────────────────
 function getHizbForPage(page) {
@@ -390,6 +424,8 @@ function sauvegarderBienvenue() {
   const carte = document.getElementById('carte-bienvenue');
   if (carte) carte.classList.add('hidden');
 }
+
+checkRetard();
 
 const now = new Date();
 document.getElementById('date-gr').textContent = now.toLocaleDateString('fr-FR', {
@@ -525,23 +561,16 @@ function localDate(d){var dd=d||new Date();return dd.getFullYear()+'-'+String(dd
     if (lpSourate) lpSourate.textContent = 'Aucune page lue';
     if (lpInfo)    lpInfo.textContent    = 'Commence ta lecture !';
   } else {
-    var lpHizb = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(lastReadPage, 604)] || 1) : 1;
-    var lpInfo2 = (typeof HIZB_TABLE !== 'undefined' && SURAH_NAMES) ? HIZB_TABLE[String(lpHizb)] : null;
-    var lpSurahName = lpInfo2 ? (SURAH_NAMES[String(lpInfo2.s)] || '') : '';
+    var lpSurahNum = (typeof PAGE_TO_SURAH !== 'undefined') ? (PAGE_TO_SURAH[Math.min(lastReadPage, 604)] || 1) : 1;
+    var lpSurahName = SURAH_NAMES ? (SURAH_NAMES[String(lpSurahNum)] || '') : '';
     if (lpSourate) lpSourate.textContent = lpSurahName ? 'Sourate ' + lpSurahName : 'Page ' + lastReadPage;
     if (lpInfo)    lpInfo.textContent    = 'Page ' + lastReadPage;
   }
 
   var hizbsJour = prog.hizbs_jour || 2;
   var pagesJourB = prog.pages_jour || 20;
-  // Page d'aujourd'hui selon le planning
+  // Page d'aujourd'hui : toujours depuis là où l'utilisateur en est réellement
   var _nextPageB = lastPage;
-  if (prog.date_debut) {
-    var _dB = new Date(prog.date_debut + 'T00:00:00');
-    var _tB = new Date(); _tB.setHours(0,0,0,0);
-    var _jB = Math.max(0, Math.floor((_tB - _dB) / 86400000));
-    _nextPageB = Math.max(lastPage, Math.min(1 + _jB * pagesJourB, 604));
-  }
 
   var _hB = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(_nextPageB,604)] || 1) : Math.ceil(_nextPageB / 10);
   var _hBN = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(_nextPageB+1,604)] || 1) : _hB;
@@ -650,6 +679,68 @@ function marquerFaitBloom() {
   window.location.reload();
 }
 
+function checkRetard() {
+  var prog = JSON.parse(localStorage.getItem('tilawa_programme') || '{}');
+  if (!prog.date_debut) return;
+  var lastPage = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  var today = new Date(); today.setHours(0,0,0,0);
+  var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  if (localStorage.getItem('tilawa_retard_dismissed') === todayStr) return;
+  var dateDebut = new Date(prog.date_debut + 'T00:00:00');
+  var hizbsJour = prog.hizbs_jour || 2;
+  var pagesJour = prog.pages_jour || 20;
+  var daysSinceDebut = Math.floor((today - dateDebut) / 86400000);
+  if (daysSinceDebut < 1) return;
+  var expectedHizb = Math.min(60, 1 + Math.floor(daysSinceDebut * hizbsJour));
+  var currentHizb = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(lastPage, 604)] || 1) : 1;
+  var retardHizbs = expectedHizb - currentHizb;
+  if (retardHizbs < 2) return;
+  var totalJours = Math.ceil(60 / hizbsJour);
+  var originalEndDate = new Date(dateDebut.getTime() + totalJours * 86400000);
+  var remainingDays = Math.max(1, Math.ceil((originalEndDate - today) / 86400000));
+  var remainingPages = Math.max(1, 605 - lastPage);
+  var newPagesJour = Math.ceil(remainingPages / remainingDays);
+  var extraPages = newPagesJour - pagesJour;
+  var newEndDate = new Date(today.getTime() + Math.ceil(remainingPages / pagesJour) * 86400000);
+  var mFr = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+  var fmt = function(d) { return d.getDate() + ' ' + mFr[d.getMonth()]; };
+  document.getElementById('retard-titre').textContent = 'Tu as ' + retardHizbs + ' hizb' + (retardHizbs > 1 ? 's' : '') + ' de retard';
+  document.getElementById('btn-rattraper-label').textContent = 'Rattraper d\'ici le ' + fmt(originalEndDate);
+  document.getElementById('btn-rattraper-detail').textContent = newPagesJour + ' pages/jour' + (extraPages > 0 ? ' (+' + extraPages + ' de plus)' : '');
+  document.getElementById('btn-repousser-label').textContent = 'Finir le ' + fmt(newEndDate);
+  window._retardData = { newPagesJour: newPagesJour, newHizbsJour: newPagesJour / 10, todayStr: todayStr, prog: prog, lastPage: lastPage, hizbsJour: hizbsJour };
+  var carte = document.getElementById('carte-retard');
+  if (carte) carte.classList.remove('hidden');
+}
+
+function choisirRattraper() {
+  if (!window._retardData) return;
+  var d = window._retardData;
+  d.prog.pages_jour = d.newPagesJour;
+  d.prog.hizbs_jour = d.newHizbsJour;
+  localStorage.setItem('tilawa_programme', JSON.stringify(d.prog));
+  if (typeof saveToCloud === 'function') saveToCloud();
+  localStorage.setItem('tilawa_retard_dismissed', d.todayStr);
+  var carte = document.getElementById('carte-retard');
+  if (carte) carte.classList.add('hidden');
+  window.location.reload();
+}
+
+function choisirRepousser() {
+  if (!window._retardData) return;
+  var d = window._retardData;
+  var currentHizb = PAGE_TO_HIZB[Math.min(d.lastPage, 604)] || 1;
+  var daysElapsed = Math.floor((currentHizb - 1) / d.hizbsJour);
+  var today = new Date(); today.setHours(0,0,0,0);
+  var newDateDebut = new Date(today.getTime() - daysElapsed * 86400000);
+  d.prog.date_debut = newDateDebut.getFullYear() + '-' + String(newDateDebut.getMonth()+1).padStart(2,'0') + '-' + String(newDateDebut.getDate()).padStart(2,'0');
+  localStorage.setItem('tilawa_programme', JSON.stringify(d.prog));
+  if (typeof saveToCloud === 'function') saveToCloud();
+  localStorage.setItem('tilawa_retard_dismissed', d.todayStr);
+  var carte = document.getElementById('carte-retard');
+  if (carte) carte.classList.add('hidden');
+}
+
 function arreterIciBloom() {
   var input = document.getElementById('input-page-arret');
   if (!input) return;
@@ -677,6 +768,70 @@ function arreterIciBloom() {
     input.placeholder = '1 à 604';
   }
 }
+
+// ── Option A : bannière in-app ────────────────────────────────────────────
+(function() {
+  var today = localDate();
+  var doneDays = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+  if (!doneDays[today]) {
+    var banner = document.getElementById('banniere-rappel');
+    if (banner) banner.classList.remove('hidden');
+  }
+})();
+
+// ── Option B : Service Worker + notifications locales ─────────────────────
+(function() {
+  if (!('serviceWorker' in navigator)) return;
+
+  function openTilawaDB() {
+    return new Promise(function(resolve, reject) {
+      var req = indexedDB.open('tilawa_sw', 1);
+      req.onupgradeneeded = function(e) { e.target.result.createObjectStore('state'); };
+      req.onsuccess = function(e) { resolve(e.target.result); };
+      req.onerror = reject;
+    });
+  }
+
+  function syncToIDB() {
+    openTilawaDB().then(function(db) {
+      var tx = db.transaction('state', 'readwrite');
+      var st = tx.objectStore('state');
+      st.put(localStorage.getItem('tilawa_notif_enabled') === '1', 'notif_enabled');
+      st.put(localStorage.getItem('tilawa_notif_heure') || '09:00', 'notif_time');
+      st.put(JSON.parse(localStorage.getItem('tilawa_done_days') || '{}'), 'done_days');
+    }).catch(function(){});
+  }
+
+  function triggerNotifIfNeeded(reg) {
+    if (localStorage.getItem('tilawa_notif_enabled') !== '1') return;
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    var today = localDate();
+    var doneDays = JSON.parse(localStorage.getItem('tilawa_done_days') || '{}');
+    if (doneDays[today]) return;
+    if (localStorage.getItem('tilawa_notif_shown') === today) return;
+    var notifTime = localStorage.getItem('tilawa_notif_heure') || '09:00';
+    var parts = notifTime.split(':');
+    var h = parseInt(parts[0]), m = parseInt(parts[1] || 0);
+    var now = new Date();
+    if (now.getHours() * 60 + now.getMinutes() < h * 60 + m) return;
+    reg.showNotification('Tilawa Tour 📚', {
+      body: "Tu n'as pas encore lu aujourd'hui — BarakAllahu fik !",
+      icon: '/Images/logo_ok.svg',
+      badge: '/Images/logo_ok.svg',
+      tag: 'tilawa-rappel',
+      renotify: false
+    });
+    localStorage.setItem('tilawa_notif_shown', today);
+  }
+
+  navigator.serviceWorker.register('/sw-tilawa.js').then(function(reg) {
+    syncToIDB();
+    triggerNotifIfNeeded(reg);
+    if ('periodicSync' in reg && localStorage.getItem('tilawa_notif_enabled') === '1') {
+      reg.periodicSync.register('check-lecture', { minInterval: 6 * 60 * 60 * 1000 }).catch(function(){});
+    }
+  }).catch(function(){});
+})();
 
 </script>
 </body>

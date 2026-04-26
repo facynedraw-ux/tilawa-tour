@@ -130,25 +130,6 @@ function closeDrawer() {
     </div>
   </div>
 
-  <!-- Statistiques -->
-  <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-    <div class="bg-surface-container-lowest rounded-2xl p-5 text-center border border-outline-variant/10">
-      <p class="font-headline text-3xl text-primary font-bold" id="stat-khatmates">0</p>
-      <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mt-1" id="label-khatmates">Khatmates</p>
-    </div>
-    <div class="bg-surface-container-lowest rounded-2xl p-5 text-center border border-outline-variant/10">
-      <p class="font-headline text-3xl text-primary font-bold" id="stat-streak">0</p>
-      <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mt-1" id="label-streak">Jours consécutifs</p>
-    </div>
-    <div class="bg-surface-container-lowest rounded-2xl p-5 text-center border border-outline-variant/10">
-      <p class="font-headline text-3xl text-primary font-bold" id="stat-pages">0</p>
-      <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mt-1" id="label-pages">Pages lues</p>
-    </div>
-    <div class="bg-surface-container-lowest rounded-2xl p-5 text-center border border-outline-variant/10">
-      <p class="font-headline text-3xl text-primary font-bold" id="stat-objectif">0%</p>
-      <p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant mt-1" id="label-objectif">Objectif du mois</p>
-    </div>
-  </section>
 
   <!-- Badges -->
   <section class="mb-10" id="badges-section" style="display:none;">
@@ -199,7 +180,7 @@ function closeDrawer() {
       <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/10 flex flex-col gap-3">
         <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant" id="label-traduction">Traduction</label>
         <select id="select-traduction" onchange="setTraduction(this.value)"
-          class="font-label text-sm font-bold text-primary bg-primary/5 border border-primary/20 rounded-xl px-3 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 w-full">
+          class="font-label text-sm font-bold text-primary bg-primary/5 border border-primary/20 rounded-xl pl-3 pr-8 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/30 w-full">
           <option value="maach">Rachid Maach</option>
           <option value="hamidullah">Pr. Hamidullah</option>
         </select>
@@ -236,22 +217,45 @@ function closeDrawer() {
       </div>
     </div>
 
-    <!-- Objectif mensuel -->
+    <!-- Rythme choisi (rappel) -->
     <div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10">
-      <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block mb-3" id="label-objectif-param">Objectif mensuel</label>
-      <div class="flex items-center gap-3 py-3 px-4 rounded-xl border-2 border-primary bg-primary-container/30 mb-3">
+      <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block mb-3" id="label-objectif-param">Mon rythme</label>
+      <div class="flex items-center gap-3 py-3 px-4 rounded-xl border-2 border-primary bg-primary-container/30">
         <span class="material-symbols-outlined text-primary text-xl">auto_stories</span>
         <div>
           <p class="font-label text-sm font-bold text-primary" id="obj-rythme-label">—</p>
           <p class="font-label text-[9px] text-primary/70 mt-0.5" id="note-objectif">—</p>
         </div>
       </div>
-      <a href="plan_serenity.html" class="flex items-center justify-center gap-2 w-full py-4 px-4 rounded-2xl bg-primary text-on-primary font-label text-sm font-bold uppercase tracking-widest hover:opacity-90 transition-all active:scale-95 shadow-lg" style="box-shadow: 0 4px 16px rgba(0,0,0,0.18);">
-        <span class="material-symbols-outlined text-base">edit_calendar</span>
-        Définir mon programme
-      </a>
     </div>
 
+  </section>
+
+  <!-- Rappel quotidien -->
+  <section class="mb-10">
+    <h2 class="font-headline text-xl text-primary mb-5">Rappel quotidien</h2>
+    <div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <p class="font-label text-sm font-bold text-on-surface">Notification de lecture</p>
+          <p class="font-label text-xs text-on-surface-variant mt-0.5">Te rappeler si la lecture n'est pas encore faite</p>
+        </div>
+        <button type="button" id="notif-toggle" onclick="toggleNotif()"
+          class="relative w-12 h-6 rounded-full transition-colors duration-200 flex-shrink-0"
+          style="background-color:rgba(0,0,0,0.15)">
+          <span id="notif-thumb" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200"></span>
+        </button>
+      </div>
+      <div id="notif-time-row" class="hidden flex-col gap-2">
+        <label class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Heure du rappel</label>
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-primary text-lg">schedule</span>
+          <input type="time" id="notif-heure" value="09:00" onchange="saveNotifTime()"
+            class="flex-1 px-3 py-2.5 rounded-xl border border-outline-variant/40 bg-surface font-label text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/30"/>
+        </div>
+      </div>
+      <p id="notif-status" class="font-label text-xs text-error mt-3 hidden"></p>
+    </div>
   </section>
 
   <!-- Historique khatmates (dynamique) -->
@@ -296,7 +300,7 @@ function closeDrawer() {
   <section class="mb-6 p-6 rounded-2xl bg-error/5 border border-error/20 text-center">
     <span class="material-symbols-outlined text-error mb-3 block">restart_alt</span>
     <h3 class="font-headline text-lg text-error mb-2">Réinitialiser mon profil</h3>
-    <p class="font-label text-sm text-on-surface-variant mb-5">Efface votre prénom, votre programme et votre thème. Toute la progression sera perdue.</p>
+    <p class="font-label text-sm text-on-surface-variant mb-5">Efface ton prénom, ton programme et ton thème. Toute la progression sera perdue.</p>
     <button onclick="resetProfil()"
       class="inline-flex items-center gap-2 px-7 py-3 bg-error/10 text-error rounded-xl font-label text-xs font-bold uppercase tracking-widest hover:bg-error/20 active:scale-95 transition-all border border-error/30">
       <span class="material-symbols-outlined text-sm">delete_forever</span>
@@ -705,6 +709,59 @@ async async function resetProfil() {
   if (typeof resetCloud === 'function') await resetCloud();
   window.location.replace('index.html');
 }
+
+// ── Notifications ─────────────────────────────────────────────────────────
+(function() {
+  var enabled = localStorage.getItem('tilawa_notif_enabled') === '1';
+  var heure   = localStorage.getItem('tilawa_notif_heure') || '09:00';
+  var heureInput = document.getElementById('notif-heure');
+  if (heureInput) heureInput.value = heure;
+  applyNotifUI(enabled);
+
+  function applyNotifUI(on) {
+    var toggle  = document.getElementById('notif-toggle');
+    var thumb   = document.getElementById('notif-thumb');
+    var timeRow = document.getElementById('notif-time-row');
+    if (!toggle) return;
+    toggle.style.backgroundColor = on ? '' : 'rgba(0,0,0,0.15)';
+    toggle.classList.toggle('bg-primary', on);
+    if (thumb) thumb.style.transform = on ? 'translateX(24px)' : '';
+    if (timeRow) { timeRow.classList.toggle('hidden', !on); timeRow.classList.toggle('flex', on); }
+  }
+
+  window.toggleNotif = async function() {
+    var on = localStorage.getItem('tilawa_notif_enabled') === '1';
+    if (!on) {
+      if (!('Notification' in window)) { showStatus('Notifications non supportées sur cet appareil.'); return; }
+      if (Notification.permission === 'denied') { showStatus('Notifications bloquées — autorise-les dans les réglages du navigateur.'); return; }
+      var perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+      if (perm !== 'granted') { showStatus('Permission refusée.'); return; }
+      localStorage.setItem('tilawa_notif_enabled', '1');
+      applyNotifUI(true);
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw-tilawa.js').then(function(reg) {
+          if ('periodicSync' in reg) reg.periodicSync.register('check-lecture', { minInterval: 6 * 60 * 60 * 1000 }).catch(function(){});
+        }).catch(function(){});
+      }
+    } else {
+      localStorage.setItem('tilawa_notif_enabled', '0');
+      applyNotifUI(false);
+    }
+  };
+
+  window.saveNotifTime = function() {
+    var input = document.getElementById('notif-heure');
+    if (input) localStorage.setItem('tilawa_notif_heure', input.value);
+  };
+
+  function showStatus(msg) {
+    var el = document.getElementById('notif-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    setTimeout(function() { el.classList.add('hidden'); }, 5000);
+  }
+})();
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

@@ -107,12 +107,6 @@ function closeDrawer() {
 
 <main class="pt-24 pb-8 px-2 sm:px-4 max-w-5xl mx-auto">
 
-  <!-- Message rétro-validation (si date_debut est dans le passé) -->
-  <div id="msg-retro" class="hidden mx-2 mb-6 flex items-start gap-3 bg-primary-container/30 border border-primary/20 rounded-2xl px-5 py-4">
-    <span class="material-symbols-outlined text-primary mt-0.5 flex-shrink-0">info</span>
-    <p class="font-label text-sm text-on-surface">Tu as commencé ton programme avant aujourd'hui. Coche les jours passés directement sur le calendrier pour les marquer comme accomplis.</p>
-  </div>
-
   <!-- En-tête -->
   <section class="mb-8 px-2 flex flex-col md:flex-row md:items-end justify-between gap-5">
     <div>
@@ -274,15 +268,6 @@ function getSouratePourPage(page) {
     const prog = JSON.parse(raw);
     window.PROG_PAGES_JOUR = prog.pages_jour || 20;
     window.PROG_DATE_DEBUT = prog.date_debut ? new Date(prog.date_debut + 'T00:00:00') : new Date();
-    // Afficher le message si date_debut est strictement avant aujourd'hui
-    if (prog.date_debut) {
-      const debut = new Date(prog.date_debut + 'T00:00:00');
-      const today = new Date(); today.setHours(0,0,0,0);
-      if (debut < today) {
-        const msg = document.getElementById('msg-retro');
-        if (msg) msg.classList.remove('hidden');
-      }
-    }
   } catch(e) {}
 })();
 
@@ -334,7 +319,7 @@ function renderCalendar() {
     const d1 = new Date(currentYear, currentMonth, 1);
     const hm = parseInt(new Intl.DateTimeFormat('en-u-ca-islamic',{month:'numeric'}).format(d1)) - 1;
     const hy = parseInt(new Intl.DateTimeFormat('en-u-ca-islamic',{year:'numeric'}).format(d1));
-    document.getElementById('mois-hij').textContent = `${moisHijFr[hm]} ${hy} — Votre parcours spirituel du mois`;
+    document.getElementById('mois-hij').textContent = `${moisHijFr[hm]} ${hy} — Ton parcours spirituel du mois`;
   } catch(e) { document.getElementById('mois-hij').textContent = 'Calendrier hégirien'; }
 
   const grid = document.getElementById('cal-grid');
@@ -395,19 +380,24 @@ function renderCalendar() {
     const isClickable = cellDate <= todayFull;
 
     if (isToday) {
-      cell.className = 'aspect-auto min-h-[72px] sm:min-h-[90px] md:min-h-[100px] rounded-xl sm:rounded-2xl p-1.5 sm:p-2 md:p-3 shadow-lg cursor-pointer active:scale-95 transition-all flex flex-col justify-between ' + (isDone ? 'bg-primary/70' : 'bg-primary');
+      // Aujourd'hui non fait → bg-secondary (or) / Aujourd'hui fait → bg-primary (violet)
+      const bgClass = isDone ? 'bg-primary' : 'bg-secondary';
+      const textColor = isDone ? 'text-on-primary' : 'text-on-secondary';
+      const textMuted = isDone ? 'text-on-primary/60' : 'text-on-secondary/70';
+      const textSub   = isDone ? 'text-on-primary/80' : 'text-on-secondary/80';
+      cell.className = `aspect-auto min-h-[72px] sm:min-h-[90px] md:min-h-[100px] rounded-xl sm:rounded-2xl p-1.5 sm:p-2 md:p-3 shadow-lg cursor-pointer active:scale-95 transition-all flex flex-col justify-between ${bgClass}`;
       cell.innerHTML = `
         <div class="flex justify-between items-start">
-          <span class="font-headline text-sm sm:text-base md:text-xl font-bold text-on-primary">${d}</span>
+          <span class="font-headline text-sm sm:text-base md:text-xl font-bold ${textColor}">${d}</span>
           ${isDone
-            ? `<span class="material-symbols-outlined text-on-primary text-xs sm:text-sm" style="font-variation-settings:'FILL' 1;">check_circle</span>`
-            : `<div class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-secondary-fixed shadow-sm"></div>`}
+            ? `<span class="material-symbols-outlined ${textColor} text-xs sm:text-sm" style="font-variation-settings:'FILL' 1;">check_circle</span>`
+            : `<div class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-on-secondary/30 shadow-sm"></div>`}
         </div>
         <div>
-          <p class="font-label text-[7px] sm:text-[8px] uppercase tracking-widest text-on-primary/60 font-bold mb-0.5">${isDone ? 'Fait ✓' : 'Auj.'}</p>
-          <span class="font-label text-[8px] sm:text-[9px] uppercase tracking-tight text-secondary-fixed font-black block">${hizbLabel}</span>
-          <p class="hidden sm:block font-label text-[8px] text-on-primary/80 mt-1 leading-tight">${sourateDeLaPage(pageDebut)}</p>
-          <p class="hidden sm:block font-label text-[8px] text-on-primary/60">p.${pageDebut}–${pageFin}</p>
+          <p class="font-label text-[7px] sm:text-[8px] uppercase tracking-widest ${textMuted} font-bold mb-0.5">${isDone ? 'Fait ✓' : 'Auj.'}</p>
+          <span class="font-label text-[8px] sm:text-[9px] uppercase tracking-tight ${textColor} font-black block">${hizbLabel}</span>
+          <p class="hidden sm:block font-label text-[8px] ${textSub} mt-1 leading-tight">${sourateDeLaPage(pageDebut)}</p>
+          <p class="hidden sm:block font-label text-[8px] ${textMuted}">p.${pageDebut}–${pageFin}</p>
         </div>`;
       cell.onclick = function() { toggleDay(dateKey); };
     } else if (isDone) {
@@ -470,10 +460,20 @@ function updateObjectif() {
   const pctEl   = document.getElementById('obj-pct');
   if (barEl) barEl.style.width = pct + '%';
   if (pctEl) pctEl.textContent = pct + '%';
+
+  // Calcul de la date de fin prévue
+  var dateFin = '';
+  if (prog.date_debut && hizbsJour2 > 0) {
+    var totalJours = Math.ceil(60 / hizbsJour2);
+    var dateDebut = new Date(prog.date_debut + 'T00:00:00');
+    var dateFinPrev = new Date(dateDebut.getTime() + totalJours * 86400000);
+    dateFin = dateFinPrev.getDate() + ' ' + moisFr[dateFinPrev.getMonth()] + ' ' + dateFinPrev.getFullYear();
+  }
+
   if (titreEl) {
     if (lastPage >= 604 || joursRestants <= 0) {
       titreEl.textContent = 'Khatma accomplie !';
-      if (descEl) descEl.textContent = 'Lancez un nouveau programme pour continuer.';
+      if (descEl) descEl.textContent = 'Lance un nouveau programme pour continuer.';
       return;
     } else if (joursRestants === 1) {
       titreEl.textContent = 'Khatma demain !';
@@ -482,8 +482,8 @@ function updateObjectif() {
     }
   }
   if (descEl) {
-    descEl.textContent = 'Page ' + lastPage + ' sur 604 — ' + pct + '% accompli. ' +
-      (pages ? pages + ' pages par jour selon votre programme.' : '');
+    descEl.textContent = 'Page ' + lastPage + ' sur 604 — ' + pct + '% accompli.' +
+      (dateFin ? ' Fin prévue le ' + dateFin + '.' : '');
   }
 }
 updateObjectif();
