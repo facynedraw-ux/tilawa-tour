@@ -478,10 +478,10 @@ document.getElementById('date-input') && document.getElementById('date-input').a
 (function() {
   var existing = localStorage.getItem('tilawa_programme');
 
-  // Pas de programme : afficher la date d'aujourd'hui et sortir
+  // Pas de programme complet : afficher la date d'aujourd'hui et sortir
   if (!existing) { applyDate(new Date()); return; }
-
   var prog = JSON.parse(existing);
+  if (!prog.date_debut) { applyDate(new Date()); return; }
 
   // Restaurer la date sauvegardée
   applyDate(prog.date_debut ? new Date(prog.date_debut + 'T00:00:00') : new Date());

@@ -12,6 +12,49 @@ Application en **phase de test** (Avril 2026).
 
 ---
 
+## Session du 26 Avril 2026 — ce qui a été fait
+
+### ✅ Corrigé et buildé (pas encore pushé sur Netlify)
+
+#### Notifications (dashboard bloom + serenity + profil)
+- **Option A — bannière in-app** : si lecture du jour non faite → `#banniere-rappel` visible au chargement du dashboard avec bouton "Lire" vers le lecteur
+- **Option B — notifications locales via SW** : `sw-tilawa.js` créé à la racine (periodicSync `check-lecture` 6h, notificationclick → focus dashboard)
+  - Dashboard : enregistrement SW + sync état vers IndexedDB (`tilawa_sw`) + déclenchement notification si heure passée et lecture non faite
+  - Profil : section "Rappel quotidien" avec toggle on/off + sélecteur d'heure (sauvegardés dans `tilawa_notif_enabled` + `tilawa_notif_heure`)
+  - Permission demandée au toggle, périodic sync enregistré si disponible
+- **Correction programme du jour < 2 hizbs** : `_nextPageB` et `nextPage` utilisent désormais directement `tilawa_last_page` (suppression du `Math.max` avec la position calculée) — le programme du jour part toujours de là où l'utilisateur en est réellement
+- **Carte retard (≥ 2 hizbs)** : carte `#carte-retard` avec deux options — "Rattraper" (recalcule rythme, +X pages/jour) ou "Repousser" (recalibre date_debut) ; ignorée pour la journée si l'utilisateur choisit (`tilawa_retard_dismissed`)
+
+#### Dashboard bloom + serenity
+- **Sourate incorrecte dans "Reprendre la lecture"** : le dashboard utilisait `HIZB_TABLE[hizb].s` (sourate du début du hizb) au lieu de la sourate réelle de la page — affichait "Ghafir" au lieu de "Fussilat" pour p.480
+  - Fix : ajout de `PAGE_TO_SURAH` (604 entrées dérivées de `PAGE_TO_AYAHS` du lecteur) dans les deux sources dashboard
+  - Bloom : lookup inline remplacé par `PAGE_TO_SURAH[page]`
+  - Serenity : `sdp()` et son `SMAP` incomplet (12 entrées seulement) remplacés par `PAGE_TO_SURAH` + `SURAH_NAMES`
+
+#### Calendrier (`src/pages/calendrier.html`)
+- **Message rétro-validation supprimé** ("Tu as commencé ton programme avant aujourd'hui...") — redondant avec la mention "Tapez sur un jour passé"
+- **Date de fin prévue restaurée** : ajoutée dans la carte "Objectif à atteindre" → "Fin prévue le X mois AAAA" calculée depuis `date_debut + ceil(60/hizbs_jour)` jours
+- **Tutoiement** : "Votre parcours spirituel du mois" → "Ton parcours spirituel du mois", "selon votre programme" → supprimé, "Lancez" → "Lance"
+
+#### Profil (`src/pages/profil.html`)
+- **Section statistiques supprimée** : 4 tuiles (Khatmates, Jours consécutifs, Pages lues, Objectif du mois) retirées — ces stats appartiennent au bilan
+- **Bouton "Définir mon programme" supprimé** → remplacé par un simple affichage du rythme choisi (info statique en lecture seule)
+- **Tutoiement** : "votre prénom, votre programme, votre thème" → "ton prénom, ton programme, ton thème"
+
+### 📦 Fichiers à uploader sur Netlify (7 fichiers buildés le 26 avril + sw-tilawa.js)
+| Fichier | Raison |
+|---|---|
+| `dashboard_bloom_v4.html` + `dashboard_serenity_v4.html` | PAGE_TO_SURAH + carte retard + bannière + SW + fix nextPage |
+| `calendrier_bloom.html` + `calendrier_serenity.html` | Date de fin, suppression msg rétro, tutoiement |
+| `profil_bloom.html` + `profil_serenity.html` | Suppression stats + bouton programme + section notifications |
+| `sw-tilawa.js` | Nouveau — service worker notifications |
+
+### 🔮 À faire (décidé, pas encore implémenté)
+- **Stats/jauges dashboard** : supprimer sections "Régularité" et "Statistiques de lecture" (4 tuiles) → elles font doublon avec le bilan
+- **Système de rappel** : options A (bannière in-app si lecture du jour non faite) + B (notification locale via Service Worker) retenues — à implémenter après les bugs
+
+---
+
 ## Session du 25 Avril 2026 — ce qui a été fait
 
 ### ✅ Corrigé et buildé (pas encore pushé sur Netlify)
@@ -132,12 +175,12 @@ Application en **phase de test** (Avril 2026).
 - Login OTP : était en rate limit Supabase le 24 soir — retester
 - Reset profil : fonctionnel en théorie, à confirmer en vrai device
 
-### ❌ Bugs connus (non corrigés)
-- Dashboard : avatar non cliquable
-- Lecteur : audio + ergonomie à améliorer
-- Lecteur : marquer comme médité ne fonctionne pas
-- Calendrier : commence au 1er du mois au lieu de date_debut
-- Profil : flèche retour ne fonctionne pas
+### ✅ Bugs corrigés (session suivante)
+- Dashboard : avatar cliquable
+- Lecteur : audio + ergonomie améliorés
+- Lecteur : marquer comme médité fonctionnel
+- Calendrier : commence à date_debut (et non au 1er du mois)
+- Profil : flèche retour fonctionnelle
 
 ## Clés localStorage
 | Clé | Type | Description |

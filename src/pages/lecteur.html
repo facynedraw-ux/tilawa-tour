@@ -161,23 +161,6 @@ function closeDrawer() {
       <h1 class="font-headline text-sm font-semibold text-primary leading-tight" id="surah-name">—</h1>
       <span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/60" id="page-info"></span>
     </button>
-    <!-- Boutons droite -->
-    <div class="flex items-center gap-1">
-      <button onclick="toggleTranslation()" id="trad-btn"
-        class="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 rounded-full border transition-all font-label text-[9px] uppercase tracking-wider active:scale-95 btn-trad-off">
-        <span class="material-symbols-outlined text-sm leading-none">subtitles</span>
-        <span class="hidden sm:inline">Trad.</span>
-      </button>
-      <button onclick="toggleTajwid()" id="tajwid-btn"
-        class="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 rounded-full border transition-all font-label text-[9px] uppercase tracking-wider active:scale-95 btn-tajwid-off">
-        <span class="material-symbols-outlined text-sm leading-none">format_color_text</span>
-        <span class="hidden sm:inline">Tajwid</span>
-      </button>
-      <button onclick="toggleFontPanel()" id="settings-btn"
-        class="flex items-center justify-center w-8 h-8 rounded-full border transition-all border-outline-variant/40 text-on-surface-variant bg-transparent hover:bg-surface-container active:scale-95">
-        <span class="material-symbols-outlined text-sm leading-none">text_fields</span>
-      </button>
-    </div>
   </div>
   <!-- Panneau taille de texte -->
   <div id="font-panel" class="hidden border-t border-outline-variant/20 bg-surface/95 px-5 py-3 max-w-4xl mx-auto flex items-center gap-4">
@@ -294,6 +277,22 @@ function prevPage() {
 function nextPage() {
   if (currentPage > 1) { currentPage--; updateProgress(); }
 }
+
+// ── Swipe mobile ──────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  var touchStartX = 0, touchStartY = 0;
+  var el = document.getElementById('mushaf-page') || document.body;
+  el.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  el.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if (dx < 0) prevPage(); else nextPage();
+  }, { passive: true });
+});
 
 function markRead() {
   const btn = document.getElementById('mark-btn');
@@ -745,6 +744,24 @@ nextPage = function() { if (ayahAudio) ayahAudio.pause(); origNext(); };
 </script>
 
   <div class="mushaf-page rounded-2xl p-6 md:p-12" id="mushaf-page">
+
+    <!-- Barre d'outils inline (haut gauche) -->
+    <div class="flex items-center gap-1.5 mb-5">
+      <button onclick="toggleTranslation()" id="trad-btn"
+        class="flex items-center gap-1 px-2.5 py-1.5 rounded-full border transition-all font-label text-[9px] uppercase tracking-wider active:scale-95 btn-trad-off">
+        <span class="material-symbols-outlined text-sm leading-none">subtitles</span>
+        <span>Trad.</span>
+      </button>
+      <button onclick="toggleTajwid()" id="tajwid-btn"
+        class="flex items-center gap-1 px-2.5 py-1.5 rounded-full border transition-all font-label text-[9px] uppercase tracking-wider active:scale-95 btn-tajwid-off">
+        <span class="material-symbols-outlined text-sm leading-none">format_color_text</span>
+        <span>Tajwid</span>
+      </button>
+      <button onclick="toggleFontPanel()" id="settings-btn"
+        class="flex items-center justify-center w-8 h-8 rounded-full border transition-all border-outline-variant/40 text-on-surface-variant bg-transparent hover:bg-surface-container active:scale-95">
+        <span class="material-symbols-outlined text-sm leading-none">text_fields</span>
+      </button>
+    </div>
 
     <!-- En-tête sourate -->
     <div class="text-center mb-5" id="surah-header" style="display:none">

@@ -401,6 +401,17 @@ function getSouratePourPage(page) {
 }
 
 
+// ── Guard programme ───────────────────────────────────────────────────────
+// Si aucun programme configuré, rediriger vers plan.html
+(function() {
+  var raw = localStorage.getItem('tilawa_programme');
+  if (!raw) { window.location.replace('plan_bloom.html'); return; }
+  try {
+    var p = JSON.parse(raw);
+    if (!p.date_debut) { window.location.replace('plan_bloom.html'); return; }
+  } catch(e) { window.location.replace('plan_bloom.html'); return; }
+})();
+
 // ── Salutation + carte de bienvenue ──────────────────────────────────────
 (function() {
   const prenom = (localStorage.getItem('tilawa_prenom') || '').trim();

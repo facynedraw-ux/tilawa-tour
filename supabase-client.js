@@ -51,6 +51,7 @@ async function syncFromCloud() {
         localStorage.setItem(key, typeof val === 'object' ? JSON.stringify(val) : String(val));
       }
     });
+    _localDirty = false; // le sync ne compte pas comme un changement local
   } catch (e) { console.warn('[Tilawa] syncFromCloud:', e); }
 }
 
@@ -74,11 +75,21 @@ async function saveToCloud() {
   } catch (e) { console.warn('[Tilawa] saveToCloud:', e); }
 }
 
-// Sauvegarde automatique quand l'utilisateur quitte la page / passe en arrière-plan
+// Sauvegarde automatique uniquement si l'utilisateur a fait des changements locaux
+// (pas juste après un syncFromCloud, pour éviter d'écraser un autre appareil)
+let _localDirty = false;
+const _origSetItem = localStorage.setItem.bind(localStorage);
+localStorage.setItem = function(key, value) {
+  if (key.startsWith('tilawa_')) _localDirty = true;
+  return _origSetItem(key, value);
+};
+
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) saveToCloud();
+  if (document.hidden && _localDirty) saveToCloud();
 });
-window.addEventListener('pagehide', saveToCloud);
+window.addEventListener('pagehide', () => {
+  if (_localDirty) saveToCloud();
+});
 
 // ── Guard : redirige vers login si non connecté ────────────────────────────
 async function requireAuth() {
