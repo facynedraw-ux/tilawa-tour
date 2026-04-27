@@ -697,20 +697,29 @@ function checkRetard() {
   var today = new Date(); today.setHours(0,0,0,0);
   var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
   if (localStorage.getItem('tilawa_retard_dismissed') === todayStr) return;
-  var dateDebut = new Date(prog.date_debut + 'T00:00:00');
   var hizbsJour = prog.hizbs_jour || 2;
   var pagesJour = prog.pages_jour || 20;
-  var daysSinceDebut = Math.floor((today - dateDebut) / 86400000);
-  if (daysSinceDebut < 1) return;
-  var expectedHizb = Math.min(60, 1 + Math.floor(daysSinceDebut * hizbsJour));
-  var currentHizb = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(lastPage, 604)] || 1) : 1;
-  var retardHizbs = expectedHizb - currentHizb;
-  if (retardHizbs < 2) return;
-  var totalJours = Math.ceil(60 / hizbsJour);
-  var originalEndDate = new Date(dateDebut.getTime() + totalJours * 86400000);
-  var remainingDays = Math.max(1, Math.ceil((originalEndDate - today) / 86400000));
   var remainingPages = Math.max(1, 605 - lastPage);
-  var newPagesJour = Math.ceil(remainingPages / remainingDays);
+  var retardHizbs, originalEndDate, remainingDays, newPagesJour;
+  if (prog.date_fin) {
+    originalEndDate = new Date(prog.date_fin + 'T00:00:00');
+    remainingDays = Math.max(1, Math.floor((originalEndDate - today) / 86400000));
+    newPagesJour = Math.ceil(remainingPages / remainingDays);
+    if (newPagesJour <= pagesJour + 1) return;
+    retardHizbs = Math.max(1, Math.round((newPagesJour - pagesJour) / 10));
+  } else {
+    var dateDebut = new Date(prog.date_debut + 'T00:00:00');
+    var daysSinceDebut = Math.floor((today - dateDebut) / 86400000);
+    if (daysSinceDebut < 1) return;
+    var expectedHizb = Math.min(60, 1 + Math.floor(daysSinceDebut * hizbsJour));
+    var currentHizb = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(lastPage, 604)] || 1) : 1;
+    retardHizbs = expectedHizb - currentHizb;
+    if (retardHizbs < 2) return;
+    var totalJours = Math.ceil(60 / hizbsJour);
+    originalEndDate = new Date(dateDebut.getTime() + totalJours * 86400000);
+    remainingDays = Math.max(1, Math.ceil((originalEndDate - today) / 86400000));
+    newPagesJour = Math.ceil(remainingPages / remainingDays);
+  }
   var extraPages = newPagesJour - pagesJour;
   var newEndDate = new Date(today.getTime() + Math.ceil(remainingPages / pagesJour) * 86400000);
   var mFr = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
@@ -731,11 +740,6 @@ function choisirRattraper() {
   d.prog.pages_jour = d.newPagesJour;
   d.prog.hizbs_jour = d.newHizbsJour;
   if (d.originalEndDate) { var _oE = d.originalEndDate; d.prog.date_fin = _oE.getFullYear() + '-' + String(_oE.getMonth()+1).padStart(2,'0') + '-' + String(_oE.getDate()).padStart(2,'0'); }
-  var _cH = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(d.lastPage,604)] || 1) : 1;
-  var _dB = Math.floor((_cH - 1) / d.newHizbsJour);
-  var _td = new Date(); _td.setHours(0,0,0,0);
-  var _nd = new Date(_td.getTime() - _dB * 86400000);
-  d.prog.date_debut = _nd.getFullYear() + '-' + String(_nd.getMonth()+1).padStart(2,'0') + '-' + String(_nd.getDate()).padStart(2,'0');
   localStorage.setItem('tilawa_programme', JSON.stringify(d.prog));
   if (typeof saveToCloud === 'function') saveToCloud();
   localStorage.setItem('tilawa_retard_dismissed', d.todayStr);
