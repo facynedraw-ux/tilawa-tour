@@ -39,19 +39,19 @@ window._maachData={"1":{"1":"Au nom d’Allah, le Tout Miséricordieux, le Très
   }
   .verse-number{
     display:inline-flex;align-items:center;justify-content:center;
-    width:1.8em;height:1.8em;border:1px solid color-mix(in srgb, #5c5b9e 30%, transparent);
+    width:1.8em;height:1.8em;border:1px solid rgba(115,92,0,0.3);
     border-radius:50%;font-family:'Amiri',serif;font-size:0.65em;
-    color:#5c5b9e;margin:0 4px;vertical-align:middle;
+    color:#735c00;margin:0 4px;vertical-align:middle;
     cursor:pointer;transition:background 0.15s,border-color 0.15s,color 0.15s;
     background:transparent;padding:0;
     position:relative;
   }
-  .verse-number:hover{background:color-mix(in srgb, #5c5b9e 12%, transparent);border-color:color-mix(in srgb, #5c5b9e 60%, transparent);}
-  .verse-number.vn-playing{background:#5c5b9e;border-color:#5c5b9e;color:#fff;}
+  .verse-number:hover{background:rgba(115,92,0,0.1);border-color:rgba(115,92,0,0.6);}
+  .verse-number.vn-playing{background:#735c00;border-color:#735c00;color:#fff;}
   /* Icône play discrète sur le numéro */
   .verse-number::after{
     content:'▶';position:absolute;top:-14px;left:50%;transform:translateX(-50%);
-    font-size:6px;color:color-mix(in srgb, #5c5b9e 40%, transparent);font-family:sans-serif;
+    font-size:6px;color:rgba(115,92,0,0.4);font-family:sans-serif;
     pointer-events:none;
   }
   /* États boutons Trad / Tajwid */
@@ -804,7 +804,7 @@ nextPage = function() { if (ayahAudio) ayahAudio.pause(); origNext(); };
     </div>
 
     <!-- Hint écoute verset -->
-    <p class="font-label text-xs text-on-surface-variant/50 text-center mb-2 italic">Touchez un numéro pour écouter le verset</p>
+    <p class="font-label text-[9px] text-on-surface-variant/35 text-center mb-2 italic">Touchez un ⓝ pour écouter un verset</p>
 
     <!-- Texte coranique -->
     <div class="quran-text" id="quran-text">
@@ -828,36 +828,6 @@ nextPage = function() { if (ayahAudio) ayahAudio.pause(); origNext(); };
         <p class="font-label text-xs text-on-surface-variant italic">Chargement de Rachid Maach...</p>
       </div>
       <div id="trad-content"></div>
-    </div>
-
-    <!-- Pied de page mushaf -->
-    <div class="mt-6 flex justify-between items-center border-t border-outline-variant/10 pt-4">
-      <span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest" id="juz-label">—</span>
-      <div class="flex flex-col items-center gap-0.5">
-        <span class="font-quran text-sm text-secondary font-bold" id="page-num">—</span>
-        <button onclick="openPageJump()" id="page-num-fr" class="font-label text-[9px] text-on-surface-variant/50 hover:text-primary active:scale-95 transition-all">p. —</button>
-      </div>
-      <span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest" id="hizb-label">—</span>
-    </div>
-
-    <!-- Bouton Page lue + navigation -->
-    <div class="mt-6 flex flex-col items-center gap-3">
-      <p class="font-label text-[10px] text-on-surface-variant/50 uppercase tracking-widest">Validez votre lecture</p>
-      <button onclick="markRead()" id="mark-btn"
-        class="flex items-center gap-2 px-6 py-2.5 bg-primary text-on-primary rounded-full font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all hover:opacity-90">
-        <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1;">check_circle</span>
-        Page lue
-      </button>
-      <div class="flex items-center gap-4 mt-1">
-        <button onclick="prevPage()" class="flex items-center gap-1 px-4 py-2 bg-secondary text-white rounded-xl font-label text-xs font-semibold uppercase tracking-wider active:scale-95 transition-all hover:opacity-90">
-          <span class="material-symbols-outlined text-base">chevron_right</span>
-          Suiv.
-        </button>
-        <button onclick="nextPage()" class="flex items-center gap-1 px-4 py-2 bg-secondary text-white rounded-xl font-label text-xs font-semibold uppercase tracking-wider active:scale-95 transition-all hover:opacity-90">
-          Préc.
-          <span class="material-symbols-outlined text-base">chevron_left</span>
-        </button>
-      </div>
     </div>
 
     <!-- Lecteur audio -->
@@ -919,6 +889,35 @@ nextPage = function() { if (ayahAudio) ayahAudio.pause(); origNext(); };
       </div>
     </div>
 
+    <!-- Bouton Page lue + navigation -->
+    <div class="mt-6 flex flex-col items-center gap-3">
+      <p class="font-label text-[10px] text-on-surface-variant/50 uppercase tracking-widest">Validez votre lecture</p>
+      <button onclick="markRead()" id="mark-btn"
+        class="flex items-center gap-2 px-6 py-2.5 bg-primary text-on-primary rounded-full font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all hover:opacity-90">
+        <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1;">check_circle</span>
+        Page lue
+      </button>
+      <div class="flex items-center gap-4 mt-1">
+        <button onclick="prevPage()" class="flex items-center gap-1 px-4 py-2 bg-secondary text-white rounded-xl font-label text-xs font-semibold uppercase tracking-wider active:scale-95 transition-all hover:opacity-90">
+          <span class="material-symbols-outlined text-base">chevron_right</span>
+          Suiv.
+        </button>
+        <button onclick="nextPage()" class="flex items-center gap-1 px-4 py-2 bg-secondary text-white rounded-xl font-label text-xs font-semibold uppercase tracking-wider active:scale-95 transition-all hover:opacity-90">
+          Préc.
+          <span class="material-symbols-outlined text-base">chevron_left</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pied de page mushaf -->
+    <div class="mt-6 flex justify-between items-center border-t border-outline-variant/10 pt-4">
+      <span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest" id="juz-label">—</span>
+      <div class="flex flex-col items-center gap-0.5">
+      <span class="font-quran text-sm text-secondary font-bold" id="page-num">—</span>
+      <button onclick="openPageJump()" id="page-num-fr" class="font-label text-[9px] text-on-surface-variant/50 hover:text-primary active:scale-95 transition-all">p. —</button>
+    </div>
+      <span class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest" id="hizb-label">—</span>
+    </div>
   </div>
 
 </main>

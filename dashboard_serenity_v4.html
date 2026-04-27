@@ -134,6 +134,26 @@
   </div>
 
   <!-- Carte retard programme — visible si ≥ 2 hizbs de retard et non ignorée aujourd'hui -->
+  <div id="carte-retard" class="hidden mb-8 bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-6">
+    <div class="flex items-start gap-3 mb-4">
+      <span class="material-symbols-outlined text-secondary mt-0.5">schedule</span>
+      <div>
+        <p class="font-headline text-base text-on-surface" id="retard-titre">—</p>
+        <p class="font-label text-sm text-on-surface-variant mt-1" id="retard-desc">Deux options pour recalibrer ton programme.</p>
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <button type="button" onclick="choisirRattraper()" class="flex-1 py-3 px-4 bg-primary text-on-primary rounded-xl font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all">
+        <span id="btn-rattraper-label">—</span>
+        <span class="block text-on-primary/70 text-[10px] mt-0.5 normal-case tracking-normal font-normal" id="btn-rattraper-detail">—</span>
+      </button>
+      <button type="button" onclick="choisirRepousser()" class="flex-1 py-3 px-4 bg-surface-container text-on-surface rounded-xl font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all border border-outline-variant/20">
+        <span id="btn-repousser-label">—</span>
+        <span class="block text-on-surface-variant text-[10px] mt-0.5 normal-case tracking-normal font-normal">Rythme inchangé</span>
+      </button>
+    </div>
+  </div>
+
   <!-- Bannière rappel (Option A) — visible si lecture du jour pas encore faite -->
   <div id="banniere-rappel" class="hidden mb-6 bg-secondary-container/30 border border-secondary/20 rounded-2xl px-5 py-4 flex items-center gap-4">
     <span class="material-symbols-outlined text-secondary text-2xl flex-shrink-0">notifications_active</span>
@@ -178,27 +198,6 @@
       </div>
     </div>
   </section>
-
-  <!-- Carte retard programme — visible si ≥ 2 hizbs de retard -->
-  <div id="carte-retard" class="hidden mb-8 bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-6">
-    <div class="flex items-start gap-3 mb-4">
-      <span class="material-symbols-outlined text-secondary mt-0.5">schedule</span>
-      <div>
-        <p class="font-headline text-base text-on-surface" id="retard-titre">—</p>
-        <p class="font-label text-sm text-on-surface-variant mt-1" id="retard-desc">Deux options pour recalibrer ton programme.</p>
-      </div>
-    </div>
-    <div class="flex flex-col sm:flex-row gap-3">
-      <button type="button" onclick="choisirRattraper()" class="flex-1 py-3 px-4 bg-primary text-on-primary rounded-xl font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all">
-        <span id="btn-rattraper-label">—</span>
-        <span class="block text-on-primary/70 text-[10px] mt-0.5 normal-case tracking-normal font-normal" id="btn-rattraper-detail">—</span>
-      </button>
-      <button type="button" onclick="choisirRepousser()" class="flex-1 py-3 px-4 bg-surface-container text-on-surface rounded-xl font-label text-xs font-bold uppercase tracking-widest active:scale-95 transition-all border border-outline-variant/20">
-        <span id="btn-repousser-label">—</span>
-        <span class="block text-on-surface-variant text-[10px] mt-0.5 normal-case tracking-normal font-normal">Rythme inchangé</span>
-      </button>
-    </div>
-  </div>
 
   <!-- Grid principal (responsive) -->
   <div class="grid grid-cols-1 md:grid-cols-12 gap-5 mb-6">
@@ -411,11 +410,14 @@ function getSouratePourPage(page) {
 
 
 // ── Guard programme ───────────────────────────────────────────────────────
+// Si aucun programme configuré, rediriger vers plan.html
 (function() {
+  var raw = localStorage.getItem('tilawa_programme');
+  if (!raw) { window.location.replace('plan_serenity.html'); return; }
   try {
-    var p = JSON.parse(localStorage.getItem('tilawa_programme') || 'null');
-    if (!p || !p.date_debut) window.location.replace('plan_serenity.html');
-  } catch(e) { window.location.replace('plan_serenity.html'); }
+    var p = JSON.parse(raw);
+    if (!p.date_debut) { window.location.replace('plan_serenity.html'); return; }
+  } catch(e) { window.location.replace('plan_serenity.html'); return; }
 })();
 
 // ── Salutation + carte de bienvenue ──────────────────────────────────────
@@ -716,10 +718,20 @@ function marquerFaitDashboard() {
   var _spM = parseInt(localStorage.getItem('tilawa_last_page') || '1');
   var hizbsJour = prog.hizbs_jour || 2;
   var pagesJourM = prog.pages_jour || 20;
-  var _hM = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(_spM,604)] || 1) : 1;
-  var _hMN = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(_spM+1,604)] || 1) : _hM;
+  // Calculer la page actuelle selon le planning (même logique que updateDashboard)
+  var currentPM = _spM;
+  if (prog.date_debut) {
+    var _dM = new Date(prog.date_debut + 'T00:00:00');
+    var _tM = new Date(); _tM.setHours(0,0,0,0);
+    var _jM = Math.max(0, Math.floor((_tM - _dM) / 86400000));
+    currentPM = Math.max(_spM, Math.min(1 + _jM * pagesJourM, 604));
+  }
+  // Avancer au début du prochain hizb officiel
+  var _hM = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(currentPM,604)] || 1) : 1;
+  var _hMN = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(currentPM+1,604)] || 1) : _hM;
   var hizbActuel = (_hMN > _hM) ? _hMN : _hM;
   var hizbSuivant = hizbActuel + Math.round(hizbsJour);
+  // Détection de Khatma complète
   if (hizbSuivant > 60) {
     var khatmates = parseInt(localStorage.getItem('tilawa_khatmates_annee') || '0') + 1;
     localStorage.setItem('tilawa_khatmates_annee', String(khatmates));
@@ -733,7 +745,7 @@ function marquerFaitDashboard() {
   }
   var nextPage = (typeof HIZB_TABLE !== 'undefined' && HIZB_TABLE[String(hizbSuivant)])
     ? HIZB_TABLE[String(hizbSuivant)].p
-    : Math.min(_spM + pagesJourM, 604);
+    : Math.min(currentPM + pagesJourM, 604);
   localStorage.setItem('tilawa_last_page', String(nextPage));
   window.location.reload();
 }
@@ -777,11 +789,6 @@ function choisirRattraper() {
   var d = window._retardData;
   d.prog.pages_jour = d.newPagesJour;
   d.prog.hizbs_jour = d.newHizbsJour;
-  // Recalibrer date_debut pour que lastPage reste cohérente avec le nouveau rythme
-  var daysBack = Math.floor((d.lastPage - 1) / d.newPagesJour);
-  var newDebut = new Date();
-  newDebut.setDate(newDebut.getDate() - daysBack);
-  d.prog.date_debut = newDebut.getFullYear() + '-' + String(newDebut.getMonth()+1).padStart(2,'0') + '-' + String(newDebut.getDate()).padStart(2,'0');
   localStorage.setItem('tilawa_programme', JSON.stringify(d.prog));
   if (typeof saveToCloud === 'function') saveToCloud();
   localStorage.setItem('tilawa_retard_dismissed', d.todayStr);

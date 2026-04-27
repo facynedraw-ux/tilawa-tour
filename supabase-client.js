@@ -67,7 +67,7 @@ async function saveToCloud() {
       const field = key.replace('tilawa_', '');
       const raw   = localStorage.getItem(key);
       if (raw !== null) {
-        try { payload[field] = JSON.parse(raw); } catch { payload[field] = raw; }
+        try { payload[field] = JSON.parse(raw); } catch(e) { payload[field] = raw; }
       }
     });
 
