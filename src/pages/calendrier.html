@@ -375,13 +375,14 @@ function renderCalendar() {
     const dayOfProg = Math.floor((cellDate - dateDebut) / MS_DAY);
     const _todayDOP = Math.max(0, Math.floor((todayFull - dateDebut) / MS_DAY));
     const _lpCell = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+    const _pagesJourInit = prog.pages_jour_initial || pagesJour;
     let pageDebut, pageFin;
     if (dayOfProg >= _todayDOP) {
       // Aujourd'hui et futur : calculer depuis la vraie position actuelle
       pageDebut = Math.min(_lpCell + (dayOfProg - _todayDOP) * pagesJour, 604);
     } else {
-      // Jours passés : formule depuis date_debut
-      pageDebut = Math.min(dayOfProg * pagesJour + 1, 604);
+      // Jours passés : rythme d'origine pour les bons labels
+      pageDebut = Math.min(dayOfProg * _pagesJourInit + 1, 604);
     }
     pageFin = Math.min(pageDebut + pagesJour - 1, 604);
     const _hS = PAGE_TO_HIZB[pageDebut] || 1;

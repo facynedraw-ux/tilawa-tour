@@ -787,6 +787,7 @@ function checkRetard() {
 function choisirRattraper() {
   if (!window._retardData) return;
   var d = window._retardData;
+  if (!d.prog.pages_jour_initial) d.prog.pages_jour_initial = d.prog.pages_jour;
   d.prog.pages_jour = d.newPagesJour;
   d.prog.hizbs_jour = d.newHizbsJour;
   if (d.originalEndDate) { var _oE = d.originalEndDate; d.prog.date_fin = _oE.getFullYear() + '-' + String(_oE.getMonth()+1).padStart(2,'0') + '-' + String(_oE.getDate()).padStart(2,'0'); }
