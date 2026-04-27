@@ -316,10 +316,11 @@ function renderCalendar() {
   document.getElementById('nav-label').textContent  = `${moisFr[currentMonth].substring(0,3)} ${currentYear}`;
 
   try {
-    const d1 = new Date(currentYear, currentMonth, 1);
-    const hm = parseInt(new Intl.DateTimeFormat('en-u-ca-islamic',{month:'numeric'}).format(d1)) - 1;
-    const hy = parseInt(new Intl.DateTimeFormat('en-u-ca-islamic',{year:'numeric'}).format(d1));
-    document.getElementById('mois-hij').textContent = `${moisHijFr[hm]} ${hy} — Ton parcours spirituel du mois`;
+    const _hij = new Date();
+    const _hd = parseInt(new Intl.DateTimeFormat('en-u-ca-islamic',{day:'numeric'}).format(_hij));
+    const _hm = parseInt(new Intl.DateTimeFormat('en-u-ca-islamic',{month:'numeric'}).format(_hij)) - 1;
+    const _hy = parseInt(new Intl.DateTimeFormat('en-u-ca-islamic',{year:'numeric'}).format(_hij));
+    document.getElementById('mois-hij').textContent = `${_hd} ${moisHijFr[_hm]} ${_hy}`;
   } catch(e) { document.getElementById('mois-hij').textContent = 'Calendrier hégirien'; }
 
   const grid = document.getElementById('cal-grid');
@@ -339,7 +340,13 @@ function renderCalendar() {
   const dateDebut = new Date(prog.date_debut + 'T00:00:00');
   const MS_DAY = 86400000;
   const totalJours = Math.ceil(60 / hizbsJour);
-  const dateFinProg = new Date(dateDebut.getTime() + totalJours * MS_DAY);
+  const _lastPageCal = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+  const _pagesRestantes = Math.max(0, 605 - _lastPageCal);
+  const _dateFinFormule = new Date(dateDebut.getTime() + totalJours * MS_DAY);
+  const _dateFinAujourdHui = _pagesRestantes > 0
+    ? new Date(todayFull.getTime() + Math.ceil(_pagesRestantes / pagesJour) * MS_DAY)
+    : _dateFinFormule;
+  const dateFinProg = _dateFinFormule >= _dateFinAujourdHui ? _dateFinFormule : _dateFinAujourdHui;
 
   // Cases vides décalage
   for (let i = 0; i < firstDay; i++) {
@@ -465,8 +472,14 @@ function updateObjectif() {
   var dateFin = '';
   if (prog.date_debut && hizbsJour2 > 0) {
     var totalJours = Math.ceil(60 / hizbsJour2);
-    var dateDebut = new Date(prog.date_debut + 'T00:00:00');
-    var dateFinPrev = new Date(dateDebut.getTime() + totalJours * 86400000);
+    var dateDebutObj = new Date(prog.date_debut + 'T00:00:00');
+    var dateFinFormule = new Date(dateDebutObj.getTime() + totalJours * 86400000);
+    var _aujourdObj = new Date(); _aujourdObj.setHours(0,0,0,0);
+    var _pagesRestObj = Math.max(0, 605 - lastPage);
+    var dateFinAujourdHuiObj = _pagesRestObj > 0
+      ? new Date(_aujourdObj.getTime() + Math.ceil(_pagesRestObj / (prog.pages_jour || 20)) * 86400000)
+      : dateFinFormule;
+    var dateFinPrev = dateFinFormule >= dateFinAujourdHuiObj ? dateFinFormule : dateFinAujourdHuiObj;
     dateFin = dateFinPrev.getDate() + ' ' + moisFr[dateFinPrev.getMonth()] + ' ' + dateFinPrev.getFullYear();
   }
 
