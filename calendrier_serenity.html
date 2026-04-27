@@ -373,16 +373,21 @@ function renderCalendar() {
 
     // Numéro de jour dans le programme (0 = date_debut)
     const dayOfProg = Math.floor((cellDate - dateDebut) / MS_DAY);
-    const hStart = Math.min(Math.floor(dayOfProg * hizbsJour) + 1, 60);
-    const hEnd   = Math.min(hStart + Math.ceil(hizbsJour) - 1, 60);
-    const hizbLabel = hizbsJour === 0.5 ? ('N.' + hStart)
-                    : hizbsJour === 1   ? ('H.' + hStart)
-                    : ('H.' + hStart + '-' + hEnd);
-    const hizbLabelFull = hizbsJour === 0.5 ? ('Nisf ' + hStart)
-                    : hizbsJour === 1   ? ('Hizb ' + hStart)
-                    : ('Hizb ' + hStart + '-' + hEnd);
-    const pageDebut = Math.min(dayOfProg * pagesJour + 1, 604);
-    const pageFin   = Math.min(pageDebut + pagesJour - 1, 604);
+    const _todayDOP = Math.max(0, Math.floor((todayFull - dateDebut) / MS_DAY));
+    const _lpCell = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+    let pageDebut, pageFin;
+    if (dayOfProg >= _todayDOP) {
+      // Aujourd'hui et futur : calculer depuis la vraie position actuelle
+      pageDebut = Math.min(_lpCell + (dayOfProg - _todayDOP) * pagesJour, 604);
+    } else {
+      // Jours passés : formule depuis date_debut
+      pageDebut = Math.min(dayOfProg * pagesJour + 1, 604);
+    }
+    pageFin = Math.min(pageDebut + pagesJour - 1, 604);
+    const _hS = PAGE_TO_HIZB[pageDebut] || 1;
+    const _hE = PAGE_TO_HIZB[pageFin] || 1;
+    const hizbLabel = (_hS === _hE) ? ('H.' + _hS) : ('H.' + _hS + '-' + _hE);
+    const hizbLabelFull = (_hS === _hE) ? ('Hizb ' + _hS) : ('Hizb ' + _hS + '-' + _hE);
     const isDone      = !!doneDays[dateKey];
     const isClickable = cellDate <= todayFull;
 
@@ -470,16 +475,21 @@ function updateObjectif() {
 
   // Calcul de la date de fin prévue
   var dateFin = '';
-  if (prog.date_debut && hizbsJour2 > 0) {
-    var totalJours = Math.ceil(60 / hizbsJour2);
-    var dateDebutObj = new Date(prog.date_debut + 'T00:00:00');
-    var dateFinFormule = new Date(dateDebutObj.getTime() + totalJours * 86400000);
-    var _aujourdObj = new Date(); _aujourdObj.setHours(0,0,0,0);
-    var _pagesRestObj = Math.max(0, 605 - lastPage);
-    var dateFinAujourdHuiObj = _pagesRestObj > 0
-      ? new Date(_aujourdObj.getTime() + Math.ceil(_pagesRestObj / (prog.pages_jour || 20)) * 86400000)
-      : dateFinFormule;
-    var dateFinPrev = dateFinFormule >= dateFinAujourdHuiObj ? dateFinFormule : dateFinAujourdHuiObj;
+  if (prog.date_fin || (prog.date_debut && hizbsJour2 > 0)) {
+    var dateFinPrev;
+    if (prog.date_fin) {
+      dateFinPrev = new Date(prog.date_fin + 'T00:00:00');
+    } else {
+      var totalJours = Math.ceil(60 / hizbsJour2);
+      var dateDebutObj = new Date(prog.date_debut + 'T00:00:00');
+      var dateFinFormule = new Date(dateDebutObj.getTime() + totalJours * 86400000);
+      var _aujourdObj = new Date(); _aujourdObj.setHours(0,0,0,0);
+      var _pagesRestObj = Math.max(0, 605 - lastPage);
+      var dateFinAujourdHuiObj = _pagesRestObj > 0
+        ? new Date(_aujourdObj.getTime() + Math.ceil(_pagesRestObj / (prog.pages_jour || 20)) * 86400000)
+        : dateFinFormule;
+      dateFinPrev = dateFinFormule >= dateFinAujourdHuiObj ? dateFinFormule : dateFinAujourdHuiObj;
+    }
     dateFin = dateFinPrev.getDate() + ' ' + moisFr[dateFinPrev.getMonth()] + ' ' + dateFinPrev.getFullYear();
   }
 

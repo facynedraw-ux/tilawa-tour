@@ -719,7 +719,7 @@ function checkRetard() {
   document.getElementById('btn-rattraper-label').textContent = 'Rattraper d\'ici le ' + fmt(originalEndDate);
   document.getElementById('btn-rattraper-detail').textContent = newPagesJour + ' pages/jour' + (extraPages > 0 ? ' (+' + extraPages + ' de plus)' : '');
   document.getElementById('btn-repousser-label').textContent = 'Finir le ' + fmt(newEndDate);
-  window._retardData = { newPagesJour: newPagesJour, newHizbsJour: newPagesJour / 10, todayStr: todayStr, prog: prog, lastPage: lastPage, hizbsJour: hizbsJour };
+  window._retardData = { newPagesJour: newPagesJour, newHizbsJour: newPagesJour / 10, todayStr: todayStr, prog: prog, lastPage: lastPage, hizbsJour: hizbsJour, originalEndDate: originalEndDate };
   var carte = document.getElementById('carte-retard');
   if (carte) carte.classList.remove('hidden');
 }
@@ -729,6 +729,7 @@ function choisirRattraper() {
   var d = window._retardData;
   d.prog.pages_jour = d.newPagesJour;
   d.prog.hizbs_jour = d.newHizbsJour;
+  if (d.originalEndDate) { var _oE = d.originalEndDate; d.prog.date_fin = _oE.getFullYear() + '-' + String(_oE.getMonth()+1).padStart(2,'0') + '-' + String(_oE.getDate()).padStart(2,'0'); }
   localStorage.setItem('tilawa_programme', JSON.stringify(d.prog));
   if (typeof saveToCloud === 'function') saveToCloud();
   localStorage.setItem('tilawa_retard_dismissed', d.todayStr);
@@ -745,6 +746,7 @@ function choisirRepousser() {
   var today = new Date(); today.setHours(0,0,0,0);
   var newDateDebut = new Date(today.getTime() - daysElapsed * 86400000);
   d.prog.date_debut = newDateDebut.getFullYear() + '-' + String(newDateDebut.getMonth()+1).padStart(2,'0') + '-' + String(newDateDebut.getDate()).padStart(2,'0');
+  var _totalJR = Math.ceil(60 / d.prog.hizbs_jour); var _dfR = new Date(newDateDebut.getTime() + _totalJR * 86400000); d.prog.date_fin = _dfR.getFullYear() + '-' + String(_dfR.getMonth()+1).padStart(2,'0') + '-' + String(_dfR.getDate()).padStart(2,'0');
   localStorage.setItem('tilawa_programme', JSON.stringify(d.prog));
   if (typeof saveToCloud === 'function') saveToCloud();
   localStorage.setItem('tilawa_retard_dismissed', d.todayStr);
