@@ -731,6 +731,11 @@ function choisirRattraper() {
   d.prog.pages_jour = d.newPagesJour;
   d.prog.hizbs_jour = d.newHizbsJour;
   if (d.originalEndDate) { var _oE = d.originalEndDate; d.prog.date_fin = _oE.getFullYear() + '-' + String(_oE.getMonth()+1).padStart(2,'0') + '-' + String(_oE.getDate()).padStart(2,'0'); }
+  var _cH = (typeof PAGE_TO_HIZB !== 'undefined') ? (PAGE_TO_HIZB[Math.min(d.lastPage,604)] || 1) : 1;
+  var _dB = Math.floor((_cH - 1) / d.newHizbsJour);
+  var _td = new Date(); _td.setHours(0,0,0,0);
+  var _nd = new Date(_td.getTime() - _dB * 86400000);
+  d.prog.date_debut = _nd.getFullYear() + '-' + String(_nd.getMonth()+1).padStart(2,'0') + '-' + String(_nd.getDate()).padStart(2,'0');
   localStorage.setItem('tilawa_programme', JSON.stringify(d.prog));
   if (typeof saveToCloud === 'function') saveToCloud();
   localStorage.setItem('tilawa_retard_dismissed', d.todayStr);

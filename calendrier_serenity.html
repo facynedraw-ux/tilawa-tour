@@ -339,14 +339,19 @@ function renderCalendar() {
 
   const dateDebut = new Date(prog.date_debut + 'T00:00:00');
   const MS_DAY = 86400000;
-  const totalJours = Math.ceil(60 / hizbsJour);
-  const _lastPageCal = parseInt(localStorage.getItem('tilawa_last_page') || '1');
-  const _pagesRestantes = Math.max(0, 605 - _lastPageCal);
-  const _dateFinFormule = new Date(dateDebut.getTime() + totalJours * MS_DAY);
-  const _dateFinAujourdHui = _pagesRestantes > 0
-    ? new Date(todayFull.getTime() + Math.ceil(_pagesRestantes / pagesJour) * MS_DAY)
-    : _dateFinFormule;
-  const dateFinProg = _dateFinFormule >= _dateFinAujourdHui ? _dateFinFormule : _dateFinAujourdHui;
+  let dateFinProg;
+  if (prog.date_fin) {
+    dateFinProg = new Date(prog.date_fin + 'T00:00:00');
+  } else {
+    const totalJours = Math.ceil(60 / hizbsJour);
+    const _lastPageCal = parseInt(localStorage.getItem('tilawa_last_page') || '1');
+    const _pagesRestantes = Math.max(0, 605 - _lastPageCal);
+    const _dateFinFormule = new Date(dateDebut.getTime() + totalJours * MS_DAY);
+    const _dateFinAujourdHui = _pagesRestantes > 0
+      ? new Date(todayFull.getTime() + Math.ceil(_pagesRestantes / pagesJour) * MS_DAY)
+      : _dateFinFormule;
+    dateFinProg = _dateFinFormule >= _dateFinAujourdHui ? _dateFinFormule : _dateFinAujourdHui;
+  }
 
   // Cases vides décalage
   for (let i = 0; i < firstDay; i++) {
@@ -491,7 +496,8 @@ function updateObjectif() {
         : dateFinFormule;
       dateFinPrev = dateFinFormule >= dateFinAujourdHuiObj ? dateFinFormule : dateFinAujourdHuiObj;
     }
-    dateFin = dateFinPrev.getDate() + ' ' + moisFr[dateFinPrev.getMonth()] + ' ' + dateFinPrev.getFullYear();
+    var _dateFinAff = new Date(dateFinPrev.getTime() - 86400000);
+    dateFin = _dateFinAff.getDate() + ' ' + moisFr[_dateFinAff.getMonth()] + ' ' + _dateFinAff.getFullYear();
   }
 
   if (titreEl) {
